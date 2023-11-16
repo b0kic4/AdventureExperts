@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kanit:wght@700&display=swap");
+body {
+  margin: 0;
+  line-height: normal;
+}
+:root {
+  /* fonts */
+  --font-inter: Inter;
+  --font-kanit: Kanit;
+
+  /* font sizes */
+  --font-size-sm: 14px;
+  --font-size-11xl: 30px;
+
+  /* Colors */
+  --color-mediumslateblue-100: #5e5bff;
+  --color-white: #fff;
+  --color-gainsboro-100: #e2e1e5;
+  --color-lightgray-100: #d2d2d2;
+  --color-black: #000;
+  --black-background: #1d1c1c;
+  --color-gray-100: #0c0c0c;
+
+  /* Paddings */
+  --padding-3xs: 10px;
+  --padding-mini: 15px;
+
+  /* Border radiuses */
+  --br-8xs: 5px;
+}
+body {
+  background-color: #1d1c1c;
+  margin: 0; /* Reset default body margin */
+  padding: 0; /* Reset default body padding */
+  font-family: Arial, sans-serif; /* Set a default font family if needed */
+  color: #ffffff; /* Set a default text color */
+}
