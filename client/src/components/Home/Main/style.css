@@ -1,17 +1,23 @@
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif; /* Change the font-family as needed */
+}
+
 .container {
   position: relative;
   width: 100%;
-  height: 60vh; /* Adjusted height */
-  overflow: hidden;
+  height: 100vh;
+  overflow: scroll;
 }
 
 video {
   object-fit: cover;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   border-radius: 7px;
 }
 
+/* Login and register section */
 .login-register-container {
   position: absolute;
   top: 50%;
@@ -19,6 +25,7 @@ video {
   transform: translate(-50%, -50%);
   text-align: center;
   color: #fff;
+  z-index: 1; /* Ensure the login-register-container is above the video */
 }
 
 .login-register-container h1 {
@@ -29,8 +36,8 @@ video {
 .login-register-container p {
   font-size: 18px;
   margin-bottom: 20px;
-  background-color: rgba(51, 51, 51, 0.5); /* Dark gray with 50% opacity */
-  padding: 10px;
+  background-color: rgba(51, 51, 51, 0.8); /* Dark gray with 80% opacity */
+  padding: 15px; /* Increased padding for better readability on mobile */
   display: inline-block;
   border-radius: 7px;
 }
@@ -38,15 +45,63 @@ video {
 .buttons-container {
   display: flex;
   justify-content: center;
+  margin-top: 20px; /* Adjusted margin for better spacing */
 }
 
 .buttons-container button {
   background-color: #fff;
   color: #333;
-  padding: 10px 20px;
+  padding: 15px 30px;
   margin: 0 10px;
   border: none;
   cursor: pointer;
   font-size: 18px;
   border-radius: 7px;
+}
+
+/* Section for traveling */
+.traveling {
+  position: relative;
+  text-align: center;
+  margin-top: 20px; /* Adjusted margin for better spacing */
+}
+
+.traveling button {
+  background: none;
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  border-radius: 7px;
+}
+
+/* Travel component */
+.travel {
+  padding: 20px; /* Adjusted padding for better spacing */
+}
+.get-started-container {
+  position: relative;
+  background-color: "#102036";
+}
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 768px) {
+  .login-register-container {
+    width: 90%; /* Adjusted width for better readability on smaller screens */
+  }
+
+  .buttons-container {
+    flex-direction: column; /* Stack buttons vertically on smaller screens */
+    align-items: center; /* Center-align buttons on smaller screens */
+    margin-top: 10px; /* Adjusted margin for better spacing */
+  }
+
+  .buttons-container button {
+    margin: 10px 0; /* Adjusted margin for better spacing */
+  }
+
+  .traveling button {
+    margin-top: 10px; /* Adjusted margin for better spacing */
+  }
 }

@@ -1,6 +1,5 @@
 /* Add these styles to your CSS file */
 
-/* Overall Navigation Container */
 .nav-container {
   position: absolute;
   top: 20px;
@@ -15,6 +14,7 @@
 
 /* Logo Container */
 .logo-container h1 {
+  position: fixed;
   display: flex;
   align-items: center;
   color: black;
@@ -29,6 +29,7 @@
   cursor: pointer;
   color: #fff; /* White text color */
   font-size: 20px; /* Increased font size */
+  margin-left: 60%;
 }
 
 .nav-links {

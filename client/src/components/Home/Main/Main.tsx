@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+// Import necessary types
+import React, { useState, useEffect, useRef } from "react";
 import "./style.css";
 import backgroundVideo from "../assets/pexels_videos_1851190 (2160p).mp4";
 import Travel from "../../Travel/Travel";
-import Dest from "../../Dest/Dest";
-import Profile from "../../Profile/Profile";
 
 const Main = () => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [visible, setVisible] = useState(false);
+  const travelRef = useRef<HTMLDivElement | null>(null); // Explicitly set the type
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option === selectedOption ? null : option);
   };
+
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+    const threshold = 100;
+    setVisible(scrollY > threshold);
+  };
+
+  const handleGetStartedClick = () => {
+    if (travelRef.current) {
+      (travelRef.current as HTMLDivElement).scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="container">
@@ -18,12 +40,10 @@ const Main = () => {
         <source src={backgroundVideo} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
       <div className="login-register-container">
-        {/* When user is logged in add => Welcome back username */}
         <div className="text-container">
-          <h1>Get Started with Creating Account</h1>
-          <p>Track all the destinations and get points for traveling</p>
+          <h1>Get Started with Your Bus Account</h1>
+          <p>With Account track Your Journey and get many more options</p>
         </div>
         <div className="buttons-container">
           <button
@@ -47,6 +67,14 @@ const Main = () => {
             Register
           </button>
         </div>
+        <div className="traveling">
+          <button onClick={handleGetStartedClick}>
+            <p>Get Started With Traveling</p>
+          </button>
+        </div>
+      </div>
+      <div className="get-started-container" ref={travelRef}>
+        <Travel />
       </div>
     </div>
   );
