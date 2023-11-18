@@ -13,20 +13,6 @@ function Navbar() {
           </h1>
         </button>
       </div>
-      {/* <div className="nav-links">
-        <button>
-          <h2>Home</h2>
-        </button>
-        <button>
-          <h2>Login</h2>
-        </button>
-        <button>
-          <h2>Travel</h2>
-        </button>
-        <button>
-          <h2>Destinations</h2>
-        </button>
-      </div> */}
     </div>
   );
 }
