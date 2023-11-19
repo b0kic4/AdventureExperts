@@ -66,17 +66,15 @@ app.post("/login", async (req, res) => {
 
     const user = result.rows[0];
 
-    // Use bcrypt.compare to check if the entered password matches the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      // Incorrect password
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
-    // Handle successful login (you can redirect or show a success message)
-    console.log("Login successful", user);
-    res.status(200).json({ message: "Login successful", user });
+    const token = jwt.sign({ userId: user.id }, jwtSecretKey, {
+      expiresIn: "3h",
+    });
+    res.status(200).json({ message: "Login successful", user, token });
   } catch (error) {
     // Handle login error
     console.error("Error during login", error);
