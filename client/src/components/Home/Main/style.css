@@ -164,7 +164,7 @@ video {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: auto; /* or 'visible' if needed */
+  overflow: auto;
 }
 
 .get-started-container img {
@@ -178,6 +178,19 @@ video {
   height: 100vh;
 }
 
+/* DESTINAITONS CONTAINER */
+.destinations-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+}
+.destinations-container img {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  border-radius: 7px;
+}
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
   .login-register-container {
