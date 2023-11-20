@@ -42,6 +42,33 @@ video {
   display: inline-block;
   border-radius: 7px;
 }
+/* IF USER IS LOGGED IN CONTAINER */
+.logged-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logged-container p {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.logout-button {
+  color: whitesmoke;
+  font-weight: bold;
+  padding: 8px 16px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #a1071e; /* Darker shade of red on hover */
+}
 
 /* REGISTRAION FORM AND LOGIN FORM */
 .login-form,
@@ -132,16 +159,26 @@ video {
   border-radius: 7px;
 }
 
-/* Section for traveling */
 .traveling {
   position: relative;
   text-align: center;
-  margin-top: 20px; /* Adjusted margin for better spacing */
+  margin-top: 20px;
 }
 
-.traveling button {
-  background-color: #ff8c00; /* Orange color */
-  position: relative;
+.button-traveling {
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px; /* Adjusted margin for space between buttons */
+  transition: background-color 0.3s ease;
+}
+
+.button-destinations {
+  background-color: #5500fe;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -151,8 +188,12 @@ video {
   transition: background-color 0.3s ease;
 }
 
-.traveling button:hover {
-  background: #c5730f;
+.button-traveling:hover {
+  background: #6f3f05;
+}
+
+.button-destinations:hover {
+  background: #270768;
 }
 
 /* Travel component */
@@ -174,7 +215,7 @@ video {
   border-radius: 7px;
 }
 
-.paralax-content {
+.parallax-content {
   height: 100vh;
 }
 

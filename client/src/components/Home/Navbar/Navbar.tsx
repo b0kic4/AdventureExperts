@@ -2,7 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBus } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
-function Navbar() {
+
+const Navbar: React.FC = () => {
   return (
     <div className="nav-container">
       <div className="logo-container">
@@ -15,6 +16,6 @@ function Navbar() {
       </div>
     </div>
   );
-}
+};
 
 export default Navbar;

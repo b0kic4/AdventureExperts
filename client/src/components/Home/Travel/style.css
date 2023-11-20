@@ -1,3 +1,5 @@
+/* Add these styles to your existing CSS */
+
 body {
   margin: 0;
   font-family: "Arial", sans-serif;
@@ -7,12 +9,11 @@ body {
   position: relative;
   height: 100vh;
   width: 100%;
-  overflow: auto;
 }
 
 .travel-items {
-  display: inline-flex;
-  justify-content: center;
+  display: flex;
+  justify-content: space-around;
   align-items: center;
   gap: 5%;
   height: 100vh;
@@ -24,12 +25,12 @@ body {
 .more-about-traveling {
   background: transparent;
   margin-top: 5%;
-  height: 50vh;
-  width: 20%;
+  height: 60vh;
+  width: 25%;
   position: relative;
-  border-radius: 3%;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Added box-shadow */
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.3s ease;
 }
 
@@ -43,89 +44,86 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   transition: box-shadow 0.3s ease-out;
+}
+
+.paralax-content img {
+  opacity: 0.5;
 }
 
 .start-traveling:hover,
 .schedule-traveling:hover,
 .more-about-traveling:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
 }
 
 .start-traveling img,
 .schedule-traveling img,
 .more-about-traveling img {
-  /* ... Existing styles ... */
-  transition: width 0.5s ease-out, height 0.5s ease-out, opacity 0.3s ease-out;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+  z-index: 1;
 }
+
 .start-traveling:hover img,
 .schedule-traveling:hover img,
 .more-about-traveling:hover img {
-  width: 90%; /* Adjust the percentage as needed */
-  height: 90%; /* Adjust the percentage as needed */
-  opacity: 1; /* Adjust the opacity as needed */
+  transform: scale(1.1);
+}
+
+.text-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: white;
+  z-index: 2; /* Set a higher z-index */
 }
 
 .start-traveling h1,
 .schedule-traveling h1,
 .more-about-traveling h1 {
-  background-color: #102036;
-  border-radius: 10px;
-  position: absolute;
-  color: white;
-  font-size: 16px;
-  margin: 0;
-  text-align: center;
-  width: fit-content;
-  top: 10px;
-  padding: 1%;
+  color: whitesmoke;
+  font-weight: bold;
 }
-
 .start-traveling p,
 .schedule-traveling p,
 .more-about-traveling p {
-  background-color: #102036;
-  padding: 1%;
-  border-radius: 10px;
+  background-color: black;
+  color: whitesmoke;
   font-weight: bold;
-  position: absolute;
-  color: white;
-  font-size: 16px;
-  margin: 0;
-  text-align: center;
-  width: fit-content;
-  bottom: 10px;
+  font-size: large;
 }
 
 @media only screen and (max-width: 768px) {
   .travel-items {
-    flex-direction: column; /* Adjusted for mobile */
-    border: none;
+    flex-direction: column;
   }
 
   .start-traveling,
   .schedule-traveling,
   .more-about-traveling {
-    width: 70%; /* Adjusted width for mobile */
-    height: auto; /* Adjusted height for mobile */
+    width: 70%;
+    height: auto;
     margin-top: 3%;
   }
 
-  .start-traveling h1,
-  .start-traveling p,
-  .schedule-traveling h1,
-  .more-about-traveling h1 {
-    font-size: 16px; /* Adjusted font size for mobile */
+  .text-overlay h1 {
+    font-size: 16px;
   }
 }
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-  .travel-items {
-    flex-direction: column;
-    border: none;
-  }
 
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
   .start-traveling,
   .schedule-traveling,
   .more-about-traveling {
@@ -134,12 +132,7 @@ body {
     margin-top: 3%;
   }
 
-  .start-traveling h1,
-  .start-traveling p,
-  .schedule-traveling h1,
-  .schedule-traveling p,
-  .more-about-traveling h1,
-  .more-about-traveling p {
+  .text-overlay h1 {
     font-size: 16px;
   }
 }

@@ -3,13 +3,15 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../../app/userSlice";
 interface LoginProps {
-  onClose: () => void; // Define the onClose prop as a function that takes no arguments and returns void
+  onClose: () => void;
 }
 const Login: React.FC<LoginProps> = ({ onClose }) => {
   const [loginEmailOrUsername, setLoginEmailOrUsername] = useState("");
   const [loginPw, setLoginPw] = useState("");
-
+  const dispatch = useDispatch();
   const handleInputLoginChange = (name: any, value: any) => {
     switch (name) {
       case "loginEmailorUsername":
@@ -23,14 +25,14 @@ const Login: React.FC<LoginProps> = ({ onClose }) => {
     }
   };
 
-  const handleLoginSubmit = async (ev: any) => {
+  const handleLoginSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     try {
       const response = await axios.post("http://localhost:8081/login", {
         emailOrUsername: loginEmailOrUsername,
         password: loginPw,
       });
-
+      dispatch(setUser(response.data.user));
       localStorage.setItem("token", response.data.token);
       toast.success("Login successful");
       onClose();

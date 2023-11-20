@@ -35,7 +35,7 @@ const Register: React.FC<RegisterProps> = ({ onClose }) => {
     }
   };
 
-  const handleRegisterSubmit = async (ev: any) => {
+  const handleRegisterSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
     try {
       if (password !== confirmPassword) {
