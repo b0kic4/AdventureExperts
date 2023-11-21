@@ -71,16 +71,41 @@ app.post("/login", async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    const token = jwt.sign({ userId: user.id }, jwtSecretKey, {
-      expiresIn: "3h",
-    });
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        username: user.username,
+        password: user.password,
+        name: user.name,
+        email: user.email,
+      },
+      jwtSecretKey,
+      {
+        expiresIn: "3h",
+      }
+    );
     res.status(200).json({ message: "Login successful", user, token });
   } catch (error) {
-    // Handle login error
     console.error("Error during login", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: No token provided" });
+  }
+  jwt.verify(token, jwtSecretKey, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token" });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
+app.get("/user/:id", verifyToken, (req, res) => {});
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}.`);

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./style.css";
 import { Parallax } from "react-parallax";
 import { ToastContainer } from "react-toastify";
@@ -11,10 +11,21 @@ import DestinationImage from "../Dest/assets/pexels-eberhard-grossgasteiger-5728
 import Register from "./Auth/Register";
 import Login from "./Auth/Login";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { clearUser } from "../../../app/userSlice";
+import { clearUser, setUser } from "../../../app/userSlice";
 import { RootState } from "../../../app/rootReducer";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+
+interface DecodedToken {
+  userId: number;
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
 
 const Main: React.FC = () => {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -22,8 +33,38 @@ const Main: React.FC = () => {
   const travelRef = useRef<HTMLDivElement | null>(null);
   const user = useSelector((state: RootState) => state.user);
   const destRef = useRef<HTMLDivElement | null>(null);
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const setUserFromToken = () => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        try {
+          const decodedToken: DecodedToken = jwtDecode(storedToken);
+          if (decodedToken) {
+            const { userId, username, password, name, email } = decodedToken;
+
+            dispatch(
+              setUser({
+                id: userId,
+                name: name,
+                password: password,
+                token: storedToken,
+                email: email,
+                username: username,
+              })
+            );
+          } else {
+            return;
+          }
+        } catch (error: any) {
+          // Handle decoding error
+          console.error("Error decoding token:", error.message);
+        }
+      }
+    };
+    setUserFromToken();
+  }, [dispatch]);
 
   const handleGetStartedClick = () => {
     if (travelRef.current) {
@@ -63,6 +104,7 @@ const Main: React.FC = () => {
         fontWeight: "bold",
       },
     });
+    localStorage.removeItem("token");
   };
 
   return (
