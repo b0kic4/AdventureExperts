@@ -99,7 +99,6 @@ body {
 .start-traveling p,
 .schedule-traveling p,
 .more-about-traveling p {
-  background-color: black;
   color: whitesmoke;
   font-weight: bold;
   font-size: large;

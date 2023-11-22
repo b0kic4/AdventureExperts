@@ -202,10 +202,15 @@ video {
 }
 
 .get-started-container {
+  text-align: center;
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
+}
+
+.get-started-container h1 {
+  color: whitesmoke;
 }
 
 .get-started-container img {
@@ -221,10 +226,11 @@ video {
 
 /* DESTINAITONS CONTAINER */
 .destinations-container {
+  text-align: center;
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
 }
 .destinations-container img {
   object-fit: cover;

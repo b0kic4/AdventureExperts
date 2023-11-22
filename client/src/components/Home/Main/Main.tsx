@@ -57,10 +57,7 @@ const Main: React.FC = () => {
           } else {
             return;
           }
-        } catch (error: any) {
-          // Handle decoding error
-          console.error("Error decoding token:", error.message);
-        }
+        } catch (error: any) {}
       }
     };
     setUserFromToken();
@@ -190,12 +187,14 @@ const Main: React.FC = () => {
             />
           )}
         >
+          <h1>TRAVELING</h1>
           <Travel />
         </Parallax>
       </div>
       <div className="destinations-container" ref={destRef}>
         <div className="paralax-content">
           <Parallax strength={600} bgImage={DestinationImage}>
+            <h1>DESTINATIONS</h1>
             <Dest />
           </Parallax>
         </div>

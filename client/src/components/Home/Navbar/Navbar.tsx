@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBus } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons/faGlobe";
 import "./style.css";
 
 const Navbar: React.FC = () => {
@@ -9,8 +10,8 @@ const Navbar: React.FC = () => {
       <div className="logo-container">
         <button>
           <h1>
-            <FontAwesomeIcon icon={faBus} />
-            YourBus
+            <FontAwesomeIcon icon={faGlobe} />
+            AdventureExperts
           </h1>
         </button>
       </div>

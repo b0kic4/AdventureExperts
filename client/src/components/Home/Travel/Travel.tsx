@@ -1,23 +1,34 @@
 import React from "react";
 import { Parallax, Background } from "react-parallax";
 import "./style.css";
+import { useNavigate } from "react-router-dom";
 import startTravelingImage from "./assets/writing-map-near-tourist-supplies.jpg";
 import scheduleImage from "./assets/map-lying-wooden-table.jpg";
 import learnMoreImage from "./assets/view-hands-holding-smartphone.jpg";
 
 const Travel = () => {
+  const navigate = useNavigate();
+  const goToStartTraveling = () => {
+    navigate("/start-traveling");
+  };
+  const goToSchedule = () => {
+    navigate("/schedule-traveling");
+  };
+  const goToAbout = () => {
+    navigate("/about-traveling");
+  };
   return (
     <div className="container">
       <div className="travel-items">
         <div className="start-traveling">
-          <button>
+          <button onClick={goToStartTraveling}>
             <img src={startTravelingImage} alt="" />
             <h1>START TRAVELING TODAY</h1>
             <p>Explore new destinations and create unforgettable memories.</p>
           </button>
         </div>
         <div className="schedule-traveling">
-          <button>
+          <button onClick={goToSchedule}>
             <img src={scheduleImage} alt="" />
             <h1>SCHEDULE TRAVELING</h1>
             <p>
@@ -27,7 +38,7 @@ const Travel = () => {
           </button>
         </div>
         <div className="more-about-traveling">
-          <button>
+          <button onClick={goToAbout}>
             <img src={learnMoreImage} alt="" />
             <h1>MORE ABOUT TRAVELING</h1>
             <p>
