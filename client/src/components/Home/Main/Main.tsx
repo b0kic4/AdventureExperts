@@ -20,7 +20,6 @@ import { jwtDecode } from "jwt-decode";
 interface DecodedToken {
   userId: number;
   username: string;
-  password: string;
   name: string;
   email: string;
   iat: number;
@@ -42,13 +41,12 @@ const Main: React.FC = () => {
         try {
           const decodedToken: DecodedToken = jwtDecode(storedToken);
           if (decodedToken) {
-            const { userId, username, password, name, email } = decodedToken;
+            const { userId, username, name, email } = decodedToken;
 
             dispatch(
               setUser({
                 id: userId,
                 name: name,
-                password: password,
                 token: storedToken,
                 email: email,
                 username: username,

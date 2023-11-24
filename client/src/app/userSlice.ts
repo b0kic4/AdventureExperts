@@ -7,7 +7,6 @@ interface UserState {
   user: {
     id: number;
     name: string;
-    password: string;
     email: string;
     username: string;
   } | null;
@@ -29,7 +28,6 @@ const userSlice = createSlice({
         name: string;
         email: string;
         username: string;
-        password: string;
         token: string;
       }>
     ) => {

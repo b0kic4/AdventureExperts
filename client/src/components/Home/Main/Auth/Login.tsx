@@ -37,11 +37,7 @@ const Login: React.FC<LoginProps> = ({ onClose }) => {
         emailOrUsername: loginEmailOrUsername,
         password: loginPw,
       });
-      console.log(response.data);
       const { user, token } = response.data;
-
-      console.log("USER: " + user);
-      console.log("TOKEN: " + token);
 
       dispatch(setLoggedIn());
       dispatch(
@@ -50,7 +46,6 @@ const Login: React.FC<LoginProps> = ({ onClose }) => {
           name: user.name,
           email: user.email,
           username: user.username,
-          password: user.password,
           token: token,
         })
       );

@@ -1,0 +1,2 @@
+Coutries and Cities: https://rapidapi.com/wirefreethought/api/geodb-cities
+Hotels: https://rapidapi.com/ntd119/api/sky-scanner3
