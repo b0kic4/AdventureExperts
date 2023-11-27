@@ -1,9 +1,18 @@
 import express from "express";
-import { GetCities } from "../controllers/TravelController";
+import {
+  getCities,
+  getDestinationsFromAirportCode,
+  getFlightOffers,
+} from "../controllers/TravelController";
 import { verifyToken } from "../middleware/VerifyToken";
 
 const travelingRouter = express.Router();
 
-travelingRouter.get("/get-cities", verifyToken, GetCities);
-
+travelingRouter.get("/get-cities", verifyToken, getCities);
+travelingRouter.get(
+  "/get-direct-Destinations",
+  verifyToken,
+  getDestinationsFromAirportCode
+);
+travelingRouter.get("/get-flight-offers", verifyToken, getFlightOffers);
 export { travelingRouter };

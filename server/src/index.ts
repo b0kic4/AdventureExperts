@@ -1,14 +1,10 @@
 import { config } from "dotenv";
 config();
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
-import * as bcrypt from "bcrypt";
-import * as crypto from "crypto";
-import * as jwt from "jsonwebtoken";
 import * as bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import pool from "./db/server";
-import axios, { AxiosRequestConfig } from "axios";
+
 import { authRouter } from "./routes/AuthRoutes";
 import { travelingRouter } from "./routes/TravelingRoutes";
 

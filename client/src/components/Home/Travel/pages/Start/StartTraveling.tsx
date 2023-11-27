@@ -1,84 +1,68 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useSpring, animated } from "react-spring";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import Loader from "../../../../assets/Loader";
 import "./style.css";
 import "leaflet/dist/leaflet.css";
-interface City {
-  name: string;
-  subType: string;
-  address: {
-    countryCode: string;
-    stateCode: string;
+interface Flight {
+  type: string;
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  lastTicketingDate: string;
+  lastTicketingDateTime: string;
+  numberOfBookableSeats: number;
+  itineraries: Array<Record<string, unknown>>;
+  price: {
+    currency: string;
+    total: string;
+    base: string;
+    fees: Array<unknown>;
+    grandTotal: string;
+    additionalServices: Array<unknown>;
   };
-  geoCode: {
-    latitude: number;
-    longitude: number;
+  pricingOptions: {
+    fareType: Array<unknown>;
+    includedCheckedBagsOnly: boolean;
   };
-  relationships: {
-    id: string;
-    type: string;
-    href: string;
-  }[];
+  validatingAirlineCodes: Array<string>;
+  travelerPricings: Array<Record<string, unknown>>;
 }
 
 const StartTraveling: React.FC = () => {
-  const [citiesInfo, setCitiesInfo] = useState<City[]>([]);
-  const [location, setLocation] = useState("");
-  const [countryCode, setCountryCode] = useState("");
+  const [flights, setFlights] = useState<Flight[]>([]);
+  const [startLocation, setStartLocation] = useState("");
+  const [endLocation, setEndLocation] = useState("");
+  const [departureDate, setDepartureDate] = useState("");
+  const [adults, setAdults] = useState("");
   const [mapCenter, setMapCenter] = useState<[number, number]>([0, 0]);
-  const [mapBounds, setMapBounds] = useState<[number, number, number, number]>([
-    0, 0, 0, 0,
-  ]);
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
-  useEffect(() => {
-    if (citiesInfo.length > 0) {
-      // Calculate the center and bounds based on city coordinates
-      const coordinates = citiesInfo.map((city) => [
-        city.geoCode.latitude,
-        city.geoCode.longitude,
-      ]);
-
-      const bounds = coordinates.reduce(
-        (acc, coord) => [
-          Math.min(acc[0], coord[0]),
-          Math.min(acc[1], coord[1]),
-          Math.max(acc[2], coord[0]),
-          Math.max(acc[3], coord[1]),
-        ],
-        [
-          coordinates[0][0],
-          coordinates[0][1],
-          coordinates[0][0],
-          coordinates[0][1],
-        ]
-      ) as [number, number, number, number];
-
-      const center = [
-        (bounds[0] + bounds[2]) / 2,
-        (bounds[1] + bounds[3]) / 2,
-      ] as [number, number];
-
-      setMapCenter(center);
-      setMapBounds(bounds);
-    }
-  }, [citiesInfo]);
+  const [airportId, setAirportId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const getInfo = async () => {
     const storedToken = localStorage.getItem("token");
     try {
-      const response = await axios.get("http://localhost:8081/get-cities", {
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-        params: {
-          location: location,
-          countryCode: countryCode,
-        },
-      });
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:8081/get-flight-offers",
+        {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+
+          params: {
+            originLocationCode: startLocation,
+            destinationLocationCode: endLocation,
+            departureDate: departureDate,
+            adults: adults,
+          },
+        }
+      );
       console.log(response.data);
-      console.log("Country Code:", countryCode);
-      setCitiesInfo(response.data);
+      setFlights(response.data);
     } catch (error: any) {
       console.error("Error Response:", error.response);
 
@@ -87,78 +71,130 @@ const StartTraveling: React.FC = () => {
       } else {
         console.log("Error occurred:", error);
       }
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocation(e.target.value);
-  };
-  const handleCountryCodesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCountryCode(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted Location:", location);
     // console.log("Submitted Country Codes: ", coutryCode);
   };
+  const getCurrentDate = (): string => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = `${now.getMonth() + 1}`.padStart(2, "0");
+    const day = `${now.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  useEffect(() => {
+    setDepartureDate(getCurrentDate());
+  }, []);
+
+  const formContainerProps = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 500 },
+  });
+
+  const resultsContainerProps = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 500 },
+  });
+
+  const flightCardsContainerProps = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 500 },
+  });
+
+  const flightCardProps = useSpring({
+    opacity: 1,
+    transform: "translateY(0)",
+    from: { opacity: 0, transform: "translateY(-20px)" },
+    config: { duration: 500 },
+  });
 
   return (
     <div className="main-container">
-      <div className="form-container">
+      <animated.div className="form-container" style={formContainerProps}>
         <form onSubmit={handleSubmit}>
           <label>
-            Destination/Location:
+            City or Airport IATA code from which the traveler will depart:
             <input
-              placeholder="Example: Paris, France, Amsterdam"
+              placeholder="e.g. BOS for Boston"
               type="text"
-              value={location}
-              onChange={handleLocationChange}
+              value={startLocation}
+              onChange={(e) => setStartLocation(e.target.value)}
             />
           </label>{" "}
           <label>
-            Enter Country Code for Your Destination
+            City or Airport IATA code to which the traveler is going
             <input
-              placeholder="Example: FR -> France, US -> United States"
+              placeholder=", e.g. PAR for Paris"
               type="text"
-              value={countryCode}
-              onChange={handleCountryCodesChange}
+              value={endLocation}
+              onChange={(e) => setEndLocation(e.target.value)}
+            />
+          </label>{" "}
+          <label>
+            Date on which the traveler will depart from the origin to go to the
+            destination.
+            <input
+              placeholder={departureDate}
+              type="text"
+              value={departureDate}
+              readOnly
+            />
+          </label>{" "}
+          <label>
+            Number of adult travelers
+            <input
+              placeholder="Age 12 or older on date of departure"
+              type="text"
+              value={adults}
+              onChange={(e) => setAdults(e.target.value)}
             />
           </label>
+          <button onClick={getInfo}>GET</button>
         </form>
-        <button onClick={getInfo}>GET</button>
-      </div>
-      <div className="results-container">
-        <div className="location-info-container">
-          <ul>
-            {citiesInfo.map((city: City, index) => (
-              <li key={index}>
-                <strong>{city.name}</strong> - {city.subType} in{" "}
-                {city.address.countryCode}, {city.address.stateCode} <br />
-                Latitude: {city.geoCode.latitude}, Longitude:{" "}
-                {city.geoCode.longitude} <br />
-                Airports:{" "}
-                {city.relationships.map((airport, i) => (
-                  <span key={i}>
-                    {airport.type} - {airport.id} <br />
-                  </span>
-                ))}
-                <hr />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="map-container" style={{ height: "150vh" }}>
-          {citiesInfo.length > 0 && (
+      </animated.div>
+      <animated.div style={resultsContainerProps} className="results-container">
+        <animated.div
+          style={flightCardsContainerProps}
+          className="flight-cards-container"
+        >
+          <div className="loader-container">{loading ? <Loader /> : null}</div>
+          {flights.map((flight: Flight, index) => (
+            <animated.div
+              className="flight-card"
+              style={flightCardProps}
+              key={index}
+            >
+              <h3>Flight ID: {flight.id}</h3>
+              <p>Source: {flight.source}</p>
+              <p>Date Purchasing: {flight.lastTicketingDateTime}</p>
+              <p>
+                Price: {flight.price.currency} {flight.price.total}
+              </p>
+              {/* Add more key details */}
+              <button>View Details</button>
+            </animated.div>
+          ))}
+        </animated.div>
+
+        {/* <div className="map-container" style={{ height: "140vh" }}>
+          {flights.length > 0 && (
             <MapContainer
               center={mapCenter}
               zoom={2}
               scrollWheelZoom={true}
               maxBoundsViscosity={1.0}
-              style={{ width: "30%", height: "30%" }}
+              style={{ width: "80%", height: "50%" }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              {citiesInfo.map((city: City, index) => (
+              {flights.map((flight:Flight, index) => (
                 <Marker
                   key={index}
                   position={[city.geoCode.latitude, city.geoCode.longitude]}
@@ -176,8 +212,8 @@ const StartTraveling: React.FC = () => {
               ))}
             </MapContainer>
           )}
-        </div>
-      </div>
+        </div> */}
+      </animated.div>
     </div>
   );
 };

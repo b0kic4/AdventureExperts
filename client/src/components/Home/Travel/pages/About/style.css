@@ -1,0 +1,121 @@
+.start-traveling-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+}
+
+.form-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+input {
+  padding: 12px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.form-container button {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: wheat;
+}
+
+.location-info-container button {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.location-info-container button:hover {
+  background-color: wheat;
+}
+
+.results-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-content: space-around;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.location-info-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  align-content: center;
+}
+
+.map-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  width: fit-content;
+  text-align: left;
+}
+
+li {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.airports {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping to the next line if needed */
+  gap: 10px; /* Adjust the value as needed for horizontal spacing */
+  align-items: center; /* Align items vertically in the center */
+  margin-top: 5px;
+}
+
+.airport {
+  display: flex;
+  align-items: center;
+}
+
+.airport button {
+  margin-left: 5px; /* Adjust the value as needed for spacing between buttons */
+}
+.leaflet-container {
+  height: 100vh;
+}
