@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSpring, animated } from "react-spring";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Loader from "../../../../assets/Loader";
 import "./style.css";
 import "leaflet/dist/leaflet.css";
+
 interface Flight {
   type: string;
   id: string;
@@ -32,15 +32,62 @@ interface Flight {
   travelerPricings: Array<Record<string, unknown>>;
 }
 
+interface FlightDetailsProps {
+  flight: Flight;
+  onClose: () => void;
+}
+
 const StartTraveling: React.FC = () => {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [adults, setAdults] = useState("");
-  const [mapCenter, setMapCenter] = useState<[number, number]>([0, 0]);
-  const [airportId, setAirportId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
+
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const FlightDetails: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
+    const detailsProps = useSpring({
+      height: isExpanded ? "100%" : "0%",
+      opacity: isExpanded ? 1 : 0,
+      config: { duration: 500 },
+    });
+
+    return (
+      <animated.div className="flight-details" style={detailsProps}>
+        <h2>Flight Details</h2>
+        <p>Flight ID: {flight.id}</p>
+        <p>Source: {flight.source}</p>
+        <p>Last Ticketing Date: {flight.lastTicketingDate}</p>
+        <p>Number of Bookable Seats: {flight.numberOfBookableSeats}</p>
+        <h3>Itineraries:</h3>
+        {flight.itineraries.map((itinerary: any, index) => (
+          <div key={index}>
+            <p>Duration: {itinerary.duration}</p>
+            <h4>Segments:</h4>
+            {itinerary.segments.map((segment: any, segmentIndex: any) => (
+              <div key={segmentIndex}>
+                <p>Departure: {segment.departure.iataCode}</p>
+                <p>Arrival: {segment.arrival.iataCode}</p>
+                {/* Add more segment details */}
+              </div>
+            ))}
+          </div>
+        ))}
+        <h3>Price:</h3>
+        <p>Currency: {flight.price.currency}</p>
+        <p>Total: {flight.price.total}</p>
+        {/* Add more price details */}
+        <button onClick={onClose}>Close</button>
+      </animated.div>
+    );
+  };
 
   const getInfo = async () => {
     const storedToken = localStorage.getItem("token");
@@ -52,7 +99,6 @@ const StartTraveling: React.FC = () => {
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
-
           params: {
             originLocationCode: startLocation,
             destinationLocationCode: endLocation,
@@ -76,10 +122,21 @@ const StartTraveling: React.FC = () => {
     }
   };
 
+  const handleViewDetails = (flight: Flight) => {
+    setSelectedFlight(flight);
+    toggle(); // Toggle the expanded state when clicking "View Details"
+  };
+
+  const handleCloseDetails = () => {
+    setSelectedFlight(null);
+    toggle(); // Toggle the expanded state when closing details
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // console.log("Submitted Country Codes: ", coutryCode);
   };
+
   const getCurrentDate = (): string => {
     const now = new Date();
     const year = now.getFullYear();
@@ -87,6 +144,7 @@ const StartTraveling: React.FC = () => {
     const day = `${now.getDate()}`.padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+
   useEffect(() => {
     setDepartureDate(getCurrentDate());
   }, []);
@@ -178,41 +236,18 @@ const StartTraveling: React.FC = () => {
               <p>
                 Price: {flight.price.currency} {flight.price.total}
               </p>
-              {/* Add more key details */}
-              <button>View Details</button>
+              <button onClick={() => handleViewDetails(flight)}>
+                View Details
+              </button>
+              {flight.id === selectedFlight?.id && (
+                <FlightDetails
+                  flight={selectedFlight}
+                  onClose={handleCloseDetails}
+                />
+              )}
             </animated.div>
           ))}
         </animated.div>
-
-        {/* <div className="map-container" style={{ height: "140vh" }}>
-          {flights.length > 0 && (
-            <MapContainer
-              center={mapCenter}
-              zoom={2}
-              scrollWheelZoom={true}
-              maxBoundsViscosity={1.0}
-              style={{ width: "80%", height: "50%" }}
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              {flights.map((flight:Flight, index) => (
-                <Marker
-                  key={index}
-                  position={[city.geoCode.latitude, city.geoCode.longitude]}
-                >
-                  <Popup>
-                    <div>
-                      <strong>{city.name}</strong> - {city.subType} <br />
-                      Country: {city.address.countryCode}, State:{" "}
-                      {city.address.stateCode} <br />
-                      Latitude: {city.geoCode.latitude}, Longitude:{" "}
-                      {city.geoCode.longitude}
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          )}
-        </div> */}
       </animated.div>
     </div>
   );
