@@ -41,23 +41,34 @@ const Main: React.FC = () => {
         try {
           const decodedToken: DecodedToken = jwtDecode(storedToken);
           if (decodedToken) {
-            const { userId, username, name, email } = decodedToken;
+            const { userId, username, name, email, exp } = decodedToken;
 
-            dispatch(
-              setUser({
-                id: userId,
-                name: name,
-                token: storedToken,
-                email: email,
-                username: username,
-              })
-            );
+            // Check if the token has not expired
+            if (exp * 1000 > Date.now()) {
+              dispatch(
+                setUser({
+                  id: userId,
+                  name: name,
+                  token: storedToken,
+                  email: email,
+                  username: username,
+                })
+              );
+            } else {
+              dispatch(clearUser());
+              localStorage.removeItem("token");
+              toast.warning("Your session has expired. Please log in again.");
+            }
           } else {
             return;
           }
-        } catch (error: any) {}
+        } catch (error: any) {
+          // Handle any decoding errors
+          console.error("Error decoding token:", error);
+        }
       }
     };
+
     setUserFromToken();
   }, [dispatch]);
 

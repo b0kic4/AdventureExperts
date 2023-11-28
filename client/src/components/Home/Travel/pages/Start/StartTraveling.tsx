@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useSpring, animated } from "react-spring";
 import Loader from "../../../../assets/Loader";
 import "./style.css";
-import "leaflet/dist/leaflet.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 
 interface Flight {
   type: string;
@@ -28,6 +29,7 @@ interface Flight {
     fareType: Array<unknown>;
     includedCheckedBagsOnly: boolean;
   };
+
   validatingAirlineCodes: Array<string>;
   travelerPricings: Array<Record<string, unknown>>;
 }
@@ -37,6 +39,152 @@ interface FlightDetailsProps {
   onClose: () => void;
 }
 
+const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
+  // const [scrollPosition, setScrollPosition] = useState<number>(0);
+  // const flightModalRef = useRef<HTMLDivElement>(null);
+  const detailsProps = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 500 },
+  });
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (flightModalRef.current) {
+  //       setScrollPosition(flightModalRef.current.scrollTop);
+  //     }
+  //   };
+
+  //   if (flightModalRef.current) {
+  //     flightModalRef.current.addEventListener("scroll", handleScroll);
+  //   }
+
+  //   return () => {
+  //     if (flightModalRef.current) {
+  //       flightModalRef.current.removeEventListener("scroll", handleScroll);
+  //     }
+  //   };
+  // }, []);
+
+  return (
+    <>
+      {flight && (
+        <div className="overlay">
+          <animated.div className="flight-modal" style={detailsProps}>
+            <button
+              id="close"
+              // className={scrollPosition > 100 ? "transparent" : ""}
+              onClick={onClose}
+            >
+              <FontAwesomeIcon size={"2xl"} icon={faClose} />
+            </button>
+            <div className="modal-header">
+              <h2>Flight Details</h2>
+            </div>
+            <div className="modal-content">
+              <div className="flight-section">
+                <div className="section">
+                  <h3>Depart</h3>
+                  <p>Flight ID: {flight.id}</p>
+                  <p>Source: {flight.source}</p>
+                  <p>Last Ticketing Date: {flight.lastTicketingDate}</p>
+                  <p>
+                    Number of Bookable Seats: {flight.numberOfBookableSeats}
+                  </p>
+                </div>
+                <div className="section">
+                  <h3>Itineraries:</h3>
+                  {flight.itineraries.map((itinerary: any, index) => (
+                    <div key={index} className="section">
+                      <p>Duration: {itinerary.duration}</p>
+                      <h4>Segments:</h4>
+                      {itinerary.segments.map(
+                        (segment: any, segmentIndex: any) => (
+                          <div key={segmentIndex} className="section">
+                            <p>
+                              Departure From: {segment.departure.iataCode} -
+                              Terminal: {segment.departure.terminal}
+                            </p>
+                            <p>Departure At: {segment.departure.at}</p>
+                            <p>
+                              Arrival At: {segment.arrival.iataCode} - Terminal:{" "}
+                              {segment.arrival.terminal} Time:{" "}
+                              {segment.arrival.at}
+                            </p>
+                            <p>Carrier Code: {segment.carrierCode}</p>
+                            <p>Number: {segment.number}</p>
+                            <p>Aircraft Code: {segment.aircraft.code}</p>
+                            <p>
+                              Operating Carrier Code:{" "}
+                              {segment.operating.carrierCode}
+                            </p>
+                            <p>Duration Time: {segment.duration}</p>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="section">
+                  <h3>Price:</h3>
+                  <p>Currency: {flight.price.currency}</p>
+                  <p>Total: {flight.price.total}</p>
+                </div>
+                <div className="section">
+                  <h3>Pricing Options:</h3>
+                  <p>Fare Type: {flight.pricingOptions.fareType.join(", ")}</p>
+                  <p>
+                    Included Checked Bags Only:{" "}
+                    {flight.pricingOptions.includedCheckedBagsOnly.toString()}
+                  </p>
+                </div>
+                <div className="section">
+                  <h3>Traveler Pricings:</h3>
+                  {flight.travelerPricings.map(
+                    (traveler: any, travelerIndex) => (
+                      <div key={travelerIndex} className="section">
+                        <p>Traveler ID: {traveler.travelerId}</p>
+                        <p>Fare Option: {traveler.fareOption}</p>
+                        <p>Traveler Type: {traveler.travelerType}</p>
+                        <p>Total Price: {traveler.price.total}</p>
+                        <p>
+                          Pricing Details:
+                          {"\n"}
+                          Currency: {traveler.price.currency}
+                          {"\n"}
+                          Total: {traveler.price.total}
+                          {"\n"}
+                          Base price: {traveler.price.base}
+                        </p>
+                        <h4>Fare Details By Segment:</h4>
+                        {traveler.fareDetailsBySegment.map(
+                          (fareDetail: any, index: number) => (
+                            <div key={index} className="section">
+                              <p>Segment ID: {fareDetail.segmentId}</p>
+                              <p>Cabin: {fareDetail.cabin}</p>
+                              <p>Fare Basis: {fareDetail.fareBasis}</p>
+                              <p>Branded Fare: {fareDetail.brandedFare}</p>
+                              <p>Class: {fareDetail.class}</p>
+                              <p>
+                                Included Checked Bags Quantity:{" "}
+                                {fareDetail.includedCheckedBags.quantity}
+                              </p>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </animated.div>
+        </div>
+      )}
+    </>
+  );
+};
+
 const StartTraveling: React.FC = () => {
   const [flights, setFlights] = useState<Flight[]>([]);
   const [startLocation, setStartLocation] = useState("");
@@ -45,49 +193,7 @@ const StartTraveling: React.FC = () => {
   const [adults, setAdults] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
-
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggle = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const FlightDetails: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
-    const detailsProps = useSpring({
-      height: isExpanded ? "100%" : "0%",
-      opacity: isExpanded ? 1 : 0,
-      config: { duration: 500 },
-    });
-
-    return (
-      <animated.div className="flight-details" style={detailsProps}>
-        <h2>Flight Details</h2>
-        <p>Flight ID: {flight.id}</p>
-        <p>Source: {flight.source}</p>
-        <p>Last Ticketing Date: {flight.lastTicketingDate}</p>
-        <p>Number of Bookable Seats: {flight.numberOfBookableSeats}</p>
-        <h3>Itineraries:</h3>
-        {flight.itineraries.map((itinerary: any, index) => (
-          <div key={index}>
-            <p>Duration: {itinerary.duration}</p>
-            <h4>Segments:</h4>
-            {itinerary.segments.map((segment: any, segmentIndex: any) => (
-              <div key={segmentIndex}>
-                <p>Departure: {segment.departure.iataCode}</p>
-                <p>Arrival: {segment.arrival.iataCode}</p>
-                {/* Add more segment details */}
-              </div>
-            ))}
-          </div>
-        ))}
-        <h3>Price:</h3>
-        <p>Currency: {flight.price.currency}</p>
-        <p>Total: {flight.price.total}</p>
-        {/* Add more price details */}
-        <button onClick={onClose}>Close</button>
-      </animated.div>
-    );
-  };
+  const [showModal, setShowModal] = useState(false);
 
   const getInfo = async () => {
     const storedToken = localStorage.getItem("token");
@@ -124,12 +230,12 @@ const StartTraveling: React.FC = () => {
 
   const handleViewDetails = (flight: Flight) => {
     setSelectedFlight(flight);
-    toggle(); // Toggle the expanded state when clicking "View Details"
+    setShowModal(true);
   };
 
-  const handleCloseDetails = () => {
+  const handleCloseModal = () => {
     setSelectedFlight(null);
-    toggle(); // Toggle the expanded state when closing details
+    setShowModal(false);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -149,34 +255,9 @@ const StartTraveling: React.FC = () => {
     setDepartureDate(getCurrentDate());
   }, []);
 
-  const formContainerProps = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-    config: { duration: 500 },
-  });
-
-  const resultsContainerProps = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-    config: { duration: 500 },
-  });
-
-  const flightCardsContainerProps = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-    config: { duration: 500 },
-  });
-
-  const flightCardProps = useSpring({
-    opacity: 1,
-    transform: "translateY(0)",
-    from: { opacity: 0, transform: "translateY(-20px)" },
-    config: { duration: 500 },
-  });
-
   return (
     <div className="main-container">
-      <animated.div className="form-container" style={formContainerProps}>
+      <div className="form-container">
         <form onSubmit={handleSubmit}>
           <label>
             City or Airport IATA code from which the traveler will depart:
@@ -217,19 +298,12 @@ const StartTraveling: React.FC = () => {
           </label>
           <button onClick={getInfo}>GET</button>
         </form>
-      </animated.div>
-      <animated.div style={resultsContainerProps} className="results-container">
-        <animated.div
-          style={flightCardsContainerProps}
-          className="flight-cards-container"
-        >
-          <div className="loader-container">{loading ? <Loader /> : null}</div>
+      </div>
+      <div className="results-container">
+        <div className="loader-container">{loading ? <Loader /> : null}</div>
+        <div className="flight-cards-container">
           {flights.map((flight: Flight, index) => (
-            <animated.div
-              className="flight-card"
-              style={flightCardProps}
-              key={index}
-            >
+            <div className="flight-card" key={index}>
               <h3>Flight ID: {flight.id}</h3>
               <p>Source: {flight.source}</p>
               <p>Date Purchasing: {flight.lastTicketingDateTime}</p>
@@ -239,16 +313,13 @@ const StartTraveling: React.FC = () => {
               <button onClick={() => handleViewDetails(flight)}>
                 View Details
               </button>
-              {flight.id === selectedFlight?.id && (
-                <FlightDetails
-                  flight={selectedFlight}
-                  onClose={handleCloseDetails}
-                />
-              )}
-            </animated.div>
+            </div>
           ))}
-        </animated.div>
-      </animated.div>
+        </div>
+        {showModal && (
+          <FlightModal flight={selectedFlight!} onClose={handleCloseModal} />
+        )}
+      </div>
     </div>
   );
 };
