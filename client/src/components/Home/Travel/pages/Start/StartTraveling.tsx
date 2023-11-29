@@ -136,7 +136,9 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
                   <p>Fare Type: {flight.pricingOptions.fareType.join(", ")}</p>
                   <p>
                     Included Checked Bags Only:{" "}
-                    {flight.pricingOptions.includedCheckedBagsOnly.toString()}
+                    {flight.pricingOptions.includedCheckedBagsOnly
+                      ? flight.pricingOptions.includedCheckedBagsOnly.toString()
+                      : "N/A"}
                   </p>
                 </div>
                 <div className="section">
@@ -274,7 +276,6 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={startLocation}
               onChange={(e) => setStartLocation(e.target.value)}
-              required
             />
           </label>{" "}
           <label>
@@ -284,7 +285,6 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
-              required
             />
           </label>{" "}
           <label>
@@ -304,7 +304,6 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={adults}
               onChange={(e) => setAdults(e.target.value)}
-              required
             />
           </label>
           <button type="submit">GET</button>
