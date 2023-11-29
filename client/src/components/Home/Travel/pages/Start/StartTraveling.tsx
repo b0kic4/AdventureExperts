@@ -195,6 +195,12 @@ const StartTraveling: React.FC = () => {
   const [selectedFlight, setSelectedFlight] = useState<Flight | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const formAnimation = useSpring({
+    opacity: 1,
+    from: { opacity: 0 },
+    config: { duration: 500 },
+  });
+
   const getInfo = async () => {
     const storedToken = localStorage.getItem("token");
     try {
@@ -228,6 +234,11 @@ const StartTraveling: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (startLocation.length < 1 || endLocation.length < 1) return;
+    getInfo();
+  }, [startLocation || endLocation || adults || departureDate]);
+
   const handleViewDetails = (flight: Flight) => {
     setSelectedFlight(flight);
     setShowModal(true);
@@ -257,7 +268,7 @@ const StartTraveling: React.FC = () => {
 
   return (
     <div className="main-container">
-      <div className="form-container">
+      <animated.div style={formAnimation} className="form-container">
         <form onSubmit={handleSubmit}>
           <label>
             City or Airport IATA code from which the traveler will depart:
@@ -266,6 +277,7 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={startLocation}
               onChange={(e) => setStartLocation(e.target.value)}
+              required
             />
           </label>{" "}
           <label>
@@ -275,6 +287,7 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={endLocation}
               onChange={(e) => setEndLocation(e.target.value)}
+              required
             />
           </label>{" "}
           <label>
@@ -294,11 +307,12 @@ const StartTraveling: React.FC = () => {
               type="text"
               value={adults}
               onChange={(e) => setAdults(e.target.value)}
+              required
             />
           </label>
           <button onClick={getInfo}>GET</button>
         </form>
-      </div>
+      </animated.div>
       <div className="results-container">
         <div className="loader-container">{loading ? <Loader /> : null}</div>
         <div className="flight-cards-container">

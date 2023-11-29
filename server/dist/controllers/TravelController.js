@@ -18,13 +18,10 @@ const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
 //      Finding flights between two destinations
 const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Before calling amadeus.shopping.flightOffers.get");
-        console.log(req.query);
         const locationCode = req.query.originLocationCode;
         const destinationLocationCode = req.query.destinationLocationCode;
         const departureDate = req.query.departureDate;
         const adults = req.query.adults;
-        console.log(locationCode, destinationLocationCode, departureDate, adults);
         // Await the result of the asynchronous operation
         const response = yield amadeusApi_1.default.shopping.flightOffersSearch.get({
             originLocationCode: locationCode,
@@ -32,13 +29,37 @@ const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function
             departureDate: departureDate,
             adults: adults,
         });
-        console.log("After calling amadeus.shopping.flightOffers.get");
-        console.log(response.data);
-        // Send the response back to the client
-        res.json(response.data);
+        console.log("Response data type: ", typeof response.data);
+        // Ensure that response.data is an array
+        const flightOffers = response.data;
+        // Check if flightOffers is an array and not empty
+        if (Array.isArray(flightOffers) && flightOffers.length > 0) {
+            console.log("Flight Offers type: ", typeof flightOffers);
+            const predictedOffers = [];
+            for (const offer of flightOffers) {
+                try {
+                    const predictionResponse = yield amadeusApi_1.default.shopping.flightOffers.prediction.post({
+                        flightOfferId: offer.id,
+                    });
+                    const predictionData = JSON.stringify(predictionResponse.data);
+                    console.log("Prediction: ", predictionData);
+                    predictedOffers.push(Object.assign(Object.assign({}, offer), { prediction: predictionData }));
+                }
+                catch (predictionError) {
+                    console.error("Error in prediction:", predictionError);
+                    // Handle prediction error for a specific offer
+                    predictedOffers.push(Object.assign(Object.assign({}, offer), { prediction: "Prediction error" }));
+                }
+            }
+            console.log("Predicted Offers: ", typeof predictedOffers);
+            res.json(predictedOffers);
+        }
+        else {
+            console.log("Flight offers data is not an array or is empty");
+            res.json([]);
+        }
     }
     catch (error) {
-        // Handle errors
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import amadeus from "../api/amadeusApi";
 // INTERFACES AND TYPES
+
 type Location = string;
 type CountryCode = string;
 type AirportCode = string;
@@ -10,13 +11,11 @@ type AirportCode = string;
 
 const getFlightOffers = async (req: Request, res: Response) => {
   try {
-    console.log("Before calling amadeus.shopping.flightOffers.get");
-    console.log(req.query);
     const locationCode = req.query.originLocationCode;
     const destinationLocationCode = req.query.destinationLocationCode;
     const departureDate = req.query.departureDate;
     const adults = req.query.adults;
-    console.log(locationCode, destinationLocationCode, departureDate, adults);
+
     // Await the result of the asynchronous operation
     const response = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode: locationCode,
@@ -25,13 +24,45 @@ const getFlightOffers = async (req: Request, res: Response) => {
       adults: adults,
     });
 
-    console.log("After calling amadeus.shopping.flightOffers.get");
-    console.log(response.data);
+    console.log("Response data type: ", typeof response.data);
 
-    // Send the response back to the client
-    res.json(response.data);
+    // Ensure that response.data is an array
+    const flightOffers = response.data;
+
+    // Check if flightOffers is an array and not empty
+    if (Array.isArray(flightOffers) && flightOffers.length > 0) {
+      console.log("Flight Offers type: ", typeof flightOffers);
+
+      const predictedOffers = [];
+      for (const offer of flightOffers) {
+        try {
+          const predictionResponse =
+            await amadeus.shopping.flightOffers.prediction.post({
+              flightOfferId: offer.id,
+            });
+          const predictionData = JSON.stringify(predictionResponse.data);
+          console.log("Prediction: ", predictionData);
+          predictedOffers.push({
+            ...offer,
+            prediction: predictionData,
+          });
+        } catch (predictionError: any) {
+          console.error("Error in prediction:", predictionError);
+          // Handle prediction error for a specific offer
+          predictedOffers.push({
+            ...offer,
+            prediction: "Prediction error",
+          });
+        }
+      }
+
+      console.log("Predicted Offers: ", typeof predictedOffers);
+      res.json(predictedOffers);
+    } else {
+      console.log("Flight offers data is not an array or is empty");
+      res.json([]);
+    }
   } catch (error: any) {
-    // Handle errors
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }

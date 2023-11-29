@@ -38,8 +38,13 @@ const verifyToken = (req, res, next) => {
         req.user = decoded;
         next();
     }
-    catch (err) {
-        console.error("Token Verification Error: ", err);
+    catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            res
+                .status(401)
+                .json({ message: "Token has expired, please log in again" });
+        }
+        console.error("Token Verification Error: ", error);
         res.status(401).json({ message: "Unauthorized: Invalid token" });
     }
 };

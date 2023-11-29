@@ -88,6 +88,9 @@ input {
   align-items: center;
   align-content: center;
 }
+.map-container .leaflet-container {
+  height: 100vh;
+}
 
 ul {
   list-style: none;
