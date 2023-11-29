@@ -21,6 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "mapbox-gl": "^2.15.0",
     "react": "^18.2.0",
     "react-collapse": "^5.1.1",
@@ -39,6 +41,7 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.5",
+    "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.15",
     "@types/react-collapse": "^5.0.4",
     "@types/react-dom": "^18.2.7",

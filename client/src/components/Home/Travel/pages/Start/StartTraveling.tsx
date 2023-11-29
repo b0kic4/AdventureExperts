@@ -5,6 +5,7 @@ import Loader from "../../../../assets/Loader";
 import "./style.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose } from "@fortawesome/free-solid-svg-icons";
+import _debounce from "lodash/debounce";
 
 interface Flight {
   type: string;
@@ -201,7 +202,7 @@ const StartTraveling: React.FC = () => {
     config: { duration: 500 },
   });
 
-  const getInfo = async () => {
+  const getInfo = _debounce(async () => {
     const storedToken = localStorage.getItem("token");
     try {
       setLoading(true);
@@ -210,6 +211,7 @@ const StartTraveling: React.FC = () => {
         {
           headers: {
             Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
           },
           params: {
             originLocationCode: startLocation,
@@ -220,24 +222,13 @@ const StartTraveling: React.FC = () => {
         }
       );
       console.log(response.data);
-      setFlights(response.data);
+      setFlights(response.data.predictedOffers.data);
     } catch (error: any) {
-      console.error("Error Response:", error.response);
-
-      if (error.response) {
-        console.log("Error Response Data:", error.response.data);
-      } else {
-        console.log("Error occurred:", error);
-      }
+      console.error(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    if (startLocation.length < 1 || endLocation.length < 1) return;
-    getInfo();
-  }, [startLocation || endLocation || adults || departureDate]);
+  }, 500);
 
   const handleViewDetails = (flight: Flight) => {
     setSelectedFlight(flight);
@@ -251,7 +242,7 @@ const StartTraveling: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log("Submitted Country Codes: ", coutryCode);
+    // Perform any necessary actions on form submission
   };
 
   const getCurrentDate = (): string => {
@@ -262,9 +253,15 @@ const StartTraveling: React.FC = () => {
     return `${year}-${month}-${day}`;
   };
 
+  // UseEffect for setting default departure date
   useEffect(() => {
     setDepartureDate(getCurrentDate());
   }, []);
+
+  // UseEffect to trigger getInfo when input values change
+  useEffect(() => {
+    getInfo();
+  }, [startLocation, endLocation, adults, departureDate]);
 
   return (
     <div className="main-container">
@@ -310,26 +307,29 @@ const StartTraveling: React.FC = () => {
               required
             />
           </label>
-          <button onClick={getInfo}>GET</button>
+          <button type="submit">GET</button>
         </form>
       </animated.div>
       <div className="results-container">
         <div className="loader-container">{loading ? <Loader /> : null}</div>
-        <div className="flight-cards-container">
-          {flights.map((flight: Flight, index) => (
-            <div className="flight-card" key={index}>
-              <h3>Flight ID: {flight.id}</h3>
-              <p>Source: {flight.source}</p>
-              <p>Date Purchasing: {flight.lastTicketingDateTime}</p>
-              <p>
-                Price: {flight.price.currency} {flight.price.total}
-              </p>
-              <button onClick={() => handleViewDetails(flight)}>
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
+        {flights && (
+          <div className="flight-cards-container">
+            {flights.map((flight: Flight, index) => (
+              <div className="flight-card" key={index}>
+                <h3>Flight ID: {flight.id}</h3>
+                <p>Source: {flight.source}</p>
+                <p>Date Purchasing: {flight.lastTicketingDateTime}</p>
+                <p>
+                  Price: {flight.price.currency} {flight.price.total}
+                </p>
+                <button onClick={() => handleViewDetails(flight)}>
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {showModal && (
           <FlightModal flight={selectedFlight!} onClose={handleCloseModal} />
         )}
