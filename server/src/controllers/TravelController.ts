@@ -9,37 +9,73 @@ type AirportCode = string;
 // START TRAVELING TODAY
 //      Finding flights between two destinations
 
-const getFlightOffers = async (req: Request, res: Response) => {
+const getLocations = async (req: Request, res: Response) => {
   try {
-    const locationCode = req.query.originLocationCode as string;
-    const destinationLocationCode = req.query.destinationLocationCode as string;
-    const departureDate = req.query.departureDate as string;
-    const adults = req.query.adults as string;
+    const { keyword } = req.query;
+    console.log("Request Query: ", req.query);
+    const response = await amadeus.referenceData.locations.get({
+      keyword: keyword,
+      subType: "CITY",
+    });
 
-    amadeus.shopping.flightOffersSearch
-      .get({
-        originLocationCode: locationCode,
-        destinationLocationCode: destinationLocationCode,
-        departureDate: departureDate,
-        adults: adults,
-      })
-      .then(function (response: Response) {
-        return amadeus.shopping.flightOffers.prediction.post(
-          JSON.stringify(response)
-        );
-      })
-      .then(function (predictedResponse: Response) {
-        const predictedOffers = predictedResponse;
-        console.log("Predicted Offers: ", predictedOffers);
-        res.json({ predictedOffers });
-      })
-      .catch(function (responseError: Error) {
-        console.log(responseError);
-        res.json({ predictedOffers: [] });
-      });
-  } catch (error) {
-    console.error(error);
+    const parsedResponse = JSON.parse(response.body);
+    res.send(parsedResponse);
+  } catch (error: any) {
+    console.error("Error parsing or sending response:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+// Get all the hotel offers available
+const getHotelOffers = async (req: Request, res: Response) => {
+  const { cityCode } = req.query;
+  const response = await amadeus.shopping.hotelOffers.get({
+    cityCode,
+  });
+  try {
+    res.json(JSON.parse(response.body));
+  } catch (err) {
+    res.json(err);
+  }
+};
+// Get all the offers from single hotel
+const getOffersFromHotel = async (req: Request, res: Response) => {
+  const { hotelId } = req.query;
+  const response = await amadeus.shopping.hotelOffersByHotel.get({
+    hotelId,
+  });
+  try {
+    res.json(JSON.parse(response.body));
+  } catch (err) {
+    res.json(err);
+  }
+};
+// Check availability of offers
+const checkAvailability = async (req: Request, res: Response) => {
+  const { offerId } = req.query;
+  const response = await amadeus.shopping.hotelOffer(offerId).get();
+  try {
+    res.json(JSON.parse(response.body));
+  } catch (err) {
+    res.json(err);
+  }
+};
+// Booking the hotel
+const bookTheHotel = async (req: Request, res: Response) => {
+  const { offerId } = req.query;
+  const { body } = req;
+  const response = await amadeus.booking.hotelBookings.post(
+    JSON.stringify({
+      data: {
+        offerId,
+        guests: body.guests,
+        payments: body.payments,
+      },
+    })
+  );
+  try {
+    await res.json(JSON.parse(response.body));
+  } catch (err) {
+    await res.json(err);
   }
 };
 
@@ -81,4 +117,4 @@ const getDestinationsFromAirportCode = async (req: Request, res: Response) => {
   }
 };
 
-export { getFlightOffers, getCities, getDestinationsFromAirportCode };
+export { getLocations, getCities, getDestinationsFromAirportCode };

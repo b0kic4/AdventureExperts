@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-const Schedule = () => {
+const Schedule: React.FC = () => {
   return <div>Schedule</div>;
 };
 

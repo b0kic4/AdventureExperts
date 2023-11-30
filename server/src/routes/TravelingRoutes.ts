@@ -2,7 +2,7 @@ import express from "express";
 import {
   getCities,
   getDestinationsFromAirportCode,
-  getFlightOffers,
+  getLocations,
 } from "../controllers/TravelController";
 import { verifyToken } from "../middleware/VerifyToken";
 
@@ -14,5 +14,5 @@ travelingRouter.get(
   verifyToken,
   getDestinationsFromAirportCode
 );
-travelingRouter.get("/get-flight-offers", verifyToken, getFlightOffers);
+travelingRouter.get("/get-locations", verifyToken, getLocations);
 export { travelingRouter };

@@ -9,7 +9,7 @@ import learnMoreImage from "./assets/view-hands-holding-smartphone.jpg";
 const Travel = () => {
   const navigate = useNavigate();
   const goToStartTraveling = () => {
-    navigate("/start-traveling");
+    navigate("/search");
   };
   const goToSchedule = () => {
     navigate("/schedule-traveling");

@@ -12,42 +12,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDestinationsFromAirportCode = exports.getCities = exports.getFlightOffers = void 0;
+exports.getDestinationsFromAirportCode = exports.getCities = exports.getLocations = void 0;
 const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
 // START TRAVELING TODAY
 //      Finding flights between two destinations
-const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getLocations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const locationCode = req.query.originLocationCode;
-        const destinationLocationCode = req.query.destinationLocationCode;
-        const departureDate = req.query.departureDate;
-        const adults = req.query.adults;
-        amadeusApi_1.default.shopping.flightOffersSearch
-            .get({
-            originLocationCode: locationCode,
-            destinationLocationCode: destinationLocationCode,
-            departureDate: departureDate,
-            adults: adults,
-        })
-            .then(function (response) {
-            return amadeusApi_1.default.shopping.flightOffers.prediction.post(JSON.stringify(response));
-        })
-            .then(function (predictedResponse) {
-            const predictedOffers = predictedResponse;
-            console.log("Predicted Offers: ", predictedOffers);
-            res.json({ predictedOffers });
-        })
-            .catch(function (responseError) {
-            console.log(responseError);
-            res.json({ predictedOffers: [] });
+        const { keyword } = req.query;
+        console.log("Request Query: ", req.query);
+        const response = yield amadeusApi_1.default.referenceData.locations.get({
+            keyword: keyword,
+            subType: "CITY",
         });
+        const parsedResponse = JSON.parse(response.body);
+        res.send(parsedResponse);
     }
     catch (error) {
-        console.error(error);
+        console.error("Error parsing or sending response:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
-exports.getFlightOffers = getFlightOffers;
+exports.getLocations = getLocations;
+// Get all the hotel offers available
+const getHotelOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { cityCode } = req.query;
+    const response = yield amadeusApi_1.default.shopping.hotelOffers.get({
+        cityCode,
+    });
+    try {
+        res.json(JSON.parse(response.body));
+    }
+    catch (err) {
+        res.json(err);
+    }
+});
+// Get all the offers from single hotel
+const getOffersFromHotel = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { hotelId } = req.query;
+    const response = yield amadeusApi_1.default.shopping.hotelOffersByHotel.get({
+        hotelId,
+    });
+    try {
+        res.json(JSON.parse(response.body));
+    }
+    catch (err) {
+        res.json(err);
+    }
+});
+// Check availability of offers
+const checkAvailability = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { offerId } = req.query;
+    const response = yield amadeusApi_1.default.shopping.hotelOffer(offerId).get();
+    try {
+        res.json(JSON.parse(response.body));
+    }
+    catch (err) {
+        res.json(err);
+    }
+});
+// Booking the hotel
+const bookTheHotel = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { offerId } = req.query;
+    const { body } = req;
+    const response = yield amadeusApi_1.default.booking.hotelBookings.post(JSON.stringify({
+        data: {
+            offerId,
+            guests: body.guests,
+            payments: body.payments,
+        },
+    }));
+    try {
+        yield res.json(JSON.parse(response.body));
+    }
+    catch (err) {
+        yield res.json(err);
+    }
+});
 // ABOUT
 const getCities = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
