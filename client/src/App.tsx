@@ -9,7 +9,7 @@ import About from "./components/Home/Travel/pages/About/About";
 
 function App() {
   const [cityCode, setCityCode] = useState<string | null>(null); // Set the initial type of cityCode
-
+  console.log("City Code in App: ", cityCode);
   return (
     <Routes>
       <Route path="/" element={<Home />} />

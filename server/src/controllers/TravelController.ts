@@ -12,7 +12,6 @@ type AirportCode = string;
 const getLocations = async (req: Request, res: Response) => {
   try {
     const { keyword } = req.query;
-    console.log("Request Query: ", req.query);
     const response = await amadeus.referenceData.locations.get({
       keyword: keyword,
       subType: "CITY",

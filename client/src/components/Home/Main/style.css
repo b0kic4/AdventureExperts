@@ -126,6 +126,14 @@ video {
   width: 100%;
   box-sizing: border-box;
 }
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+  height: 100px; /* Set your desired height */
+}
 
 .registration-form button {
   background-color: #5500fe; /* Button background color */

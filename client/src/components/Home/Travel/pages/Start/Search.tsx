@@ -7,7 +7,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { makeStyles } from "@material-ui/core/styles"; // Import makeStyles
+import { makeStyles } from "@material-ui/core/styles";
 
 interface City {
   city: string;
@@ -21,18 +21,20 @@ interface SearchProps {
   cityCode: string | null;
 }
 
-const Search: React.FC<SearchProps> = ({ setCityCode }) => {
+const Search: React.FC<SearchProps> = ({ cityCode, setCityCode }) => {
   const [options, setOptions] = useState<City[]>([
     { city: "", country: "", code: "", state: "" },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const classes = useStyles(); // Add this line to define classes
+  const classes = useStyles({ hasSuggestions: Boolean(options.length) });
 
   const handleInputChange = (newInputValue: string) => {
     setInputValue(newInputValue);
   };
-
+  useEffect(() => {
+    console.log("City Code: ", cityCode);
+  }, [cityCode]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,9 +67,9 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
             state: location.address.stateCode,
           })
         );
-
         setOptions(cities);
-      } catch (error) {
+        console.log("Options: ", options);
+      } catch (error: any) {
         console.error(error);
       } finally {
         setLoading(false);
@@ -80,22 +82,28 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
   }, [inputValue]);
 
   return (
-    <div>
+    <div className={classes.container}>
       <Autocomplete
         autoComplete
         autoHighlight
+        className={classes.textInput}
         freeSolo
         disableClearable
         blurOnSelect
         clearOnBlur
         options={options}
         loading={loading}
-        onChange={(event, newValue) => {
-          setCityCode((newValue as City)?.code || "");
+        onChange={(_event, newValue) => {
+          console.log("Before setCityCode in Search: ", cityCode);
+          const newCityCode = (newValue as City)?.code || "";
+          console.log("new CityCode: ", newCityCode);
+          setCityCode(newCityCode);
+          console.log("City Code after setCityCode: ", cityCode);
         }}
         onInputChange={(_, newInputValue) => handleInputChange(newInputValue)}
         getOptionLabel={(option: City) => option.city || ""}
         renderOption={(option: City) => (
+          // Displaying container on searching
           <Grid container alignItems="center">
             <Grid item>
               <FontAwesomeIcon icon={faSearch} />
@@ -112,6 +120,7 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
         renderInput={(props) => (
           <TextField
             {...props}
+            className={classes.textInput}
             placeholder="Search"
             label="City"
             variant="outlined"
@@ -131,10 +140,38 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
 };
 
 const useStyles = makeStyles(() => ({
-  // Define your styles here
   cityName: {
     color: "black",
     fontWeight: "bold",
+  },
+  container: {
+    display: "flex",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  textInput: {
+    width: "40%",
+    "& .MuiAutocomplete-inputRoot": {
+      color: "white",
+      // color: "#FF5733", // Set your desired input text color
+      backgroundColor: "rgb(0, 0, 0, 0.5)", // Set the background color
+    },
+    "& .MuiInputLabel-root": {
+      color: "white", // Set your desired label text color
+      fontWeight: "bold",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733", // Set the border color to match the text color
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733", // Set the hover border color
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733", // Set the focused border color
+    },
+  },
+  girdContainer: {
+    border: "1px solid black",
   },
 }));
 

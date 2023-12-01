@@ -19,7 +19,6 @@ const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
 const getLocations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { keyword } = req.query;
-        console.log("Request Query: ", req.query);
         const response = yield amadeusApi_1.default.referenceData.locations.get({
             keyword: keyword,
             subType: "CITY",

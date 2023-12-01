@@ -16,6 +16,7 @@ import { RootState } from "../../../app/rootReducer";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
+import Search from "../Travel/pages/Start/Search";
 
 interface DecodedToken {
   userId: number;
@@ -191,12 +192,18 @@ const Main: React.FC = () => {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                background: `rgba(0, 0, 0, ${0.2 + percentage * 0.4})`, // Adjust the opacity by changing the last value
+                background: `rgba(0, 0, 0, ${0.1 + percentage * 0.2})`, // Adjust the opacity by changing the last value
               }}
             />
           )}
         >
           <h1>TRAVELING</h1>
+          <Search
+            setCityCode={function (_code: string): void {
+              throw new Error("Function not implemented.");
+            }}
+            cityCode={null}
+          />
           <Travel />
         </Parallax>
       </div>
