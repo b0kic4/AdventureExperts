@@ -50,8 +50,11 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
             },
           }
         );
+        // Based on response data for location is in response.data.data
         const locations = response.data.data; // Extract the locations array
         const cities = locations.map(
+          // Mapping location with address from response that has properties of:
+          // cityName, countryName, stateCode, regionCode, countryCode
           (location: {
             address: { cityName: any; countryName: any; stateCode: any };
             iataCode: any;
@@ -62,6 +65,7 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
             state: location.address.stateCode,
           })
         );
+
         setOptions(cities);
       } catch (error) {
         console.error(error);
@@ -126,10 +130,11 @@ const Search: React.FC<SearchProps> = ({ setCityCode }) => {
   );
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   // Define your styles here
   cityName: {
-    // Define your styles for cityName here
+    color: "black",
+    fontWeight: "bold",
   },
 }));
 
