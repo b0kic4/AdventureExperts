@@ -5,14 +5,6 @@ import Travel from "./components/Home/Travel/Travel";
 import Search from "./components/Home/Travel/pages/Start/Search";
 import Schedule from "./components/Home/Travel/pages/Schedule/Schedule";
 import About from "./components/Home/Travel/pages/About/About";
-
-interface City {
-  city: string;
-  country: string;
-  state?: string;
-  code: string;
-}
-
 function App() {
   // Define a function to handle city code changes
 

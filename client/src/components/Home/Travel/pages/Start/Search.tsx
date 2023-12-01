@@ -12,7 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { useDispatch } from "react-redux";
+import { setCitySliceCode } from "../../../../../app/locationSlice";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { RootState } from "../../../../../app/rootReducer";
 interface City {
   city: string;
   country: string;
@@ -20,12 +23,12 @@ interface City {
   code: string;
 }
 
-// interface SearchProps {
-//   onCityCodeChange: (newCityCode: City | string | null) => void;
-// }
-// <SearchProps>
 const Search: React.FC = () => {
-  const [cityCode, setCityCode] = useState<City | string | null>(null);
+  const dispatch = useDispatch();
+  const [cityCode, setCityCode] = useState<string | null>(null);
+
+  const thisCityCode = useSelector((state: RootState) => state.location);
+
   const [options, setOptions] = useState<City[]>([
     { city: "", country: "", code: "", state: "" },
   ]);
@@ -34,7 +37,11 @@ const Search: React.FC = () => {
   const classes = useStyles({ hasSuggestions: Boolean(options.length) });
   useEffect(() => {
     console.log("City code updated: ", cityCode);
+    dispatch(setCitySliceCode(cityCode));
   }, [cityCode]);
+  useEffect(() => {
+    console.log("City after changes:", thisCityCode);
+  }, [thisCityCode]);
   useEffect(() => {
     const fetchData = async () => {
       try {
