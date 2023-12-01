@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Autocomplete } from "@material-ui/lab";
+import {
+  Autocomplete,
+  AutocompleteChangeDetails,
+  AutocompleteChangeReason,
+} from "@material-ui/lab";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -16,24 +20,20 @@ interface City {
   code: string;
 }
 
-interface SearchProps {
-  setCityCode: (code: string) => void;
-  cityCode: string | null;
-}
-
-const Search: React.FC<SearchProps> = ({ cityCode, setCityCode }) => {
+// interface SearchProps {
+//   onCityCodeChange: (newCityCode: City | string | null) => void;
+// }
+// <SearchProps>
+const Search: React.FC = () => {
+  const [cityCode, setCityCode] = useState<City | string | null>(null);
   const [options, setOptions] = useState<City[]>([
     { city: "", country: "", code: "", state: "" },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const classes = useStyles({ hasSuggestions: Boolean(options.length) });
-
-  const handleInputChange = (newInputValue: string) => {
-    setInputValue(newInputValue);
-  };
   useEffect(() => {
-    console.log("City Code: ", cityCode);
+    console.log("City code updated: ", cityCode);
   }, [cityCode]);
   useEffect(() => {
     const fetchData = async () => {
@@ -52,23 +52,23 @@ const Search: React.FC<SearchProps> = ({ cityCode, setCityCode }) => {
             },
           }
         );
-        // Based on response data for location is in response.data.data
-        const locations = response.data.data; // Extract the locations array
-        const cities = locations.map(
-          // Mapping location with address from response that has properties of:
-          // cityName, countryName, stateCode, regionCode, countryCode
-          (location: {
-            address: { cityName: any; countryName: any; stateCode: any };
-            iataCode: any;
-          }) => ({
-            city: location.address.cityName,
-            country: location.address.countryName,
-            code: location.iataCode,
-            state: location.address.stateCode,
-          })
+        const locations = response.data.data;
+        const cities = locations.map((location: any) => ({
+          city: location.address.cityName,
+          country: location.address.countryName,
+          code: location.iataCode,
+          state: location.address.stateCode,
+        }));
+
+        // Use the callback form to ensure you get the updated state
+        setOptions((_prevOptions) => cities);
+        console.log("Options: ", cities);
+
+        // Use the callback form to ensure you get the updated state
+        setCityCode((prevCityCode) =>
+          inputValue.trim() !== "" ? prevCityCode : null
         );
-        setOptions(cities);
-        console.log("Options: ", options);
+        console.log("City code: ", cityCode);
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -80,6 +80,19 @@ const Search: React.FC<SearchProps> = ({ cityCode, setCityCode }) => {
       fetchData();
     }
   }, [inputValue]);
+
+  const handleAutocompleteChange = (
+    _event: React.ChangeEvent<{}>,
+    value: NonNullable<string | City>,
+    _reason: AutocompleteChangeReason,
+    _details?: AutocompleteChangeDetails<City> | undefined
+  ) => {
+    if (value) {
+      const newCityCode = typeof value === "string" ? value : value.code || "";
+      setCityCode(newCityCode);
+      console.log("New city code: ", newCityCode);
+    }
+  };
 
   return (
     <div className={classes.container}>
@@ -93,17 +106,10 @@ const Search: React.FC<SearchProps> = ({ cityCode, setCityCode }) => {
         clearOnBlur
         options={options}
         loading={loading}
-        onChange={(_event, newValue) => {
-          console.log("Before setCityCode in Search: ", cityCode);
-          const newCityCode = (newValue as City)?.code || "";
-          console.log("new CityCode: ", newCityCode);
-          setCityCode(newCityCode);
-          console.log("City Code after setCityCode: ", cityCode);
-        }}
-        onInputChange={(_, newInputValue) => handleInputChange(newInputValue)}
+        onChange={handleAutocompleteChange}
+        onInputChange={(_, newInputValue) => setInputValue(newInputValue)}
         getOptionLabel={(option: City) => option.city || ""}
         renderOption={(option: City) => (
-          // Displaying container on searching
           <Grid container alignItems="center">
             <Grid item>
               <FontAwesomeIcon icon={faSearch} />

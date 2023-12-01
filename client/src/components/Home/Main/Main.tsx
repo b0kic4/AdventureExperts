@@ -26,6 +26,12 @@ interface DecodedToken {
   iat: number;
   exp: number;
 }
+interface City {
+  city: string;
+  country: string;
+  state?: string;
+  code: string;
+}
 
 const Main: React.FC = () => {
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
@@ -198,12 +204,7 @@ const Main: React.FC = () => {
           )}
         >
           <h1>TRAVELING</h1>
-          <Search
-            setCityCode={function (_code: string): void {
-              throw new Error("Function not implemented.");
-            }}
-            cityCode={null}
-          />
+          <Search />
           <Travel />
         </Parallax>
       </div>
