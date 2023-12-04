@@ -12,7 +12,7 @@ const ButtonComponent: React.FC<ButtonComponentProps> = ({ onClick }) => {
       variant="contained"
       color="primary"
       onClick={onClick}
-      className={classes.button}
+      className={`${classes.button}`}
     >
       Show Flights
     </Button>

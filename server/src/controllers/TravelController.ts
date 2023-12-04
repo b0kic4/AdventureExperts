@@ -69,7 +69,6 @@ const getFlightOffers = async (req: Request, res: Response) => {
       adults,
     });
 
-    console.log(response.data);
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (error: any) {

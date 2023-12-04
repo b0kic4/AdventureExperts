@@ -10,17 +10,106 @@ import { setOriginCitySliceCode } from "../../../../../../app/locationSlice";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { RootState } from "../../../../../../app/rootReducer";
 import { format } from "date-fns";
-
+import Button from "@material-ui/core/Button";
 import DateInputComponent from "./components/DateInputComponent";
 import ButtonComponent from "./components/ButtonComponent";
 import AutocompleteComponent from "./components/AutocompleteComponent";
 import NumberInputComponent from "./components/NumberInputComponent";
+import ProgressBar from "../../../../../assets/Loader";
+import Loader from "../../../../../assets/Loader";
 
+// INTERFACES
 interface City {
   city: string;
   country: string;
   state?: string;
   code: string;
+}
+// RESPONSE INTERFACES
+interface Aircraft {
+  code: string;
+}
+
+interface Location {
+  iataCode: string;
+  terminal?: string;
+  at: string;
+}
+
+interface Segment {
+  departure: Location;
+  arrival: Location;
+  carrierCode: string;
+  number: string;
+  aircraft: Aircraft;
+  operating: {
+    carrierCode: string;
+  };
+  duration: string;
+  id: string;
+  numberOfStops: number;
+  blacklistedInEU: boolean;
+}
+
+interface Itinerary {
+  duration: string;
+  segments: Segment[];
+}
+
+interface Fee {
+  amount: string;
+  type: string;
+}
+
+interface Price {
+  currency: string;
+  total: string;
+  base: string;
+  fees: Fee[];
+  grandTotal: string;
+}
+
+interface FareDetailsBySegment {
+  segmentId: string;
+  cabin: string;
+  fareBasis: string;
+  brandedFare: string;
+  class: string;
+  includedCheckedBags: {
+    quantity: number;
+  };
+}
+
+interface TravelerPricing {
+  travelerId: string;
+  fareOption: string;
+  travelerType: string;
+  price: {
+    currency: string;
+    total: string;
+    base: string;
+  };
+  fareDetailsBySegment: FareDetailsBySegment[];
+}
+
+interface FlightOffer {
+  type: string;
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  lastTicketingDate: string;
+  lastTicketingDateTime: string;
+  numberOfBookableSeats: number;
+  itineraries: Itinerary[];
+  price: Price;
+  pricingOptions: {
+    fareType: string[];
+    includedCheckedBagsOnly: boolean;
+  };
+  validatingAirlineCodes: string[];
+  travelerPricings: TravelerPricing[];
 }
 
 const Search: React.FC = () => {
@@ -28,6 +117,7 @@ const Search: React.FC = () => {
   const [originLocationCode, setOriginLocationCode] = useState<string | null>(
     null
   );
+
   const [adults, setAdults] = useState<number>(1);
   const [destinationLocationCode, setDestinationLocationCode] = useState<
     string | null
@@ -52,6 +142,8 @@ const Search: React.FC = () => {
   }, [thisCityCode]);
 
   // Making call to find flights offers
+  const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
+
   const fetchFlightsOffers = async () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -75,9 +167,13 @@ const Search: React.FC = () => {
           },
         }
       );
+      setFlightOffers(response.data);
+      console.log("Flight offers console log: ", flightOffers);
       console.log("Response data flight offers: ", response.data);
     } catch (error: any) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,7 +181,6 @@ const Search: React.FC = () => {
     const fetchOriginLocationData = async () => {
       try {
         const storedToken = localStorage.getItem("token");
-        setLoading(true);
         const response = await axios.get(
           "http://localhost:8081/get-origin-locations",
           {
@@ -116,8 +211,6 @@ const Search: React.FC = () => {
         console.log("Origin City code: ", originLocationCode);
       } catch (error: any) {
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -130,7 +223,7 @@ const Search: React.FC = () => {
     const fetchDestinationLocationData = async () => {
       try {
         const storedToken = localStorage.getItem("token");
-        setLoading(true);
+
         const response = await axios.get(
           "http://localhost:8081/get-destinations-locations",
           {
@@ -161,8 +254,6 @@ const Search: React.FC = () => {
         );
       } catch (error: any) {
         console.error(error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -222,108 +313,128 @@ const Search: React.FC = () => {
   const handleDateChange = (date: Date | null): void => {
     setDepartureDate(date);
   };
+  const handleClearFilter = () => {
+    setOriginLocationCode(null);
+    setDestinationLocationCode(null);
+    setDepartureDate(null);
+    setAdults(1);
+    setFlightOffers([]);
+  };
 
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
-        {/* Location From Autocomplete */}
-        <Grid item xs={12} sm={6}>
-          <AutocompleteComponent
-            options={options}
-            loading={loading}
-            value={originInputValue}
-            onChange={(value) =>
-              handleOriginLocationCodeAutocompleteChange(
-                value as NonNullable<string | City>
-              )
-            }
-            onInputChange={(newInputValue) =>
-              setOriginInputValue(newInputValue)
-            }
-            getOptionLabel={(option: City) => option.city || ""}
-            renderOption={(option: City) => (
-              <Grid container alignItems="center">
-                <Grid item>
-                  <FontAwesomeIcon icon={faSearch} />
-                </Grid>
-                <Grid item xs>
-                  <span className={classes.cityName}>{option.city}</span>
-                  <Typography variant="body2" color="textSecondary">
-                    {option.country}
-                    {option.state ? `, ${option.state}` : ""}
-                  </Typography>
-                </Grid>
+        {loading ? (
+          <Loader />
+        ) : !flightOffers || Object.keys(flightOffers).length === 0 ? (
+          <>
+            <Grid item xs={12} sm={6}>
+              <AutocompleteComponent
+                options={options}
+                loading={loading}
+                value={originInputValue}
+                onChange={(value) =>
+                  handleOriginLocationCodeAutocompleteChange(
+                    value as NonNullable<string | City>
+                  )
+                }
+                onInputChange={(newInputValue) =>
+                  setOriginInputValue(newInputValue)
+                }
+                getOptionLabel={(option: City) => option.city || ""}
+                renderOption={(option: City) => (
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FontAwesomeIcon icon={faSearch} />
+                    </Grid>
+                    <Grid item xs>
+                      <span className={classes.cityName}>{option.city}</span>
+                      <Typography variant="body2" color="textSecondary">
+                        {option.country}
+                        {option.state ? `, ${option.state}` : ""}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                label="From (City)"
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <AutocompleteComponent
+                options={options}
+                loading={loading}
+                value={destinationInputValue}
+                onChange={(value) =>
+                  handleDestinationLocationCodeAutocompleteChange(
+                    value as NonNullable<string | City>
+                  )
+                }
+                onInputChange={(newInputValue) =>
+                  setDestinationInputValue(newInputValue)
+                }
+                getOptionLabel={(option: City) => option.city || ""}
+                renderOption={(option: City) => (
+                  <Grid container alignItems="center">
+                    <Grid item>
+                      <FontAwesomeIcon icon={faSearch} />
+                    </Grid>
+                    <Grid item xs>
+                      <span className={classes.cityName}>{option.city}</span>
+                      <Typography variant="body2" color="textSecondary">
+                        {option.country}
+                        {option.state ? `, ${option.state}` : ""}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                label="To (City)"
+              />
+            </Grid>
+
+            <Grid
+              container
+              alignItems="center"
+              className={classes.datePickerContainer}
+            >
+              <Grid item xs>
+                <NumberInputComponent
+                  value={adults}
+                  onChange={setAdults}
+                  label="Adults"
+                />
               </Grid>
-            )}
-            label="From (City)"
-          />
-        </Grid>
+            </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <AutocompleteComponent
-            options={options}
-            loading={loading}
-            value={destinationInputValue}
-            onChange={(value) =>
-              handleDestinationLocationCodeAutocompleteChange(
-                value as NonNullable<string | City>
-              )
-            }
-            onInputChange={(newInputValue) =>
-              setDestinationInputValue(newInputValue)
-            }
-            getOptionLabel={(option: City) => option.city || ""}
-            renderOption={(option: City) => (
-              <Grid container alignItems="center">
-                <Grid item>
-                  <FontAwesomeIcon icon={faSearch} />
-                </Grid>
-                <Grid item xs>
-                  <span className={classes.cityName}>{option.city}</span>
-                  <Typography variant="body2" color="textSecondary">
-                    {option.country}
-                    {option.state ? `, ${option.state}` : ""}
-                  </Typography>
-                </Grid>
+            <Grid container alignItems="center">
+              <Grid item xs className={classes.datePickerContainer}>
+                <DateInputComponent
+                  value={departureDate}
+                  onChange={(date) => handleDateChange(date)}
+                  label="Departure Date"
+                />
               </Grid>
-            )}
-            label="To (City)"
-          />
-        </Grid>
-
-        <Grid
-          container
-          alignItems="center"
-          className={classes.datePickerContainer}
-        >
-          <Grid item xs>
-            <NumberInputComponent
-              value={adults}
-              onChange={setAdults}
-              label="Adults"
-            />
+            </Grid>
+            {departureDate && originLocationCode && destinationLocationCode ? (
+              <Grid item xs>
+                <ButtonComponent onClick={fetchFlightsOffers} />
+              </Grid>
+            ) : null}
+          </>
+        ) : (
+          <Grid container>
+            <Grid item xs>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.clearButton}
+                onClick={() => handleClearFilter()}
+              >
+                Clear Filters
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-
-        <Grid
-          container
-          alignItems="center"
-          className={classes.datePickerContainer}
-        >
-          <Grid item xs className={classes.datePickerContainer}>
-            <DateInputComponent
-              value={departureDate}
-              onChange={(date) => handleDateChange(date)}
-              label="Departure Date"
-            />
-          </Grid>
-        </Grid>
-
-        {departureDate && originLocationCode && destinationLocationCode ? (
-          <Grid item xs>
-            <ButtonComponent onClick={fetchFlightsOffers} />
-          </Grid>
-        ) : null}
+        )}
       </Grid>
     </div>
   );

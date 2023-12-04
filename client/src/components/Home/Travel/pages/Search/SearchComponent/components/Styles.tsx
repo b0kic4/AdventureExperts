@@ -17,9 +17,20 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#50C878",
     color: "white",
     fontWeight: "bold",
+    width: "50%",
     fontSize: "20px",
     "&:hover": {
       backgroundColor: "#40875E", // Change the color on hover if needed
+    },
+  },
+  clearButton: {
+    backgroundColor: "#D0342C",
+    color: "white",
+    fontWeight: "bold",
+    width: "100%",
+    fontSize: "20px",
+    "&:hover": {
+      backgroundColor: "#D0342C", // Change the color on hover if needed
     },
   },
 

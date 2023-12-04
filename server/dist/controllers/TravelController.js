@@ -77,7 +77,6 @@ const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function
             departureDate,
             adults,
         });
-        console.log(response.data);
         const parsedResponse = JSON.parse(response.body);
         res.send(parsedResponse);
     }
