@@ -26,6 +26,7 @@
     "@mui/material": "^5.14.19",
     "@mui/styled-engine-sc": "^6.0.0-alpha.7",
     "@mui/styles": "^5.14.19",
+    "@mui/x-data-grid": "^6.18.3",
     "@mui/x-date-pickers": "^6.18.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/react-leaflet": "^3.0.0",

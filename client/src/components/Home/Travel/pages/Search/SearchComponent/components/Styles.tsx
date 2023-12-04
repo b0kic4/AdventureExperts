@@ -33,6 +33,16 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#D0342C", // Change the color on hover if needed
     },
   },
+  scrollContainer: {
+    color: "white",
+    maxHeight: "60vh",
+    width: "100%",
+    overflowY: "auto",
+  },
+  flightOfferItem: {
+    /* Add your styling for individual flight offer items */
+    marginBottom: "10px",
+  },
 
   adultsInput: {
     backgroundColor: "rgb(0, 0, 0, 0.5)",

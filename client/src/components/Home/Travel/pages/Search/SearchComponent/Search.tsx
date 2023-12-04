@@ -15,9 +15,9 @@ import DateInputComponent from "./components/DateInputComponent";
 import ButtonComponent from "./components/ButtonComponent";
 import AutocompleteComponent from "./components/AutocompleteComponent";
 import NumberInputComponent from "./components/NumberInputComponent";
-import ProgressBar from "../../../../../assets/Loader";
 import Loader from "../../../../../assets/Loader";
-
+import FlightModal from "../FlightModal/FlightModal";
+import FlightOffer from "./components/interfaces/FlightTypes";
 // INTERFACES
 interface City {
   city: string;
@@ -26,91 +26,6 @@ interface City {
   code: string;
 }
 // RESPONSE INTERFACES
-interface Aircraft {
-  code: string;
-}
-
-interface Location {
-  iataCode: string;
-  terminal?: string;
-  at: string;
-}
-
-interface Segment {
-  departure: Location;
-  arrival: Location;
-  carrierCode: string;
-  number: string;
-  aircraft: Aircraft;
-  operating: {
-    carrierCode: string;
-  };
-  duration: string;
-  id: string;
-  numberOfStops: number;
-  blacklistedInEU: boolean;
-}
-
-interface Itinerary {
-  duration: string;
-  segments: Segment[];
-}
-
-interface Fee {
-  amount: string;
-  type: string;
-}
-
-interface Price {
-  currency: string;
-  total: string;
-  base: string;
-  fees: Fee[];
-  grandTotal: string;
-}
-
-interface FareDetailsBySegment {
-  segmentId: string;
-  cabin: string;
-  fareBasis: string;
-  brandedFare: string;
-  class: string;
-  includedCheckedBags: {
-    quantity: number;
-  };
-}
-
-interface TravelerPricing {
-  travelerId: string;
-  fareOption: string;
-  travelerType: string;
-  price: {
-    currency: string;
-    total: string;
-    base: string;
-  };
-  fareDetailsBySegment: FareDetailsBySegment[];
-}
-
-interface FlightOffer {
-  type: string;
-  id: string;
-  source: string;
-  instantTicketingRequired: boolean;
-  nonHomogeneous: boolean;
-  oneWay: boolean;
-  lastTicketingDate: string;
-  lastTicketingDateTime: string;
-  numberOfBookableSeats: number;
-  itineraries: Itinerary[];
-  price: Price;
-  pricingOptions: {
-    fareType: string[];
-    includedCheckedBagsOnly: boolean;
-  };
-  validatingAirlineCodes: string[];
-  travelerPricings: TravelerPricing[];
-}
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
@@ -143,6 +58,9 @@ const Search: React.FC = () => {
 
   // Making call to find flights offers
   const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
+  useEffect(() => {
+    console.log("Flight offers console log: ", flightOffers);
+  }, [flightOffers]);
 
   const fetchFlightsOffers = async () => {
     try {
@@ -167,8 +85,8 @@ const Search: React.FC = () => {
           },
         }
       );
-      setFlightOffers(response.data);
-      console.log("Flight offers console log: ", flightOffers);
+      const offers = response.data.data;
+      setFlightOffers(offers);
       console.log("Response data flight offers: ", response.data);
     } catch (error: any) {
       console.error(error);
@@ -320,13 +238,23 @@ const Search: React.FC = () => {
     setAdults(1);
     setFlightOffers([]);
   };
+  const [selectedFlight, setSelectedFlight] = useState<FlightOffer | null>(
+    null
+  );
+  const handleFlightClick = (flight: FlightOffer) => {
+    setSelectedFlight(flight);
+  };
+
+  const handleCloseFlightDetails = () => {
+    setSelectedFlight(null);
+  };
 
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
         {loading ? (
           <Loader />
-        ) : !flightOffers || Object.keys(flightOffers).length === 0 ? (
+        ) : flightOffers.length === 0 ? (
           <>
             <Grid item xs={12} sm={6}>
               <AutocompleteComponent
@@ -422,20 +350,58 @@ const Search: React.FC = () => {
             ) : null}
           </>
         ) : (
-          <Grid container>
-            <Grid item xs>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.clearButton}
-                onClick={() => handleClearFilter()}
-              >
-                Clear Filters
-              </Button>
+          <>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <div className={classes.scrollContainer}>
+                  {flightOffers.map((offer) => (
+                    <Grid
+                      item
+                      key={offer.id}
+                      className={classes.flightOfferItem}
+                      onClick={() => handleFlightClick(offer)}
+                    >
+                      <Typography variant="h6">
+                        Flight Offer {offer.id}
+                      </Typography>
+                      <Typography variant="body2">
+                        Departure Date: {offer.lastTicketingDate}
+                      </Typography>
+                      <Typography variant="body2">
+                        Duration: {offer.itineraries[0].duration}
+                      </Typography>
+                      <Typography variant="body2">
+                        Price: {offer.price.currency} {offer.price.total}
+                      </Typography>
+                      <Typography variant="body2">
+                        Number of Bookable Seats: {offer.numberOfBookableSeats}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </div>
+              </Grid>
             </Grid>
-          </Grid>
+            <Grid item xs>
+              {flightOffers.length > 0 && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.clearButton}
+                  onClick={() => handleClearFilter()}
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </Grid>
+          </>
         )}
       </Grid>
+      {selectedFlight && (
+        <FlightModal
+          flight={selectedFlight}
+          onClose={handleCloseFlightDetails}
+        />
+      )}
     </div>
   );
 };
