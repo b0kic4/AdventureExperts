@@ -8,10 +8,9 @@ import amadeus from "../api/amadeusApi";
 
 // START TRAVELING TODAY
 //      Finding flights between two destinations
-
+// console.log("Amadeus shopping object: ", amadeus.shopping);
 const getOriginLocations = async (req: Request, res: Response) => {
   try {
-    console.log("Origin Req Query: ", req.query);
     const { keyword } = req.query;
     const response = await amadeus.referenceData.locations.get({
       keyword: keyword,
@@ -27,7 +26,6 @@ const getOriginLocations = async (req: Request, res: Response) => {
 };
 const getDestinationLocations = async (req: Request, res: Response) => {
   try {
-    console.log("Destination Req Query: ", req.query);
     const { keyword } = req.query;
     const response = await amadeus.referenceData.locations.get({
       keyword: keyword,
@@ -60,22 +58,26 @@ const getFlightOffers = async (req: Request, res: Response) => {
     const {
       originLocationCode,
       destinationLocationCode,
-      depratureCode,
+      departureDate,
       adults,
     } = req.query;
-    const response = await amadeus.shopping.flightOffers.get({
+
+    const response = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode,
       destinationLocationCode,
-      depratureCode,
+      departureDate,
       adults,
     });
+
     console.log(response.data);
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (error: any) {
     console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 // Get all the offers from single hotel
 // const getOffersFromHotel = async (req: Request, res: Response) => {
 //   const { hotelId } = req.query;

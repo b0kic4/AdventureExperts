@@ -20,9 +20,9 @@ const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
 // type AirportCode = string;
 // START TRAVELING TODAY
 //      Finding flights between two destinations
+// console.log("Amadeus shopping object: ", amadeus.shopping);
 const getOriginLocations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Origin Req Query: ", req.query);
         const { keyword } = req.query;
         const response = yield amadeusApi_1.default.referenceData.locations.get({
             keyword: keyword,
@@ -39,7 +39,6 @@ const getOriginLocations = (req, res) => __awaiter(void 0, void 0, void 0, funct
 exports.getOriginLocations = getOriginLocations;
 const getDestinationLocations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Destination Req Query: ", req.query);
         const { keyword } = req.query;
         const response = yield amadeusApi_1.default.referenceData.locations.get({
             keyword: keyword,
@@ -71,11 +70,11 @@ const getHotelOffers = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { originLocationCode, destinationLocationCode, depratureCode, adults, } = req.query;
-        const response = yield amadeusApi_1.default.shopping.flightOffers.get({
+        const { originLocationCode, destinationLocationCode, departureDate, adults, } = req.query;
+        const response = yield amadeusApi_1.default.shopping.flightOffersSearch.get({
             originLocationCode,
             destinationLocationCode,
-            depratureCode,
+            departureDate,
             adults,
         });
         console.log(response.data);
@@ -84,6 +83,7 @@ const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     catch (error) {
         console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 exports.getFlightOffers = getFlightOffers;

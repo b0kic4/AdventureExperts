@@ -17,6 +17,7 @@ import { setOriginCitySliceCode } from "../../../../../app/locationSlice";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { RootState } from "../../../../../app/rootReducer";
 import { format } from "date-fns";
+import { Button } from "@material-ui/core";
 
 interface City {
   city: string;
@@ -53,6 +54,45 @@ const Search: React.FC = () => {
     console.log("City after changes:", thisCityCode);
   }, [thisCityCode]);
 
+  // Making call to find flights offers
+  const fetchFlightsOffers = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+      setLoading(true);
+      const formattedDate = departureDate
+        ? format(departureDate, "yyyy-MM-dd")
+        : null;
+
+      const response = await axios.get(
+        "http://localhost:8081/get-flight-offers",
+        {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+          params: {
+            originLocationCode: originLocationCode,
+            destinationLocationCode: destinationLocationCode,
+            departureDate: formattedDate,
+            adults: adults,
+          },
+        }
+      );
+      console.log("Response data flight offers: ", response.data);
+    } catch (error: any) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    if (
+      originLocationCode &&
+      destinationLocationCode &&
+      departureDate &&
+      adults
+    )
+      fetchFlightsOffers();
+  }, []);
+
   useEffect(() => {
     const fetchOriginLocationData = async () => {
       try {
@@ -70,7 +110,6 @@ const Search: React.FC = () => {
             },
           }
         );
-        console.log("Destinations Response data: ", response.data);
         // console.log("Origin Location Value: ", originInputValue);
         const locations = response.data.data;
         const cities = locations.map((location: any) => ({
@@ -88,7 +127,7 @@ const Search: React.FC = () => {
         setOriginLocationCode((prevCityCode) =>
           originInputValue.trim() !== "" ? prevCityCode : null
         );
-        console.log("City code: ", originLocationCode);
+        console.log("Origin City code: ", originLocationCode);
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -118,7 +157,7 @@ const Search: React.FC = () => {
             },
           }
         );
-        console.log("Destinations Response data: ", response.data);
+
         const locations = response.data.data;
         const cities = locations.map((location: any) => ({
           city: location.address.cityName,
@@ -126,16 +165,14 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
-        console.log("Destination Location Value: ", destinationInputValue);
+
         // Use the callback form to ensure you get the updated state
         setOptions((_prevOptions) => cities);
-        console.log("Destination Options: ", cities);
-
+        console.log("Destination city code: ", destinationLocationCode);
         // Use the callback form to ensure you get the updated state
         setDestinationLocationCode((prevCityCode) =>
           destinationInputValue.trim() !== "" ? prevCityCode : null
         );
-        console.log("City code: ", destinationLocationCode);
       } catch (error: any) {
         console.error(error);
       } finally {
@@ -355,6 +392,7 @@ const Search: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
+      <button onClick={fetchFlightsOffers}>GET</button>
     </div>
   );
 };
