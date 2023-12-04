@@ -30,7 +30,7 @@ const Search: React.FC = () => {
   const [originLocationCode, setOriginLocationCode] = useState<string | null>(
     null
   );
-
+  const [adults, setAdults] = useState<number>(1); // Step 1
   const [destinationLocationCode, setDestinationLocationCode] = useState<
     string | null
   >(null);
@@ -203,9 +203,6 @@ const Search: React.FC = () => {
     }
   };
 
-  const currentDate = new Date(); // Get the current date
-  const currentDateString = currentDate.toISOString().split("T")[0]; // Convert to string
-
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const parsedDate = new Date(inputValue);
@@ -266,7 +263,6 @@ const Search: React.FC = () => {
           />
         </Grid>
 
-        {/* Location To Autocomplete */}
         <Grid item xs={12} sm={6}>
           <Autocomplete
             autoComplete
@@ -316,18 +312,21 @@ const Search: React.FC = () => {
             )}
           />
         </Grid>
-        <Grid container alignItems="center">
+        <Grid
+          container
+          alignItems="center"
+          className={classes.datePickerContainer}
+        >
           <Grid item xs>
             <TextField
               type="text"
               label="Adults"
               variant="outlined"
-              value={destinationLocationCode}
+              value={adults} // Step 2: Use the state variable as the value
               onChange={(e) => {
-                // Validate input to allow only numeric values
                 const input = e.target.value;
                 if (/^\d*$/.test(input)) {
-                  setDestinationLocationCode(input);
+                  setAdults(Number(input)); // Update the state when input changes
                 }
               }}
               inputProps={{ min: 1 }}
@@ -373,6 +372,7 @@ const useStyles = makeStyles(() => ({
   },
   adultsInput: {
     backgroundColor: "rgb(0, 0, 0, 0.5)",
+    textAlign: "center",
     "& input": {
       color: "white",
     },
@@ -391,31 +391,6 @@ const useStyles = makeStyles(() => ({
     width: "100%",
   },
   numberInput: {
-    width: "95%",
-    height: "50%",
-    "& .MuiAutocomplete-inputRoot": {
-      color: "white",
-      backgroundColor: "rgb(0, 0, 0, 0.5)",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-  },
-  datePickerContainer: {
-    marginTop: "10px",
-  },
-  datePicker: {
     width: "50%",
     height: "50%",
     "& .MuiAutocomplete-inputRoot": {
@@ -439,6 +414,31 @@ const useStyles = makeStyles(() => ({
   },
   textInput: {
     width: "100%",
+    height: "50%",
+    "& .MuiAutocomplete-inputRoot": {
+      color: "white",
+      backgroundColor: "rgb(0, 0, 0, 0.5)",
+    },
+    "& .MuiInputLabel-root": {
+      color: "white",
+      fontWeight: "bold",
+      fontSize: "20px",
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733 !important",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733 !important",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#FF5733 !important",
+    },
+  },
+  datePickerContainer: {
+    marginTop: "20px",
+  },
+  datePicker: {
+    width: "50%",
     height: "50%",
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
