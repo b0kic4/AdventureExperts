@@ -214,7 +214,7 @@ video {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  overflow: none;
 }
 
 .get-started-container h1 {

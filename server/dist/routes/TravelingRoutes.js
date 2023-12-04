@@ -9,6 +9,12 @@ const TravelController_1 = require("../controllers/TravelController");
 const VerifyToken_1 = require("../middleware/VerifyToken");
 const travelingRouter = express_1.default.Router();
 exports.travelingRouter = travelingRouter;
-travelingRouter.get("/get-cities", VerifyToken_1.verifyToken, TravelController_1.getCities);
-travelingRouter.get("/get-direct-Destinations", VerifyToken_1.verifyToken, TravelController_1.getDestinationsFromAirportCode);
-travelingRouter.get("/get-locations", VerifyToken_1.verifyToken, TravelController_1.getLocations);
+// travelingRouter.get("/get-cities", verifyToken, getCities);
+// travelingRouter.get(
+//   "/get-direct-Destinations",
+//   verifyToken,
+//   getDestinationsFromAirportCode
+// );
+travelingRouter.get("/get-origin-locations", VerifyToken_1.verifyToken, TravelController_1.getOriginLocations);
+travelingRouter.get("/get-destinations-locations", VerifyToken_1.verifyToken, TravelController_1.getDestinationLocations);
+travelingRouter.get("/get-flight-offers", VerifyToken_1.verifyToken, TravelController_1.getFlightOffers);

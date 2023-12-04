@@ -5,17 +5,21 @@ import Travel from "./components/Home/Travel/Travel";
 import Search from "./components/Home/Travel/pages/Start/Search";
 import Schedule from "./components/Home/Travel/pages/Schedule/Schedule";
 import About from "./components/Home/Travel/pages/About/About";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 function App() {
   // Define a function to handle city code changes
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/travel" element={<Travel />} />
-      <Route path="/search" element={<Search />} />
-      <Route path="/schedule-traveling" element={<Schedule />} />
-      <Route path="/about-traveling" element={<About />} />
-    </Routes>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/travel" element={<Travel />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/schedule-traveling" element={<Schedule />} />
+        <Route path="/about-traveling" element={<About />} />
+      </Routes>
+    </LocalizationProvider>
   );
 }
 

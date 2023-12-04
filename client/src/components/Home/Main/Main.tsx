@@ -16,7 +16,6 @@ import { RootState } from "../../../app/rootReducer";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
-import Search from "../Travel/pages/Start/Search";
 
 interface DecodedToken {
   userId: number;
@@ -25,12 +24,6 @@ interface DecodedToken {
   email: string;
   iat: number;
   exp: number;
-}
-interface City {
-  city: string;
-  country: string;
-  state?: string;
-  code: string;
 }
 
 const Main: React.FC = () => {
@@ -198,13 +191,13 @@ const Main: React.FC = () => {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                background: `rgba(0, 0, 0, ${0.1 + percentage * 0.2})`, // Adjust the opacity by changing the last value
+                background: `rgba(0, 0, 0, ${0.1 + percentage * 0.7})`,
               }}
             />
           )}
         >
           <h1>TRAVELING</h1>
-          <Search />
+
           <Travel />
         </Parallax>
       </div>

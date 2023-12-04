@@ -18,12 +18,12 @@ const destinationSlice = createSlice({
   name: "destination",
   initialState,
   reducers: {
-    setCitySliceCode: (state, action: PayloadAction<string | null>) => {
+    setOriginCitySliceCode: (state, action: PayloadAction<string | null>) => {
       state.location.cityCode = action.payload;
     },
   },
 });
 
-export const { setCitySliceCode } = destinationSlice.actions;
+export const { setOriginCitySliceCode } = destinationSlice.actions;
 
 export default destinationSlice.reducer;
