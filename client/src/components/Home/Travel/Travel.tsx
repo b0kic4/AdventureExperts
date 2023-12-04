@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.css";
-import Search from "./pages/Start/Search";
+import Search from "./pages/Search/SearchComponent/Search";
 
 const Travel: React.FC = () => {
   return (

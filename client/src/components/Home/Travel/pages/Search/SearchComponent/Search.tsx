@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Autocomplete,
-  AutocompleteChangeDetails,
-  AutocompleteChangeReason,
-} from "@material-ui/lab";
-import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { makeStyles } from "@material-ui/core/styles";
+import useStyles from "./components/Styles";
 import { useDispatch } from "react-redux";
-import { setOriginCitySliceCode } from "../../../../../app/locationSlice";
+import { setOriginCitySliceCode } from "../../../../../../app/locationSlice";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { RootState } from "../../../../../app/rootReducer";
+import { RootState } from "../../../../../../app/rootReducer";
 import { format } from "date-fns";
-import { Button } from "@material-ui/core";
+
+import DateInputComponent from "./components/DateInputComponent";
+import ButtonComponent from "./components/ButtonComponent";
+import AutocompleteComponent from "./components/AutocompleteComponent";
+import NumberInputComponent from "./components/NumberInputComponent";
 
 interface City {
   city: string;
@@ -31,11 +28,12 @@ const Search: React.FC = () => {
   const [originLocationCode, setOriginLocationCode] = useState<string | null>(
     null
   );
-  const [adults, setAdults] = useState<number>(1); // Step 1
+  const [adults, setAdults] = useState<number>(1);
   const [destinationLocationCode, setDestinationLocationCode] = useState<
     string | null
   >(null);
-  const [hotelsOption, setHotelsOption] = useState(false);
+  const classes = useStyles();
+  // const [hotelsOption, setHotelsOption] = useState(false);
   const thisCityCode = useSelector((state: RootState) => state.location);
 
   const [departureDate, setDepartureDate] = useState<Date | null>(null);
@@ -45,7 +43,6 @@ const Search: React.FC = () => {
   const [originInputValue, setOriginInputValue] = useState("");
   const [destinationInputValue, setDestinationInputValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const classes = useStyles({ hasSuggestions: Boolean(options.length) });
   useEffect(() => {
     console.log("City code updated: ", originLocationCode);
     dispatch(setOriginCitySliceCode(originLocationCode));
@@ -83,15 +80,6 @@ const Search: React.FC = () => {
       console.error(error);
     }
   };
-  useEffect(() => {
-    if (
-      originLocationCode &&
-      destinationLocationCode &&
-      departureDate &&
-      adults
-    )
-      fetchFlightsOffers();
-  }, []);
 
   useEffect(() => {
     const fetchOriginLocationData = async () => {
@@ -119,11 +107,9 @@ const Search: React.FC = () => {
           state: location.address.stateCode,
         }));
 
-        // Use the callback form to ensure you get the updated state
         setOptions((_prevOptions) => cities);
         console.log("Origin Options: ", cities);
 
-        // Use the callback form to ensure you get the updated state
         setOriginLocationCode((prevCityCode) =>
           originInputValue.trim() !== "" ? prevCityCode : null
         );
@@ -213,11 +199,8 @@ const Search: React.FC = () => {
   // }, [originLocationCode]);
 
   const handleOriginLocationCodeAutocompleteChange = (
-    _event: React.ChangeEvent<{}>,
-    value: NonNullable<string | City>,
-    _reason: AutocompleteChangeReason,
-    _details?: AutocompleteChangeDetails<City> | undefined
-  ) => {
+    value: NonNullable<string | City>
+  ): void => {
     if (value) {
       const newCityCode = typeof value === "string" ? value : value.code || "";
       setOriginLocationCode(newCityCode);
@@ -225,13 +208,9 @@ const Search: React.FC = () => {
       console.log("Origin Location Code: ", originLocationCode);
     }
   };
-
   const handleDestinationLocationCodeAutocompleteChange = (
-    _event: React.ChangeEvent<{}>,
-    value: NonNullable<string | City>,
-    _reason: AutocompleteChangeReason,
-    _details?: AutocompleteChangeDetails<City> | undefined
-  ) => {
+    value: NonNullable<string | City>
+  ): void => {
     if (value) {
       const newCityCode = typeof value === "string" ? value : value.code || "";
       setDestinationLocationCode(newCityCode);
@@ -240,10 +219,8 @@ const Search: React.FC = () => {
     }
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    const parsedDate = new Date(inputValue);
-    setDepartureDate(parsedDate);
+  const handleDateChange = (date: Date | null): void => {
+    setDepartureDate(date);
   };
 
   return (
@@ -251,18 +228,16 @@ const Search: React.FC = () => {
       <Grid container spacing={2}>
         {/* Location From Autocomplete */}
         <Grid item xs={12} sm={6}>
-          <Autocomplete
-            autoComplete
-            autoHighlight
-            className={classes.textInput}
-            freeSolo
-            disableClearable
-            blurOnSelect
-            clearOnBlur
+          <AutocompleteComponent
             options={options}
             loading={loading}
-            onChange={handleOriginLocationCodeAutocompleteChange}
-            onInputChange={(_, newInputValue) =>
+            value={originInputValue}
+            onChange={(value) =>
+              handleOriginLocationCodeAutocompleteChange(
+                value as NonNullable<string | City>
+              )
+            }
+            onInputChange={(newInputValue) =>
               setOriginInputValue(newInputValue)
             }
             getOptionLabel={(option: City) => option.city || ""}
@@ -280,39 +255,21 @@ const Search: React.FC = () => {
                 </Grid>
               </Grid>
             )}
-            renderInput={(props) => (
-              <TextField
-                {...props}
-                className={classes.textInput}
-                placeholder="Search"
-                label="From (City)"
-                variant="outlined"
-                InputProps={{
-                  ...props.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <FontAwesomeIcon icon={faSearch} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
+            label="From (City)"
           />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <Autocomplete
-            autoComplete
-            autoHighlight
-            className={classes.textInput}
-            freeSolo
-            disableClearable
-            blurOnSelect
-            clearOnBlur
+          <AutocompleteComponent
             options={options}
             loading={loading}
-            onChange={handleDestinationLocationCodeAutocompleteChange}
-            onInputChange={(_, newInputValue) =>
+            value={destinationInputValue}
+            onChange={(value) =>
+              handleDestinationLocationCodeAutocompleteChange(
+                value as NonNullable<string | City>
+              )
+            }
+            onInputChange={(newInputValue) =>
               setDestinationInputValue(newInputValue)
             }
             getOptionLabel={(option: City) => option.city || ""}
@@ -330,173 +287,46 @@ const Search: React.FC = () => {
                 </Grid>
               </Grid>
             )}
-            renderInput={(props) => (
-              <TextField
-                {...props}
-                className={classes.textInput}
-                placeholder="Search"
-                label="To (City)"
-                variant="outlined"
-                InputProps={{
-                  ...props.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <FontAwesomeIcon icon={faSearch} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            )}
+            label="To (City)"
           />
         </Grid>
+
         <Grid
           container
           alignItems="center"
           className={classes.datePickerContainer}
         >
           <Grid item xs>
-            <TextField
-              type="text"
+            <NumberInputComponent
+              value={adults}
+              onChange={setAdults}
               label="Adults"
-              variant="outlined"
-              value={adults} // Step 2: Use the state variable as the value
-              onChange={(e) => {
-                const input = e.target.value;
-                if (/^\d*$/.test(input)) {
-                  setAdults(Number(input)); // Update the state when input changes
-                }
-              }}
-              inputProps={{ min: 1 }}
-              className={`${classes.numberInput} ${classes.adultsInput}`}
             />
           </Grid>
         </Grid>
+
         <Grid
-          className={classes.datePickerContainer}
           container
           alignItems="center"
+          className={classes.datePickerContainer}
         >
-          <Grid item xs>
-            <TextField
-              type="date"
+          <Grid item xs className={classes.datePickerContainer}>
+            <DateInputComponent
+              value={departureDate}
+              onChange={(date) => handleDateChange(date)}
               label="Departure Date"
-              variant="outlined"
-              value={departureDate ? format(departureDate, "yyyy-MM-dd") : ""}
-              onChange={handleDateChange}
-              className={`${classes.datePicker} ${classes.adultsInput}`}
-              inputProps={{ min: 1 }}
-              InputLabelProps={{
-                shrink: true,
-              }}
             />
           </Grid>
         </Grid>
+
+        {departureDate && originLocationCode && destinationLocationCode ? (
+          <Grid item xs>
+            <ButtonComponent onClick={fetchFlightsOffers} />
+          </Grid>
+        ) : null}
       </Grid>
-      <button onClick={fetchFlightsOffers}>GET</button>
     </div>
   );
 };
-const useStyles = makeStyles(() => ({
-  cityName: {
-    color: "black",
-    fontWeight: "bold",
-  },
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    overflow: "hidden",
-  },
-  adultsInput: {
-    backgroundColor: "rgb(0, 0, 0, 0.5)",
-    textAlign: "center",
-    "& input": {
-      color: "white",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white !important",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white !important",
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "white !important",
-    },
-    width: "100%",
-  },
-  numberInput: {
-    width: "50%",
-    height: "50%",
-    "& .MuiAutocomplete-inputRoot": {
-      color: "white",
-      backgroundColor: "rgb(0, 0, 0, 0.5)",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-  },
-  textInput: {
-    width: "100%",
-    height: "50%",
-    "& .MuiAutocomplete-inputRoot": {
-      color: "white",
-      backgroundColor: "rgb(0, 0, 0, 0.5)",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-  },
-  datePickerContainer: {
-    marginTop: "20px",
-  },
-  datePicker: {
-    width: "50%",
-    height: "50%",
-    "& .MuiAutocomplete-inputRoot": {
-      color: "white",
-      backgroundColor: "rgb(0, 0, 0, 0.5)",
-    },
-    "& .MuiInputLabel-root": {
-      color: "white",
-      fontWeight: "bold",
-      fontSize: "20px",
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "#FF5733 !important",
-    },
-  },
-}));
 
 export default Search;

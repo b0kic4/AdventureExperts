@@ -7,7 +7,7 @@ body {
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: auto;
+  overflow: none;
 }
 
 video {
@@ -132,6 +132,7 @@ video {
   align-items: center;
   margin-top: 20px;
   width: 100%;
+  overflow: none;
   height: 100px; /* Set your desired height */
 }
 
@@ -220,7 +221,7 @@ video {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: none;
 }
 
 .overlay h1 {
@@ -243,6 +244,7 @@ video {
   width: 100%;
   height: 100vh;
   border-radius: 7px;
+  overflow: hidden;
 }
 
 .parallax-content {
