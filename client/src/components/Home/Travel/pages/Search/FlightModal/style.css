@@ -7,7 +7,7 @@
   transform: translate(-50%, -50%);
   padding: 20px;
   border-radius: 8px;
-  background: #fff;
+  background: #929292;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 9998;
 }
@@ -150,7 +150,7 @@
 }
 
 #close {
-  background-color: #3498db;
+  background-color: #c30707;
   color: #fff;
   border: none;
   padding: 12px;
@@ -160,7 +160,7 @@
 }
 
 #close:hover {
-  background-color: #2980b9;
+  background-color: #670202;
 }
 #close.transparent {
   background-color: transparent;

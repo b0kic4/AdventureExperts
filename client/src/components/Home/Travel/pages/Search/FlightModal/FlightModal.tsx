@@ -2,6 +2,7 @@ import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
 import "./style.css";
+import { useState } from "react";
 interface Flight {
   type: string;
   id: string;
@@ -36,11 +37,16 @@ interface FlightDetailsProps {
 }
 
 const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
+  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+
   const detailsProps = useSpring({
     opacity: 1,
     from: { opacity: 0 },
     config: { duration: 500 },
   });
+  const handleToggleAdditionalInfo = () => {
+    setShowAdditionalInfo(!showAdditionalInfo);
+  };
   return (
     <>
       {flight && (
@@ -58,6 +64,10 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
             </div>
             <div className="modal-content">
               <div className="flight-section">
+                <h3>Additional Information</h3>
+                <button onClick={handleToggleAdditionalInfo}>
+                  {showAdditionalInfo ? "Hide" : "Show"} Additional Info
+                </button>
                 <div className="section">
                   <h3>Depart</h3>
                   <p>Flight ID: {flight.id}</p>
@@ -86,14 +96,18 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
                               {segment.arrival.terminal} Time:{" "}
                               {segment.arrival.at}
                             </p>
-                            <p>Carrier Code: {segment.carrierCode}</p>
-                            <p>Number: {segment.number}</p>
-                            <p>Aircraft Code: {segment.aircraft.code}</p>
+                            <p>Carrier Code: {segment.carrierCode || "N/A"}</p>
+                            <p>Number: {segment.number || "N/A"}</p>
+                            <p>
+                              Aircraft Code: {segment.aircraft.code || "N/A"}
+                            </p>
+
                             <p>
                               Operating Carrier Code:{" "}
-                              {segment.operating.carrierCode}
+                              {segment.operating.carrierCode || "N/A"}
                             </p>
-                            <p>Duration Time: {segment.duration}</p>
+
+                            <p>Duration Time: {segment.duration || "N/A"}</p>
                           </div>
                         )
                       )}

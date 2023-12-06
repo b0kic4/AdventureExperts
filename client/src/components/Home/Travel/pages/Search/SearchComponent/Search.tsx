@@ -55,15 +55,15 @@ const Search: React.FC = () => {
     dispatch(setOriginCitySliceCode(originLocationCode));
     dispatch(setDestinationSliceCode(destinationLocationCode));
   }, [originLocationCode, destinationLocationCode]);
-  useEffect(() => {
-    console.log("city code slicers after changes:", thisCityCode);
-  }, [thisCityCode]);
+  // useEffect(() => {
+  //   console.log("city code slicers after changes:", thisCityCode);
+  // }, [thisCityCode]);
 
   // Making call to find flights offers
   const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
-  useEffect(() => {
-    console.log("Flight offers console log: ", flightOffers);
-  }, [flightOffers]);
+  // useEffect(() => {
+  //   console.log("Flight offers console log: ", flightOffers);
+  // }, [flightOffers]);
 
   const fetchFlightsOffers = async () => {
     try {
@@ -89,8 +89,10 @@ const Search: React.FC = () => {
         }
       );
       const offers = response.data.data;
+      console.log("Full response data: ", response.data);
       setFlightOffers(offers);
-      console.log("Response data flight offers: ", response.data);
+      // console.log("Offers: ", offers);
+      // console.log("Response data flight offers: ", response.data);
     } catch (error: any) {
       console.error(error);
     } finally {
@@ -124,12 +126,12 @@ const Search: React.FC = () => {
         }));
 
         setOptions((_prevOptions) => cities);
-        console.log("Origin Options: ", cities);
+        // console.log("Origin Options: ", cities);
 
         setOriginLocationCode((prevCityCode) =>
           originInputValue.trim() !== "" ? prevCityCode : null
         );
-        console.log("Origin City code: ", originLocationCode);
+        // console.log("Origin City code: ", originLocationCode);
       } catch (error: any) {
         console.error(error);
       }
@@ -168,7 +170,7 @@ const Search: React.FC = () => {
 
         // Use the callback form to ensure you get the updated state
         setOptions((_prevOptions) => cities);
-        console.log("Destination city code: ", destinationLocationCode);
+        // console.log("Destination city code: ", destinationLocationCode);
         // Use the callback form to ensure you get the updated state
         setDestinationLocationCode((prevCityCode) =>
           destinationInputValue.trim() !== "" ? prevCityCode : null
@@ -216,8 +218,8 @@ const Search: React.FC = () => {
     if (value) {
       const newCityCode = typeof value === "string" ? value : value.code || "";
       setOriginLocationCode(newCityCode);
-      console.log("New city code: ", newCityCode);
-      console.log("Origin Location Code: ", originLocationCode);
+      // console.log("New city code: ", newCityCode);
+      // console.log("Origin Location Code: ", originLocationCode);
     }
   };
   const handleDestinationLocationCodeAutocompleteChange = (
@@ -226,8 +228,8 @@ const Search: React.FC = () => {
     if (value) {
       const newCityCode = typeof value === "string" ? value : value.code || "";
       setDestinationLocationCode(newCityCode);
-      console.log("New city code: ", newCityCode);
-      console.log("Destination Location Code: ", destinationLocationCode);
+      // console.log("New city code: ", newCityCode);
+      // console.log("Destination Location Code: ", destinationLocationCode);
     }
   };
 
