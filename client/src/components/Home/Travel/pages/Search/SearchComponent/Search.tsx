@@ -6,7 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./components/Styles";
 import { useDispatch } from "react-redux";
-import { setOriginCitySliceCode } from "../../../../../../app/locationSlice";
+import {
+  setOriginCitySliceCode,
+  setDestinationSliceCode,
+} from "../../../../../../app/locationSlice";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { RootState } from "../../../../../../app/rootReducer";
 import { format } from "date-fns";
@@ -49,11 +52,11 @@ const Search: React.FC = () => {
   const [destinationInputValue, setDestinationInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log("City code updated: ", originLocationCode);
     dispatch(setOriginCitySliceCode(originLocationCode));
-  }, [originLocationCode]);
+    dispatch(setDestinationSliceCode(destinationLocationCode));
+  }, [originLocationCode, destinationLocationCode]);
   useEffect(() => {
-    console.log("City after changes:", thisCityCode);
+    console.log("city code slicers after changes:", thisCityCode);
   }, [thisCityCode]);
 
   // Making call to find flights offers
@@ -353,13 +356,16 @@ const Search: React.FC = () => {
           <>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <div className={classes.scrollContainer}>
+                <Grid container spacing={2} className={classes.scrollContainer}>
                   {flightOffers.map((offer) => (
                     <Grid
                       item
-                      key={offer.id}
-                      className={classes.flightOfferItem}
+                      xs={12}
+                      sm={6}
+                      md={4}
                       onClick={() => handleFlightClick(offer)}
+                      key={offer.id}
+                      className={classes.flightOfferCard}
                     >
                       <Typography variant="h6">
                         Flight Offer {offer.id}
@@ -378,20 +384,20 @@ const Search: React.FC = () => {
                       </Typography>
                     </Grid>
                   ))}
-                </div>
+                </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs>
-              {flightOffers.length > 0 && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.clearButton}
-                  onClick={() => handleClearFilter()}
-                >
-                  Clear Filters
-                </Button>
-              )}
+              <Grid item xs>
+                {flightOffers.length > 0 && (
+                  <Button
+                    className={classes.clearButton}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleClearFilter()}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+              </Grid>
             </Grid>
           </>
         )}

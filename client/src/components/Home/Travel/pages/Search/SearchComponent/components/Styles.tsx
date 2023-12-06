@@ -1,6 +1,13 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
+  // MODAL
+  modalHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "10px",
+  },
   cityName: {
     color: "black",
     fontWeight: "bold",
@@ -25,9 +32,10 @@ const useStyles = makeStyles(() => ({
   },
   clearButton: {
     backgroundColor: "#D0342C",
+    marginTop: "20px",
     color: "white",
     fontWeight: "bold",
-    width: "100%",
+    width: "20%",
     fontSize: "20px",
     "&:hover": {
       backgroundColor: "#D0342C", // Change the color on hover if needed
@@ -40,8 +48,32 @@ const useStyles = makeStyles(() => ({
     overflowY: "auto",
   },
   flightOfferItem: {
-    /* Add your styling for individual flight offer items */
     marginBottom: "10px",
+    width: "100%", // Take up the full width of the container
+    boxSizing: "border-box",
+    cursor: "pointer",
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    transition: "background-color 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#f5f5f5",
+      color: "black",
+    },
+  }, // Inside the useStyles
+  flightOfferCard: {
+    marginBottom: "20px",
+    cursor: "pointer",
+    boxSizing: "border-box",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    transition: "box-shadow 0.3s ease",
+    "&:hover": {
+      backgroundColor: "#f5f5f5",
+      color: "black",
+      boxShadow: "0px 0px 10px 0px #000000",
+    },
   },
 
   adultsInput: {

@@ -1,7 +1,7 @@
 import { faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
-
+import "./style.css";
 interface Flight {
   type: string;
   id: string;
@@ -45,7 +45,11 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
     <>
       {flight && (
         <div className="overlay">
-          <animated.div className="flight-modal" style={detailsProps}>
+          <animated.div
+            className="flight-modal"
+            onClick={(e) => e.stopPropagation()}
+            style={detailsProps}
+          >
             <button id="close" onClick={onClose}>
               <FontAwesomeIcon size={"2xl"} icon={faClose} />
             </button>

@@ -4,13 +4,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface DestinationState {
   location: {
-    cityCode: string | null;
+    originCityCode: string | null;
+    destinationCityCode: string | null;
   };
 }
 
 const initialState: DestinationState = {
   location: {
-    cityCode: null, // Assign an initial value for cityCode
+    originCityCode: null,
+    destinationCityCode: null,
   },
 };
 
@@ -19,11 +21,15 @@ const destinationSlice = createSlice({
   initialState,
   reducers: {
     setOriginCitySliceCode: (state, action: PayloadAction<string | null>) => {
-      state.location.cityCode = action.payload;
+      state.location.originCityCode = action.payload;
+    },
+    setDestinationSliceCode: (state, action: PayloadAction<string | null>) => {
+      state.location.destinationCityCode = action.payload;
     },
   },
 });
 
-export const { setOriginCitySliceCode } = destinationSlice.actions;
+export const { setOriginCitySliceCode, setDestinationSliceCode } =
+  destinationSlice.actions;
 
 export default destinationSlice.reducer;
