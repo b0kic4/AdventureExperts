@@ -89,7 +89,6 @@ const Search: React.FC = () => {
         }
       );
       const offers = response.data.data;
-      console.log("Full response data: ", response.data);
       setFlightOffers(offers);
       const responseData = response.data;
       const dict = responseData.dictionaries;

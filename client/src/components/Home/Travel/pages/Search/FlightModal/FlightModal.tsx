@@ -1,9 +1,4 @@
-import {
-  faCartPlus,
-  faCartShopping,
-  faClose,
-  faShop,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
 import "./style.css";
@@ -20,15 +15,11 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
   dictionaries,
   onClose,
 }) => {
-  console.log("Flight: ", flight);
   const detailsProps = useSpring({
     opacity: 1,
     from: { opacity: 0 },
     config: { duration: 500 },
   });
-
-  console.log("Dictionaries: ", dictionaries);
-  console.log("Aircraft: ", flight.aircraftCode);
 
   return (
     <>
