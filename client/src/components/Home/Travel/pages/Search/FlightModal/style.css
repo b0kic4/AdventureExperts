@@ -71,6 +71,13 @@
 
 /* Flight Card Styles */
 
+.header-container {
+  margin: 20px 5px;
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
 .flight-card {
   max-width: 300px;
   width: 100%;
@@ -150,8 +157,7 @@
 }
 
 #close {
-  background-color: #c30707;
-  color: #fff;
+  color: black;
   border: none;
   padding: 12px;
   border-radius: 8px;
@@ -160,7 +166,21 @@
 }
 
 #close:hover {
-  background-color: #670202;
+  background-color: #9d0000;
+  color: whitesmoke;
+}
+#shop {
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: small;
+}
+#shop:hover {
+  background-color: green;
+  color: greenyellow;
 }
 #close.transparent {
   background-color: transparent;

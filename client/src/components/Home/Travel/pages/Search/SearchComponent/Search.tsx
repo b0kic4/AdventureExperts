@@ -35,14 +35,14 @@ const Search: React.FC = () => {
   const [originLocationCode, setOriginLocationCode] = useState<string | null>(
     null
   );
-
+  const [dictionaries, setDictionaries] = useState<[]>([]);
   const [adults, setAdults] = useState<number>(1);
   const [destinationLocationCode, setDestinationLocationCode] = useState<
     string | null
   >(null);
   const classes = useStyles();
   // const [hotelsOption, setHotelsOption] = useState(false);
-  const thisCityCode = useSelector((state: RootState) => state.location);
+  // const thisCityCode = useSelector((state: RootState) => state.location);
 
   const [departureDate, setDepartureDate] = useState<Date | null>(null);
   const [options, setOptions] = useState<City[]>([
@@ -91,6 +91,10 @@ const Search: React.FC = () => {
       const offers = response.data.data;
       console.log("Full response data: ", response.data);
       setFlightOffers(offers);
+      const responseData = response.data;
+      const dict = responseData.dictionaries;
+      setDictionaries(dict);
+
       // console.log("Offers: ", offers);
       // console.log("Response data flight offers: ", response.data);
     } catch (error: any) {
@@ -407,6 +411,7 @@ const Search: React.FC = () => {
       {selectedFlight && (
         <FlightModal
           flight={selectedFlight}
+          dictionaries={dictionaries}
           onClose={handleCloseFlightDetails}
         />
       )}

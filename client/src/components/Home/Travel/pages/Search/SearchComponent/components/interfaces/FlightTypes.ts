@@ -63,8 +63,39 @@ interface TravelerPricing {
   };
   fareDetailsBySegment: FareDetailsBySegment[];
 }
-
+interface Flight {
+  carrierCode: any;
+  aircraftCode: any;
+  dictionaries: any;
+  type: string;
+  id: string;
+  source: string;
+  instantTicketingRequired: boolean;
+  nonHomogeneous: boolean;
+  oneWay: boolean;
+  lastTicketingDate: string;
+  lastTicketingDateTime: string;
+  numberOfBookableSeats: number;
+  itineraries: Array<Record<string, unknown>>;
+  price: {
+    currency: string;
+    total: string;
+    base: string;
+    fees: Array<unknown>;
+    grandTotal: string;
+    additionalServices: Array<unknown>;
+  };
+  pricingOptions: {
+    fareType: Array<unknown>;
+    includedCheckedBagsOnly: boolean;
+  };
+  validatingAirlineCodes: Array<string>;
+  travelerPricings: Array<Record<string, unknown>>;
+}
 interface FlightOffer {
+  carrierCode: any;
+  aircraftCode: any;
+  dictionaries: any;
   type: string;
   id: string;
   source: string;

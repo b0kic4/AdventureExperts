@@ -1,52 +1,35 @@
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCartPlus,
+  faCartShopping,
+  faClose,
+  faShop,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
 import "./style.css";
-import { useState } from "react";
-interface Flight {
-  type: string;
-  id: string;
-  source: string;
-  instantTicketingRequired: boolean;
-  nonHomogeneous: boolean;
-  oneWay: boolean;
-  lastTicketingDate: string;
-  lastTicketingDateTime: string;
-  numberOfBookableSeats: number;
-  itineraries: Array<Record<string, unknown>>;
-  price: {
-    currency: string;
-    total: string;
-    base: string;
-    fees: Array<unknown>;
-    grandTotal: string;
-    additionalServices: Array<unknown>;
-  };
-  pricingOptions: {
-    fareType: Array<unknown>;
-    includedCheckedBagsOnly: boolean;
-  };
 
-  validatingAirlineCodes: Array<string>;
-  travelerPricings: Array<Record<string, unknown>>;
-}
-
+import Flight from "../SearchComponent/components/interfaces/FlightTypes";
 interface FlightDetailsProps {
   flight: Flight;
+  dictionaries: any;
   onClose: () => void;
 }
 
-const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
-  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-
+const FlightModal: React.FC<FlightDetailsProps> = ({
+  flight,
+  dictionaries,
+  onClose,
+}) => {
+  console.log("Flight: ", flight);
   const detailsProps = useSpring({
     opacity: 1,
     from: { opacity: 0 },
     config: { duration: 500 },
   });
-  const handleToggleAdditionalInfo = () => {
-    setShowAdditionalInfo(!showAdditionalInfo);
-  };
+
+  console.log("Dictionaries: ", dictionaries);
+  console.log("Aircraft: ", flight.aircraftCode);
+
   return (
     <>
       {flight && (
@@ -56,18 +39,19 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
             onClick={(e) => e.stopPropagation()}
             style={detailsProps}
           >
-            <button id="close" onClick={onClose}>
-              <FontAwesomeIcon size={"2xl"} icon={faClose} />
-            </button>
+            <div className="header-container">
+              <button id="shop">
+                <FontAwesomeIcon size={"2xl"} icon={faCartShopping} /> - Cart
+              </button>{" "}
+              <button id="close" onClick={onClose}>
+                Close - <FontAwesomeIcon size={"2xl"} icon={faClose} />
+              </button>
+            </div>
             <div className="modal-header">
               <h2>Flight Details</h2>
             </div>
             <div className="modal-content">
               <div className="flight-section">
-                <h3>Additional Information</h3>
-                <button onClick={handleToggleAdditionalInfo}>
-                  {showAdditionalInfo ? "Hide" : "Show"} Additional Info
-                </button>
                 <div className="section">
                   <h3>Depart</h3>
                   <p>Flight ID: {flight.id}</p>
@@ -99,7 +83,12 @@ const FlightModal: React.FC<FlightDetailsProps> = ({ flight, onClose }) => {
                             <p>Carrier Code: {segment.carrierCode || "N/A"}</p>
                             <p>Number: {segment.number || "N/A"}</p>
                             <p>
-                              Aircraft Code: {segment.aircraft.code || "N/A"}
+                              <p>
+                                Aircraft Information: Code=
+                                {segment.aircraft.code} Plane:{" "}
+                                {dictionaries.aircraft[segment.aircraft.code] ||
+                                  "Unknown Aircraft"}
+                              </p>
                             </p>
 
                             <p>
