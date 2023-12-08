@@ -40,19 +40,31 @@ const getDestinationLocations = async (req: Request, res: Response) => {
   }
 };
 // Get all the hotel offers available
-const getHotelOffers = async (req: Request, res: Response) => {
-  console.log("Query: ", req.query);
-  const { cityCode } = req.query;
-  const response = await amadeus.referenceData.locations.hotels.byCity.get({
-    cityCode,
-  });
+const getHotelList = async (req: Request, res: Response) => {
   try {
+    console.log("Query: ", req.query);
+    const { cityCode } = req.query;
+
+    if (!cityCode) {
+      return res.status(400).json({ error: "Missing cityCode parameter" });
+    }
+
+    const response = await amadeus.referenceData.locations.hotels.byCity.get({
+      cityCode: cityCode.toString(),
+    });
+
+    console.log(response.data);
+    const hotelList = response.data;
+    console.log("Hotel List: ", hotelList);
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (err: any) {
-    res.json(err);
+    console.log(err.message);
+    console.error("Error fetching hotel list:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 const getFlightOffers = async (req: Request, res: Response) => {
   try {
     const {
@@ -161,7 +173,7 @@ export {
   getOriginLocations,
   getDestinationLocations,
   getFlightOffers,
-  // getHotelOffers,
+  getHotelList,
   // getOffersFromHotel,
   // getCities,
   // confirmingOffer,

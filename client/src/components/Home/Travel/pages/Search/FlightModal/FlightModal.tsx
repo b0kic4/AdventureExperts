@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
 import "./style.css";
 
-import Flight from "../SearchComponent/components/interfaces/FlightTypes";
+import FlightOffer from "../SearchComponent/components/interfaces/FlightTypes";
 interface FlightDetailsProps {
-  flight: Flight;
+  flight: FlightOffer;
   dictionaries: any;
   onClose: () => void;
 }
@@ -74,12 +74,13 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                             <p>Carrier Code: {segment.carrierCode || "N/A"}</p>
                             <p>Number: {segment.number || "N/A"}</p>
                             <p>
-                              <p>
-                                Aircraft Information: Code=
-                                {segment.aircraft.code} Plane:{" "}
-                                {dictionaries.aircraft[segment.aircraft.code] ||
-                                  "Unknown Aircraft"}
-                              </p>
+                              <p>Aircraft Information:</p>
+                            </p>
+                            <p>Aircraft Code: {segment.aircraft.code}</p>
+                            <p>
+                              Aircraft Name:{" "}
+                              {dictionaries.aircraft[segment.aircraft.code] ||
+                                "Unknown Aircraft"}
                             </p>
 
                             <p>

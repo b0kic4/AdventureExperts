@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getFlightOffers = exports.getDestinationLocations = exports.getOriginLocations = void 0;
+exports.getHotelList = exports.getFlightOffers = exports.getDestinationLocations = exports.getOriginLocations = void 0;
 const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
 // INTERFACES AND TYPES
 // type Location = string;
@@ -54,20 +54,29 @@ const getDestinationLocations = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.getDestinationLocations = getDestinationLocations;
 // Get all the hotel offers available
-const getHotelOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Query: ", req.query);
-    const { cityCode } = req.query;
-    const response = yield amadeusApi_1.default.referenceData.locations.hotels.byCity.get({
-        cityCode,
-    });
+const getHotelList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("Query: ", req.query);
+        const { cityCode } = req.query;
+        if (!cityCode) {
+            return res.status(400).json({ error: "Missing cityCode parameter" });
+        }
+        const response = yield amadeusApi_1.default.referenceData.locations.hotels.byCity.get({
+            cityCode: cityCode.toString(),
+        });
+        console.log(response.data);
+        const hotelList = response.data;
+        console.log("Hotel List: ", hotelList);
         const parsedResponse = JSON.parse(response.body);
         res.send(parsedResponse);
     }
     catch (err) {
-        res.json(err);
+        console.log(err.message);
+        console.error("Error fetching hotel list:", err);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
+exports.getHotelList = getHotelList;
 const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { originLocationCode, destinationLocationCode, departureDate, adults, } = req.query;

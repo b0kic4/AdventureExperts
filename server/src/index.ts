@@ -12,11 +12,14 @@ const PORT: number | string = process.env.PORT || 3000;
 const app = express();
 app.use(
   cors({
-    credentials: true,
     origin: "http://localhost:5173",
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
+// Add a route to handle OPTIONS requests
+
 // api
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

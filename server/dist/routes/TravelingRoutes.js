@@ -18,3 +18,4 @@ exports.travelingRouter = travelingRouter;
 travelingRouter.get("/get-origin-locations", VerifyToken_1.verifyToken, TravelController_1.getOriginLocations);
 travelingRouter.get("/get-destinations-locations", VerifyToken_1.verifyToken, TravelController_1.getDestinationLocations);
 travelingRouter.get("/get-flight-offers", VerifyToken_1.verifyToken, TravelController_1.getFlightOffers);
+travelingRouter.get("/get-hotel-list", VerifyToken_1.verifyToken, TravelController_1.getHotelList);

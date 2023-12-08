@@ -21,6 +21,7 @@ import NumberInputComponent from "./components/NumberInputComponent";
 import Loader from "../../../../../assets/Loader";
 import FlightModal from "../FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
+import HotelModal from "../HotelModal/HotelModal";
 // INTERFACES
 interface City {
   city: string;
@@ -406,13 +407,16 @@ const Search: React.FC = () => {
             </Grid>
           </>
         )}
+        <HotelModal />
       </Grid>
       {selectedFlight && (
-        <FlightModal
-          flight={selectedFlight}
-          dictionaries={dictionaries}
-          onClose={handleCloseFlightDetails}
-        />
+        <>
+          <FlightModal
+            flight={selectedFlight}
+            dictionaries={dictionaries}
+            onClose={handleCloseFlightDetails}
+          />
+        </>
       )}
     </div>
   );

@@ -37,10 +37,12 @@ const TravelingRoutes_1 = require("./routes/TravelingRoutes");
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    credentials: true,
     origin: "http://localhost:5173",
+    credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 }));
+// Add a route to handle OPTIONS requests
 // api
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
