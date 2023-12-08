@@ -6,11 +6,25 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    alignContent: "center",
     marginBottom: "10px",
   },
   cityName: {
     color: "black",
     fontWeight: "bold",
+  },
+  mainContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  buttonContainer: {
+    marginTop: "150px",
+    display: "flex",
+    justifyContent: "flex-start",
+    gap: "2",
   },
   container: {
     display: "flex",
@@ -18,6 +32,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
     height: "100vh",
     overflow: "none",
+    marginBottom: "150px",
   },
   button: {
     marginTop: "20px",

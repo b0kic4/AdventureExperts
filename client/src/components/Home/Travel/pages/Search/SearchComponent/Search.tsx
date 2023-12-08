@@ -66,6 +66,13 @@ const Search: React.FC = () => {
   //   console.log("Flight offers console log: ", flightOffers);
   // }, [flightOffers]);
 
+  const [activeButton, setActiveButton] = useState<"flights" | "hotels">(
+    "flights"
+  );
+  const handleButtonClick = (buttonType: "flights" | "hotels") => {
+    setActiveButton(buttonType);
+    console.log("Active button: ", activeButton);
+  };
   const fetchFlightsOffers = async () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -259,165 +266,192 @@ const Search: React.FC = () => {
   };
 
   return (
-    <div className={classes.container}>
-      <Grid container spacing={2}>
-        {loading ? (
-          <Loader />
-        ) : flightOffers.length === 0 ? (
-          <>
-            <Grid item xs={12} sm={6}>
-              <AutocompleteComponent
-                options={options}
-                loading={loading}
-                value={originInputValue}
-                onChange={(value) =>
-                  handleOriginLocationCodeAutocompleteChange(
-                    value as NonNullable<string | City>
-                  )
-                }
-                onInputChange={(newInputValue) =>
-                  setOriginInputValue(newInputValue)
-                }
-                getOptionLabel={(option: City) => option.city || ""}
-                renderOption={(option: City) => (
-                  <Grid container alignItems="center">
-                    <Grid item>
-                      <FontAwesomeIcon icon={faSearch} />
+    <div className={classes.mainContainer}>
+      <div className={classes.buttonContainer}>
+        <div>
+          <Button
+            variant={activeButton === "flights" ? "contained" : "outlined"}
+            color="primary"
+            onClick={() => handleButtonClick("flights")}
+          >
+            Flight Offers
+          </Button>
+        </div>
+        <div>
+          <Button
+            variant={activeButton === "hotels" ? "contained" : "outlined"}
+            color="primary"
+            onClick={() => handleButtonClick("hotels")}
+          >
+            Hotels
+          </Button>
+        </div>
+      </div>
+      <div className={classes.container}>
+        <Grid container spacing={2}>
+          {loading ? (
+            <Loader />
+          ) : flightOffers.length === 0 ? (
+            <>
+              <Grid item xs={12} sm={6}>
+                <AutocompleteComponent
+                  options={options}
+                  loading={loading}
+                  value={originInputValue}
+                  onChange={(value) =>
+                    handleOriginLocationCodeAutocompleteChange(
+                      value as NonNullable<string | City>
+                    )
+                  }
+                  onInputChange={(newInputValue) =>
+                    setOriginInputValue(newInputValue)
+                  }
+                  getOptionLabel={(option: City) => option.city || ""}
+                  renderOption={(option: City) => (
+                    <Grid container alignItems="center">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Grid>
+                      <Grid item xs>
+                        <span className={classes.cityName}>{option.city}</span>
+                        <Typography variant="body2" color="textSecondary">
+                          {option.country}
+                          {option.state ? `, ${option.state}` : ""}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item xs>
-                      <span className={classes.cityName}>{option.city}</span>
-                      <Typography variant="body2" color="textSecondary">
-                        {option.country}
-                        {option.state ? `, ${option.state}` : ""}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )}
-                label="From (City)"
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <AutocompleteComponent
-                options={options}
-                loading={loading}
-                value={destinationInputValue}
-                onChange={(value) =>
-                  handleDestinationLocationCodeAutocompleteChange(
-                    value as NonNullable<string | City>
-                  )
-                }
-                onInputChange={(newInputValue) =>
-                  setDestinationInputValue(newInputValue)
-                }
-                getOptionLabel={(option: City) => option.city || ""}
-                renderOption={(option: City) => (
-                  <Grid container alignItems="center">
-                    <Grid item>
-                      <FontAwesomeIcon icon={faSearch} />
-                    </Grid>
-                    <Grid item xs>
-                      <span className={classes.cityName}>{option.city}</span>
-                      <Typography variant="body2" color="textSecondary">
-                        {option.country}
-                        {option.state ? `, ${option.state}` : ""}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                )}
-                label="To (City)"
-              />
-            </Grid>
-
-            <Grid
-              container
-              alignItems="center"
-              className={classes.datePickerContainer}
-            >
-              <Grid item xs>
-                <NumberInputComponent
-                  value={adults}
-                  onChange={setAdults}
-                  label="Adults"
+                  )}
+                  label="From (City)"
                 />
               </Grid>
-            </Grid>
 
-            <Grid container alignItems="center">
-              <Grid item xs className={classes.datePickerContainer}>
-                <DateInputComponent
-                  value={departureDate}
-                  onChange={(date) => handleDateChange(date)}
-                  label="Departure Date"
+              <Grid item xs={12} sm={6}>
+                <AutocompleteComponent
+                  options={options}
+                  loading={loading}
+                  value={destinationInputValue}
+                  onChange={(value) =>
+                    handleDestinationLocationCodeAutocompleteChange(
+                      value as NonNullable<string | City>
+                    )
+                  }
+                  onInputChange={(newInputValue) =>
+                    setDestinationInputValue(newInputValue)
+                  }
+                  getOptionLabel={(option: City) => option.city || ""}
+                  renderOption={(option: City) => (
+                    <Grid container alignItems="center">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Grid>
+                      <Grid item xs>
+                        <span className={classes.cityName}>{option.city}</span>
+                        <Typography variant="body2" color="textSecondary">
+                          {option.country}
+                          {option.state ? `, ${option.state}` : ""}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )}
+                  label="To (City)"
                 />
               </Grid>
-            </Grid>
-            {departureDate && originLocationCode && destinationLocationCode ? (
-              <Grid item xs>
-                <ButtonComponent onClick={fetchFlightsOffers} />
-              </Grid>
-            ) : null}
-          </>
-        ) : (
-          <>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Grid container spacing={2} className={classes.scrollContainer}>
-                  {flightOffers.map((offer) => (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      md={4}
-                      onClick={() => handleFlightClick(offer)}
-                      key={offer.id}
-                      className={classes.flightOfferCard}
-                    >
-                      <Typography variant="h6">
-                        Flight Offer {offer.id}
-                      </Typography>
-                      <Typography variant="body2">
-                        Departure Date: {offer.lastTicketingDate}
-                      </Typography>
-                      <Typography variant="body2">
-                        Duration: {offer.itineraries[0].duration}
-                      </Typography>
-                      <Typography variant="body2">
-                        Price: {offer.price.currency} {offer.price.total}
-                      </Typography>
-                      <Typography variant="body2">
-                        Number of Bookable Seats: {offer.numberOfBookableSeats}
-                      </Typography>
-                    </Grid>
-                  ))}
+
+              <Grid
+                container
+                alignItems="center"
+                className={classes.datePickerContainer}
+              >
+                <Grid item xs>
+                  <NumberInputComponent
+                    value={adults}
+                    onChange={setAdults}
+                    label="Adults"
+                  />
                 </Grid>
               </Grid>
-              <Grid item xs>
-                {flightOffers.length > 0 && (
-                  <Button
-                    className={classes.clearButton}
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => handleClearFilter()}
-                  >
-                    Clear Filters
-                  </Button>
-                )}
+
+              <Grid container alignItems="center">
+                <Grid item xs className={classes.datePickerContainer}>
+                  <DateInputComponent
+                    value={departureDate}
+                    onChange={(date) => handleDateChange(date)}
+                    label="Departure Date"
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </>
-        )}
-        <HotelModal />
-      </Grid>
-      {selectedFlight && (
-        <>
+              {departureDate &&
+              originLocationCode &&
+              destinationLocationCode ? (
+                <Grid item xs>
+                  <ButtonComponent onClick={fetchFlightsOffers} />
+                </Grid>
+              ) : null}
+            </>
+          ) : (
+            <>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Grid
+                    container
+                    spacing={2}
+                    className={classes.scrollContainer}
+                  >
+                    {flightOffers.map((offer) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        md={4}
+                        onClick={() => handleFlightClick(offer)}
+                        key={offer.id}
+                        className={classes.flightOfferCard}
+                      >
+                        <Typography variant="h6">
+                          Flight Offer {offer.id}
+                        </Typography>
+                        <Typography variant="body2">
+                          Departure Date: {offer.lastTicketingDate}
+                        </Typography>
+                        <Typography variant="body2">
+                          Duration: {offer.itineraries[0].duration}
+                        </Typography>
+                        <Typography variant="body2">
+                          Price: {offer.price.currency} {offer.price.total}
+                        </Typography>
+                        <Typography variant="body2">
+                          Number of Bookable Seats:{" "}
+                          {offer.numberOfBookableSeats}
+                        </Typography>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+                <Grid item xs>
+                  {flightOffers.length > 0 && (
+                    <Button
+                      className={classes.clearButton}
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => handleClearFilter()}
+                    >
+                      Clear Filters
+                    </Button>
+                  )}
+                </Grid>
+              </Grid>
+            </>
+          )}
+        </Grid>
+        {selectedFlight && activeButton === "flights" ? (
           <FlightModal
             flight={selectedFlight}
             dictionaries={dictionaries}
             onClose={handleCloseFlightDetails}
           />
-        </>
-      )}
+        ) : null}
+        {activeButton === "hotels" ? <HotelModal /> : null}
+      </div>
     </div>
   );
 };
