@@ -15,25 +15,34 @@ const useStyles = makeStyles(() => ({
   },
   mainContainer: {
     display: "flex",
+    flex: 1,
+    width: "100%",
+    maxHeight: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
   },
+  parentContainer: {
+    width: "100%",
+    margin: "0",
+    padding: "0",
+    boxSizing: "border-box",
+  },
+
   buttonContainer: {
-    marginTop: "150px",
     display: "flex",
-    justifyContent: "flex-start",
     gap: "2",
   },
   container: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
+    width: "100%",
     overflow: "none",
     marginBottom: "150px",
   },
+
   button: {
     marginTop: "20px",
     backgroundColor: "#50C878",

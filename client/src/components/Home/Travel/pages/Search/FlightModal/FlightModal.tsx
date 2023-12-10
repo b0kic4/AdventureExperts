@@ -34,7 +34,7 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
               <button id="shop">
                 <FontAwesomeIcon size={"2xl"} icon={faCartShopping} /> - Cart
               </button>{" "}
-              <button id="close" onClick={onClose}>
+              <button id="exit" onClick={onClose}>
                 Close - <FontAwesomeIcon size={"2xl"} icon={faClose} />
               </button>
             </div>
