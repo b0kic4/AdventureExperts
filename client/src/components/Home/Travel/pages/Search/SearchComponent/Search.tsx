@@ -44,7 +44,7 @@ const Search: React.FC = () => {
     string | null
   >(null);
   const classes = useStyles();
-  // const [hotelsOption, setHotelsOption] = useState(false);
+
   // const thisCityCode = useSelector((state: RootState) => state.location);
 
   const [departureDate, setDepartureDate] = useState<Date | null>(null);
@@ -196,33 +196,6 @@ const Search: React.FC = () => {
       fetchDestinationLocationData();
     }
   }, [destinationInputValue]);
-
-  // useEffect(() => {
-  //   const fetchHotelOffers = async () => {
-  //     if (originLocationCode !== null && originLocationCode !== "") {
-  //       const storedToken = localStorage.getItem("token");
-  //       try {
-  //         const response = await axios.get(
-  //           "http://localhost:8081/getHotelOffers",
-  //           {
-  //             headers: { Authorization: `Bearer ${storedToken}` },
-  //             params: { originLocationCode: originLocationCode },
-  //           }
-  //         );
-  //         console.log(response.data);
-  //       } catch (error: any) {
-  //         // Log the detailed error information
-  //         console.error("Axios Error:", error);
-  //         if (error.response) {
-  //           console.error("Response Data:", error.response.data);
-  //           console.error("Response Status:", error.response.status);
-  //         }
-  //       }
-  //     }
-  //   };
-
-  //   fetchHotelOffers();
-  // }, [originLocationCode]);
 
   const handleOriginLocationCodeAutocompleteChange = (
     value: NonNullable<string | City>
@@ -397,20 +370,21 @@ const Search: React.FC = () => {
             ) : (
               <>
                 {activeButton === "flights" ? (
-                  <>
-                    <FlightList
-                      flightOffers={flightOffers}
-                      classes={classes}
-                      handleFlightClick={handleFlightClick}
-                      handleClearFilter={handleClearFilter}
-                    />
-                  </>
+                  <FlightList
+                    flightOffers={flightOffers}
+                    classes={classes}
+                    handleFlightClick={handleFlightClick}
+                    handleClearFilter={handleClearFilter}
+                  />
                 ) : activeButton === "hotels" ? (
-                  <>
-                    <HotelList />
-                  </>
+                  <HotelList />
                 ) : (
-                  <></>
+                  <FlightList
+                    flightOffers={flightOffers}
+                    classes={classes}
+                    handleFlightClick={handleFlightClick}
+                    handleClearFilter={handleClearFilter}
+                  />
                 )}
               </>
             )}

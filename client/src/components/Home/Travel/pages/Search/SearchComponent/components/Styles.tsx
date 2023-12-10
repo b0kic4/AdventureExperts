@@ -1,12 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(() => ({
-  // MODAL
+const useStyles = makeStyles({
   modalHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    alignContent: "center",
     marginBottom: "10px",
   },
   cityName: {
@@ -29,7 +27,6 @@ const useStyles = makeStyles(() => ({
     padding: "0",
     boxSizing: "border-box",
   },
-
   buttonContainer: {
     display: "flex",
     gap: "2",
@@ -42,7 +39,6 @@ const useStyles = makeStyles(() => ({
     overflow: "none",
     marginBottom: "150px",
   },
-
   button: {
     marginTop: "20px",
     backgroundColor: "#50C878",
@@ -54,26 +50,9 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#40875E", // Change the color on hover if needed
     },
   },
-  clearButton: {
-    backgroundColor: "#D0342C",
-    marginTop: "20px",
-    color: "white",
-    fontWeight: "bold",
-    width: "20%",
-    fontSize: "20px",
-    "&:hover": {
-      backgroundColor: "#D0342C", // Change the color on hover if needed
-    },
-  },
-  scrollContainer: {
-    color: "white",
-    maxHeight: "60vh",
-    width: "100%",
-    overflowY: "auto",
-  },
   flightOfferItem: {
     marginBottom: "10px",
-    width: "100%", // Take up the full width of the container
+    width: "100%",
     boxSizing: "border-box",
     cursor: "pointer",
     padding: "10px",
@@ -84,22 +63,7 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#f5f5f5",
       color: "black",
     },
-  }, // Inside the useStyles
-  flightOfferCard: {
-    marginBottom: "20px",
-    cursor: "pointer",
-    boxSizing: "border-box",
-    padding: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    transition: "box-shadow 0.3s ease",
-    "&:hover": {
-      backgroundColor: "#f5f5f5",
-      color: "black",
-      boxShadow: "0px 0px 10px 0px #000000",
-    },
   },
-
   adultsInput: {
     backgroundColor: "rgb(0, 0, 0, 0.5)",
     textAlign: "center",
@@ -118,7 +82,7 @@ const useStyles = makeStyles(() => ({
     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
       borderColor: "white !important",
     },
-    width: "100%",
+    width: "70%",
   },
   numberInput: {
     width: "50%",
@@ -143,8 +107,9 @@ const useStyles = makeStyles(() => ({
     },
   },
   textInput: {
-    width: "100%",
+    width: "70%",
     height: "50%",
+    margin: "10px auto", // Add margin to center the input horizontally
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
       backgroundColor: "rgb(0, 0, 0, 0.5)",
@@ -189,6 +154,6 @@ const useStyles = makeStyles(() => ({
       borderColor: "#50C878 !important",
     },
   },
-}));
+});
 
 export default useStyles;

@@ -1,54 +1,8 @@
+/* FLIGHT MODAL CSS */
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0;
   font-family: "Arial", sans-serif;
   background-color: #f5f5f5;
-}
-
-/* Container Styles */
-
-.start-traveling-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  min-height: 100vh;
-}
-
-/* Form Styles */
-
-.form-container {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-.label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  font-size: 16px;
-}
-
-input {
-  padding: 12px;
-  width: 40%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-  text-align: center;
-}
-
-input:read-only {
-  width: 25%;
-  text-align: center;
 }
 
 /* Flight Modal Styles */
@@ -58,11 +12,16 @@ input:read-only {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 20px;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #2c3e50;
+  width: fit-content;
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 12px;
+  background: #ecf0f1;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   z-index: 9999;
+  overflow: auto;
+  border: 2px solid #3498db;
 }
 
 .overlay {
@@ -98,20 +57,11 @@ input:read-only {
   flex: 1;
   display: flex;
   justify-content: center;
+  align-content: center;
   align-items: center;
 }
 
 /* Results Container Styles */
-
-.results-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
 
 /* Flight Cards Container Styles */
 
@@ -150,16 +100,6 @@ input:read-only {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   z-index: 9999;
   overflow: auto;
-}
-
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9998;
 }
 
 .modal-content {

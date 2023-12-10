@@ -7,7 +7,7 @@ body {
 .container {
   position: relative;
   max-height: 100vh;
-  max-width: 100%;
+  width: 100%;
   overflow: none;
 }
 
@@ -16,7 +16,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100%;
-  max-width: 100%;
+  width: 100%;
   overflow: none;
 }
 
@@ -26,7 +26,7 @@ body {
   align-content: center;
   align-items: center;
   padding: 20px;
-  max-width: 70%;
+  max-width: 50%;
   height: 70%;
   border: 1px solid black;
   border-radius: 10px;

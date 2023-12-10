@@ -2,7 +2,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-
+import "./css/styles.css";
 interface FlightListProps {
   flightOffers: any[];
   classes: Record<string, string>;
@@ -19,7 +19,7 @@ const FlightList: React.FC<FlightListProps> = ({
   return (
     <>
       <Grid item xs={12}>
-        <Grid container spacing={2} className={classes.scrollContainer}>
+        <Grid container spacing={2} className="scrollContainer">
           {flightOffers.map((offer: any) => (
             <Grid
               item
@@ -28,7 +28,7 @@ const FlightList: React.FC<FlightListProps> = ({
               md={4}
               onClick={() => handleFlightClick(offer)}
               key={offer.id}
-              className={classes.flightOfferCard}
+              className="flightOfferCard"
             >
               <Typography variant="h6">Flight Offer {offer.id}</Typography>
               <Typography variant="body2">
@@ -51,7 +51,7 @@ const FlightList: React.FC<FlightListProps> = ({
         <Grid item xs>
           {flightOffers.length > 0 && (
             <Button
-              className={classes.clearButton}
+              className="clearButton"
               variant="contained"
               color="secondary"
               onClick={() => handleClearFilter()}
