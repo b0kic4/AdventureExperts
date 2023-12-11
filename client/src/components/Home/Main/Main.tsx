@@ -121,35 +121,17 @@ const Main: React.FC = () => {
       </video>
       <div className="login-register-container">
         <div className="text-container">
-          {!user.user?.username ? (
-            <h1>Get Started with Your Bus Account</h1>
-          ) : (
-            <h1>Welcome back!</h1>
-          )}
+          {!user.user?.username ? <h1>Get Started</h1> : <h1>Welcome back!</h1>}
 
           <p>Get The Most Out Of Traveling</p>
         </div>
         <div className="buttons-container">
           {!user.user?.username ? (
             <div>
-              <button
-                style={{
-                  background: "#D2042D",
-                  color: "whitesmoke",
-                  fontWeight: "bold",
-                }}
-                onClick={handleLoginClick}
-              >
+              <button className="login-button" onClick={handleLoginClick}>
                 Login
               </button>
-              <button
-                style={{
-                  background: "blue",
-                  color: "whitesmoke",
-                  fontWeight: "bold",
-                }}
-                onClick={handleRegisterClick}
-              >
+              <button className="register-button" onClick={handleRegisterClick}>
                 Register
               </button>{" "}
             </div>
@@ -185,17 +167,7 @@ const Main: React.FC = () => {
         <Parallax
           strength={600}
           bgImage={imageForTraveling}
-          renderLayer={() => (
-            <div
-              style={{
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                overflow: "none",
-                background: "rgba(0, 0, 0, 0.78)", // Adjust the last value for opacity
-              }}
-            />
-          )}
+          renderLayer={() => <div className="container-renderLayer" />}
         >
           <h1>TRAVELING</h1>
 

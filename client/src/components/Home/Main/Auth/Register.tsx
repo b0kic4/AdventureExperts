@@ -3,6 +3,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { toast } from "react-toastify";
+import "./styles.css";
 interface RegisterProps {
   onClose: () => void; // Define the onClose prop as a function that takes no arguments and returns void
 }
@@ -63,15 +64,7 @@ const Register: React.FC<RegisterProps> = ({ onClose }) => {
 
   return (
     <div className="registration-form active">
-      <button
-        style={{
-          background: "transparent",
-          color: "black",
-          fontSize: "32px",
-        }}
-        className="close-button"
-        onClick={onClose}
-      >
+      <button className="close-button" onClick={onClose}>
         <FontAwesomeIcon icon={faTimes} />
       </button>
       <form>
@@ -125,8 +118,12 @@ const Register: React.FC<RegisterProps> = ({ onClose }) => {
             }
           />
         </label>
-        <button onClick={handleRegisterSubmit} type="submit">
-          Submit
+        <button
+          className="submit-button"
+          onClick={handleRegisterSubmit}
+          type="submit"
+        >
+          Register
         </button>
       </form>
     </div>

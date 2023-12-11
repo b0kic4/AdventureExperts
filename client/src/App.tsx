@@ -3,7 +3,6 @@ import "./App.css";
 import Home from "./components/Home/Home";
 import Travel from "./components/Home/Travel/Travel";
 import Search from "./components/Home/Travel/pages/Search/SearchComponent/Search";
-import Schedule from "./components/Home/Travel/pages/Schedule/Schedule";
 import About from "./components/Home/Travel/pages/About/About";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -16,8 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/travel" element={<Travel />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/schedule-traveling" element={<Schedule />} />
-        <Route path="/about-traveling" element={<About />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </LocalizationProvider>
   );

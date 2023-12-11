@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
@@ -68,15 +68,7 @@ const Login: React.FC<LoginProps> = ({ onClose }) => {
   //   }, [thisuser]);
   return (
     <div className="registration-form active">
-      <button
-        style={{
-          background: "transparent",
-          color: "black",
-          fontSize: "32px",
-        }}
-        className="close-button"
-        onClick={onClose}
-      >
+      <button className="close-button" onClick={onClose}>
         <FontAwesomeIcon icon={faTimes} />
       </button>
       <form>
@@ -98,7 +90,11 @@ const Login: React.FC<LoginProps> = ({ onClose }) => {
             onChange={(e) => handleInputLoginChange("loginPw", e.target.value)}
           />
         </label>
-        <button onClick={handleLoginSubmit} type="submit">
+        <button
+          className="submit-button"
+          onClick={handleLoginSubmit}
+          type="submit"
+        >
           Submit
         </button>
       </form>

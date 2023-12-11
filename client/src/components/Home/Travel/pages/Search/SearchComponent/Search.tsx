@@ -19,11 +19,10 @@ import ButtonComponent from "./components/ButtonComponent";
 import AutocompleteComponent from "./components/AutocompleteComponent";
 import NumberInputComponent from "./components/NumberInputComponent";
 import Loader from "../../../../../assets/Loader";
-import FlightModal from "../FlightModal/FlightModal";
+import FlightModal from "../Flights/FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
-import HotelModal from "../HotelModal/HotelModal";
-import FlightList from "./FlightList";
-import HotelList from "./HotelList";
+import FlightList from "../Flights/FlightList";
+import HotelList from "../Hotels/HotelList";
 // INTERFACES
 interface City {
   city: string;
@@ -240,163 +239,155 @@ const Search: React.FC = () => {
   };
 
   return (
-    <div className={classes.parentContainer}>
-      <div className={classes.mainContainer}>
-        <div className={classes.buttonContainer}>
-          <div>
-            <Button
-              variant={activeButton === "flights" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => handleButtonClick("flights")}
-            >
-              Flight Offers
-            </Button>
-          </div>
-          <div>
-            <Button
-              variant={activeButton === "hotels" ? "contained" : "outlined"}
-              color="primary"
-              onClick={() => handleButtonClick("hotels")}
-            >
-              Hotels
-            </Button>
-          </div>
-        </div>
-        <div className={classes.container}>
-          <Grid container spacing={2}>
-            {loading ? (
-              <Loader />
-            ) : flightOffers.length === 0 ? (
-              <>
-                <Grid item xs={12} sm={6}>
-                  <AutocompleteComponent
-                    options={options}
-                    loading={loading}
-                    value={originInputValue}
-                    onChange={(value) =>
-                      handleOriginLocationCodeAutocompleteChange(
-                        value as NonNullable<string | City>
-                      )
-                    }
-                    onInputChange={(newInputValue) =>
-                      setOriginInputValue(newInputValue)
-                    }
-                    getOptionLabel={(option: City) => option.city || ""}
-                    renderOption={(option: City) => (
-                      <Grid container alignItems="center">
-                        <Grid item>
-                          <FontAwesomeIcon icon={faSearch} />
-                        </Grid>
-                        <Grid item xs>
-                          <span className={classes.cityName}>
-                            {option.city}
-                          </span>
-                          <Typography variant="body2" color="textSecondary">
-                            {option.country}
-                            {option.state ? `, ${option.state}` : ""}
-                          </Typography>
-                        </Grid>
+    <div className={classes.mainContainer}>
+      <div className={classes.buttonContainer}>
+        <Button
+          className={`${classes.flightButton} ${
+            activeButton === "flights" ? "" : classes.inactiveButton
+          }`}
+          onClick={() => handleButtonClick("flights")}
+        >
+          Flight Offers
+        </Button>
+
+        <Button
+          className={`${classes.hotelButton} ${
+            activeButton === "hotels" ? "" : classes.inactiveButton
+          }`}
+          onClick={() => handleButtonClick("hotels")}
+        >
+          Hotels
+        </Button>
+      </div>
+      <div className={classes.container}>
+        <Grid container spacing={2}>
+          {loading ? (
+            <Loader />
+          ) : flightOffers.length === 0 ? (
+            <>
+              <Grid item xs={12} sm={6}>
+                <AutocompleteComponent
+                  options={options}
+                  loading={loading}
+                  value={originInputValue}
+                  onChange={(value) =>
+                    handleOriginLocationCodeAutocompleteChange(
+                      value as NonNullable<string | City>
+                    )
+                  }
+                  onInputChange={(newInputValue) =>
+                    setOriginInputValue(newInputValue)
+                  }
+                  getOptionLabel={(option: City) => option.city || ""}
+                  renderOption={(option: City) => (
+                    <Grid container alignItems="center">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faSearch} />
                       </Grid>
-                    )}
-                    label="From (City)"
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <AutocompleteComponent
-                    options={options}
-                    loading={loading}
-                    value={destinationInputValue}
-                    onChange={(value) =>
-                      handleDestinationLocationCodeAutocompleteChange(
-                        value as NonNullable<string | City>
-                      )
-                    }
-                    onInputChange={(newInputValue) =>
-                      setDestinationInputValue(newInputValue)
-                    }
-                    getOptionLabel={(option: City) => option.city || ""}
-                    renderOption={(option: City) => (
-                      <Grid container alignItems="center">
-                        <Grid item>
-                          <FontAwesomeIcon icon={faSearch} />
-                        </Grid>
-                        <Grid item xs>
-                          <span className={classes.cityName}>
-                            {option.city}
-                          </span>
-                          <Typography variant="body2" color="textSecondary">
-                            {option.country}
-                            {option.state ? `, ${option.state}` : ""}
-                          </Typography>
-                        </Grid>
+                      <Grid item xs>
+                        <span className={classes.cityName}>{option.city}</span>
+                        <Typography variant="body2" color="textSecondary">
+                          {option.country}
+                          {option.state ? `, ${option.state}` : ""}
+                        </Typography>
                       </Grid>
-                    )}
-                    label="To (City)"
-                  />
-                </Grid>
+                    </Grid>
+                  )}
+                  label="From (City)"
+                />
+              </Grid>
 
-                <Grid
-                  container
-                  alignItems="center"
-                  className={classes.datePickerContainer}
-                >
-                  <Grid item xs>
-                    <NumberInputComponent
-                      value={adults}
-                      onChange={setAdults}
-                      label="Adults"
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item xs={12} sm={6}>
+                <AutocompleteComponent
+                  options={options}
+                  loading={loading}
+                  value={destinationInputValue}
+                  onChange={(value) =>
+                    handleDestinationLocationCodeAutocompleteChange(
+                      value as NonNullable<string | City>
+                    )
+                  }
+                  onInputChange={(newInputValue) =>
+                    setDestinationInputValue(newInputValue)
+                  }
+                  getOptionLabel={(option: City) => option.city || ""}
+                  renderOption={(option: City) => (
+                    <Grid container alignItems="center">
+                      <Grid item>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </Grid>
+                      <Grid item xs>
+                        <span className={classes.cityName}>{option.city}</span>
+                        <Typography variant="body2" color="textSecondary">
+                          {option.country}
+                          {option.state ? `, ${option.state}` : ""}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )}
+                  label="To (City)"
+                />
+              </Grid>
 
-                <Grid container alignItems="center">
-                  <Grid item xs className={classes.datePickerContainer}>
-                    <DateInputComponent
-                      value={departureDate}
-                      onChange={(date) => handleDateChange(date)}
-                      label="Departure Date"
-                    />
-                  </Grid>
+              <Grid
+                container
+                alignItems="center"
+                className={classes.datePickerContainer}
+              >
+                <Grid item xs>
+                  <NumberInputComponent
+                    value={adults}
+                    onChange={setAdults}
+                    label="Adults"
+                    max={9}
+                  />
                 </Grid>
-                {departureDate &&
-                originLocationCode &&
-                destinationLocationCode ? (
-                  <Grid item xs>
-                    <ButtonComponent onClick={fetchFlightsOffers} />
-                  </Grid>
-                ) : null}
-              </>
-            ) : (
-              <>
-                {activeButton === "flights" ? (
-                  <FlightList
-                    flightOffers={flightOffers}
-                    classes={classes}
-                    handleFlightClick={handleFlightClick}
-                    handleClearFilter={handleClearFilter}
+              </Grid>
+
+              <Grid container alignItems="center">
+                <Grid item xs className={classes.datePickerContainer}>
+                  <DateInputComponent
+                    value={departureDate}
+                    onChange={(date) => handleDateChange(date)}
+                    label="Departure Date"
                   />
-                ) : activeButton === "hotels" ? (
-                  <HotelList />
-                ) : (
-                  <FlightList
-                    flightOffers={flightOffers}
-                    classes={classes}
-                    handleFlightClick={handleFlightClick}
-                    handleClearFilter={handleClearFilter}
-                  />
-                )}
-              </>
-            )}
-          </Grid>
-          {selectedFlight && activeButton === "flights" ? (
-            <FlightModal
-              flight={selectedFlight}
-              dictionaries={dictionaries}
-              onClose={handleCloseFlightDetails}
-            />
-          ) : null}
-        </div>
+                </Grid>
+              </Grid>
+              {departureDate &&
+              originLocationCode &&
+              destinationLocationCode ? (
+                <Grid item xs>
+                  <ButtonComponent onClick={fetchFlightsOffers} />
+                </Grid>
+              ) : null}
+            </>
+          ) : (
+            <Grid container>
+              {activeButton === "flights" ? (
+                <FlightList
+                  flightOffers={flightOffers}
+                  handleFlightClick={handleFlightClick}
+                  handleClearFilter={handleClearFilter}
+                />
+              ) : activeButton === "hotels" ? (
+                <HotelList />
+              ) : (
+                <FlightList
+                  flightOffers={flightOffers}
+                  handleFlightClick={handleFlightClick}
+                  handleClearFilter={handleClearFilter}
+                />
+              )}
+            </Grid>
+          )}
+        </Grid>
+        {selectedFlight && activeButton === "flights" ? (
+          <FlightModal
+            flight={selectedFlight}
+            dictionaries={dictionaries}
+            onClose={handleCloseFlightDetails}
+          />
+        ) : null}
       </div>
     </div>
   );

@@ -2,17 +2,15 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import "./css/styles.css";
+import "./styles.css";
 interface FlightListProps {
   flightOffers: any[];
-  classes: Record<string, string>;
   handleFlightClick: (flight: any) => void;
   handleClearFilter: () => void;
 }
 
 const FlightList: React.FC<FlightListProps> = ({
   flightOffers,
-  classes,
   handleFlightClick,
   handleClearFilter,
 }) => {

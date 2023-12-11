@@ -15,41 +15,65 @@ const useStyles = makeStyles({
     display: "flex",
     flex: 1,
     width: "100%",
-    maxHeight: "100%",
+    maxHeight: "100vh",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-  },
-  parentContainer: {
-    width: "100%",
-    margin: "0",
-    padding: "0",
-    boxSizing: "border-box",
+    background: "rgba(0, 0, 0, 0.30)",
   },
   buttonContainer: {
     display: "flex",
-    gap: "2",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    top: "0",
   },
   container: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    alignContent: "center",
     width: "100%",
     overflow: "none",
-    marginBottom: "150px",
   },
-  button: {
-    marginTop: "20px",
-    backgroundColor: "#50C878",
-    color: "white",
+  // BUTTONS
+  flightButton: {
+    textAlign: "center",
     fontWeight: "bold",
-    width: "50%",
-    fontSize: "20px",
+    backgroundColor: "#3498db", // Change the background color
+    opacity: 1,
+    transition: "opacity 0.3s ease", // Optional: Add transition for smooth effect
     "&:hover": {
-      backgroundColor: "#40875E", // Change the color on hover if needed
+      opacity: 0.8, // Adjust opacity for hover effect
+      backgroundColor: "#2980b9", // Change background color on hover
     },
   },
+
+  hotelButton: {
+    textAlign: "center",
+    fontWeight: "bold",
+    backgroundColor: "#2ecc71", // Change the background color
+    opacity: 1,
+    transition: "opacity 0.3s ease",
+    "&:hover": {
+      opacity: 0.8, // Adjust opacity for hover effect
+      backgroundColor: "#27ae60", // Change background color on hover
+    },
+  },
+
+  inactiveButton: {
+    opacity: 0.7,
+    backgroundColor: "#ffffff", // Change the background color
+    transition: "opacity 0.3s ease", // Optional: Add transition for smooth effect
+    "&:hover": {
+      opacity: 0.8,
+      backgroundColor: "#ffffff", // Change background color on hover
+      transition: "opacity 0.3s ease",
+    },
+  },
+
   flightOfferItem: {
     marginBottom: "10px",
     width: "100%",
@@ -87,6 +111,7 @@ const useStyles = makeStyles({
   numberInput: {
     width: "50%",
     height: "50%",
+    margin: "10px 0",
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
       backgroundColor: "rgb(0, 0, 0, 0.5)",
@@ -109,7 +134,7 @@ const useStyles = makeStyles({
   textInput: {
     width: "70%",
     height: "50%",
-    margin: "10px auto", // Add margin to center the input horizontally
+
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
       backgroundColor: "rgb(0, 0, 0, 0.5)",
@@ -130,7 +155,7 @@ const useStyles = makeStyles({
     },
   },
   datePickerContainer: {
-    marginTop: "20px",
+    margin: "20px 0",
   },
   datePicker: {
     width: "50%",

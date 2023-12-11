@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { animated, useSpring } from "react-spring";
 import "./style.css";
 
-import FlightOffer from "../SearchComponent/components/interfaces/FlightTypes";
+import FlightOffer from "../../SearchComponent/components/interfaces/FlightTypes";
 interface FlightDetailsProps {
   flight: FlightOffer;
   dictionaries: any;

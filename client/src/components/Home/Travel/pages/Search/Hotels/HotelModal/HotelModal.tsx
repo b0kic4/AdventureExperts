@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./style.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../../../app/rootReducer";
+import { RootState } from "../../../../../../../app/rootReducer";
 
 interface GeoCode {
   latitude: number;

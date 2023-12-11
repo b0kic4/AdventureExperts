@@ -5,12 +5,14 @@ interface NumberInputComponentProps {
   value: number;
   onChange: (value: number) => void;
   label: string;
+  max: number;
 }
 
 const NumberInputComponent: React.FC<NumberInputComponentProps> = ({
   value,
   onChange,
   label,
+  max,
 }) => {
   const classes = useStyles();
   return (
@@ -25,7 +27,7 @@ const NumberInputComponent: React.FC<NumberInputComponentProps> = ({
           onChange(Number(input));
         }
       }}
-      inputProps={{ min: 1 }}
+      inputProps={{ min: 1, max }}
       className={`${classes.numberInput} ${classes.adultsInput}`}
     />
   );
