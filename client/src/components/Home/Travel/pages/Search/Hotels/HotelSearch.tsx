@@ -98,17 +98,17 @@ const HotelSearch: React.FC = () => {
 
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
-  const [ratings, setRatings] = useState<number[]>([]);
+  const [ratings, setRatings] = useState<string[]>([]);
   const [hotelSource, setHotelSource] = useState<string[]>([]);
 
-  const handleRatingChange = (selectedRating: number) => {
+  const handleRatingChange = (selectedRating: string) => {
     if (!ratings.includes(selectedRating) && ratings.length < 4) {
       setRatings((prevRatings) => [...prevRatings, selectedRating]);
     } else {
       toast.error("Select up to four ratings");
     }
   };
-  const handleRemoveRating = (removedRating: number) => {
+  const handleRemoveRating = (removedRating: string) => {
     setRatings((prevRatings) =>
       prevRatings.filter((rating) => rating !== removedRating)
     );
@@ -226,7 +226,7 @@ const HotelSearch: React.FC = () => {
           ))}
         </Select>
         <Button onClick={handleClearAmenities} className={classes.clearButton}>
-          Clear Amenities
+          Clear Filters
         </Button>
       </FormControl>
       <FormControl className={classes.formControl}>
@@ -236,10 +236,10 @@ const HotelSearch: React.FC = () => {
           id="ratings"
           multiple
           value={ratings}
-          onChange={(e) => handleRatingChange(e.target.value as number)}
+          onChange={(e) => handleRatingChange(e.target.value as string)}
           renderValue={(selected) => (
             <div className={classes.chips}>
-              {(selected as number[]).map((value) => (
+              {(selected as string[]).map((value) => (
                 <Chip
                   key={value}
                   label={`Rating ${value}`}
@@ -251,11 +251,12 @@ const HotelSearch: React.FC = () => {
           )}
         >
           {[1, 2, 3, 4, 5].map((rating) => (
-            <MenuItem key={rating} value={rating}>
+            <MenuItem key={rating} value={String(rating)}>
               {`Rating ${rating}`}
             </MenuItem>
           ))}
         </Select>
+        <Button onClick={() => setRatings([])}>Clear Ratings</Button>
       </FormControl>
 
       <label className={classes.formLabel}>Hotel Source:</label>

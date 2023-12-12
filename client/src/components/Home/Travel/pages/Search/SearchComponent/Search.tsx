@@ -237,23 +237,35 @@ const Search: React.FC = () => {
   const handleCloseFlightDetails = () => {
     setSelectedFlight(null);
   };
-
+  //   <Button
+  //   className={`${classes.flightButton} ${
+  //     activeButton === "flights" ? "" : classes.inactiveButton
+  //   }`}
+  //   onClick={() => handleButtonClick("flights")}
+  // >
+  //   Flight Offers
+  // </Button>
+  // <Button
+  //   className={`${classes.hotelButton} ${
+  //     activeButton === "hotels" ? "" : classes.inactiveButton
+  //   }`}
+  //   onClick={() => handleButtonClick("hotels")}
+  // >
+  //   Hotels
+  // </Button>
   return (
     <div className={classes.mainContainer}>
       <div className={classes.buttonContainer}>
         <Button
-          className={`${classes.flightButton} ${
-            activeButton === "flights" ? "" : classes.inactiveButton
-          }`}
+          variant={activeButton === "flights" ? "contained" : "outlined"}
+          color="primary"
           onClick={() => handleButtonClick("flights")}
         >
           Flight Offers
         </Button>
-
         <Button
-          className={`${classes.hotelButton} ${
-            activeButton === "hotels" ? "" : classes.inactiveButton
-          }`}
+          variant={activeButton === "hotels" ? "contained" : "outlined"}
+          color="secondary"
           onClick={() => handleButtonClick("hotels")}
         >
           Hotels

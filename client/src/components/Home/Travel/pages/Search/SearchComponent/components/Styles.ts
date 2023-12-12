@@ -24,6 +24,7 @@ const useStyles = makeStyles({
   },
   buttonContainer: {
     display: "flex",
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
@@ -42,28 +43,29 @@ const useStyles = makeStyles({
   flightButton: {
     textAlign: "center",
     fontWeight: "bold",
-    backgroundColor: "#3498db", // Change the background color
+    backgroundColor: "#3498db",
     opacity: 1,
-    transition: "opacity 0.3s ease", // Optional: Add transition for smooth effect
+    transition: "opacity 0.3s ease",
     "&:hover": {
-      opacity: 0.8, // Adjust opacity for hover effect
-      backgroundColor: "#2980b9", // Change background color on hover
+      opacity: 0.8,
+      backgroundColor: "#2980b9",
     },
   },
 
   hotelButton: {
     textAlign: "center",
     fontWeight: "bold",
-    backgroundColor: "#2ecc71", // Change the background color
+    backgroundColor: "#2ecc71",
     opacity: 1,
     transition: "opacity 0.3s ease",
     "&:hover": {
-      opacity: 0.8, // Adjust opacity for hover effect
-      backgroundColor: "#27ae60", // Change background color on hover
+      opacity: 0.8,
+      backgroundColor: "#27ae60",
     },
   },
 
   inactiveButton: {
+    fontWeight: "bold",
     opacity: 0.7,
     backgroundColor: "#ffffff", // Change the background color
     transition: "opacity 0.3s ease", // Optional: Add transition for smooth effect
