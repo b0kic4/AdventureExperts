@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import useStyles from "./Styles";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../../app/rootReducer";
+import {
+  setRadius as setRadiusAction,
+  setRadiusUnit as setRadiusUnitAction,
+  setAmenities as setAmenitiesAction,
+  setRatings as setRatingsAction,
+} from "../../../../../app/filtersSlice";
 import {
   Button,
   Chip,
@@ -90,6 +96,7 @@ const amenitiesOptions = [
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
   const [hotelList, setHotelList] = useState<HotelResponse | null>(null);
+  const dispatch = useDispatch();
 
   const [radius, setRadius] = useState<number>(5);
   const [radiusUnit, setRadiusUnit] = useState<"KM" | "MILE">("KM");
@@ -156,6 +163,10 @@ const HotelSearch: React.FC = () => {
 
   const getHotelList = async () => {
     try {
+      dispatch(setRadiusAction(radius));
+      dispatch(setRadiusUnitAction(radiusUnit));
+      dispatch(setAmenitiesAction(selectedAmenities));
+      dispatch(setRatingsAction(ratings));
       const storedToken = localStorage.getItem("token");
       const response = await axios.get<HotelResponse>(
         "http://localhost:8081/get-hotel-list",

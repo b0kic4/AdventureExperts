@@ -72,12 +72,11 @@ const useStyles = makeStyles((theme) => ({
   hotelButton: {
     textAlign: "center",
     fontWeight: "bold",
-    backgroundColor: "#2ecc71",
+    color: "black",
     opacity: 1,
     transition: "opacity 0.3s ease",
     "&:hover": {
       opacity: 0.8,
-      backgroundColor: "#27ae60",
     },
   },
 
