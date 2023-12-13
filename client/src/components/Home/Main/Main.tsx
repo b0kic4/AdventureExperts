@@ -10,10 +10,9 @@ import imageForTraveling from "../assets/pexels-pixabay-414916.jpg";
 import DestinationImage from "../Dest/assets/pexels-eberhard-grossgasteiger-572897.jpg";
 import Register from "./Auth/Register";
 import Login from "./Auth/Login";
-import { useSelector } from "react-redux/es/hooks/useSelector";
 import { clearUser, setUser } from "../../../app/userSlice";
 import { RootState } from "../../../app/rootReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 

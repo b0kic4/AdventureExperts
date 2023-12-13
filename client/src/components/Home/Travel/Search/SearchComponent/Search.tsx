@@ -10,7 +10,7 @@ import {
   setOriginCitySliceCode,
   setDestinationSliceCode,
 } from "../../../../../app/locationSlice";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+
 import { RootState } from "../../../../../app/rootReducer";
 import { format } from "date-fns";
 import Button from "@material-ui/core/Button";

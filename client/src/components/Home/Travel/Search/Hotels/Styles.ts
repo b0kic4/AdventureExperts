@@ -6,11 +6,12 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    width: "100%", // Set width to 100%
+    maxWidth: "80%",
     height: "50%",
     margin: "auto",
     padding: "20px",
-    backgroundColor: "rgba(255, 255, 255, 0.85)",
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
     borderRadius: "35px",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
     overflow: "auto",
@@ -20,6 +21,18 @@ const useStyles = makeStyles((theme) => ({
       width: "80%",
       height: "60%",
     },
+    [theme.breakpoints.up("lg")]: {
+      maxWidth: "50%", // Adjusted maxWidth for larger screens (you can change this value)
+    },
+  },
+  savedFiltersContainer: {
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    border: `1px solid ${theme.palette.grey[300]}`,
+    borderRadius: theme.shape.borderRadius,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   formControl: {

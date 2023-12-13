@@ -8,7 +8,11 @@ import {
   setRadiusUnit as setRadiusUnitAction,
   setAmenities as setAmenitiesAction,
   setRatings as setRatingsAction,
+  loadFiltersFromLocalStorage,
+  saveFiltersToLocalStorage,
+  removeSavedFilters,
 } from "../../../../../app/filtersSlice";
+
 import {
   Button,
   Chip,
@@ -116,6 +120,7 @@ const HotelSearch: React.FC = () => {
       if (Array.isArray(selectedRatings)) {
         const selectedRatingsArray = selectedRatings.map(String);
         setRatings(selectedRatingsArray);
+        dispatch(setRatingsAction(ratings));
       } else {
         toast.error("Invalid ratings");
       }
@@ -124,6 +129,7 @@ const HotelSearch: React.FC = () => {
 
   const handleClearRatings = () => {
     setRatings([]);
+    dispatch(setRatingsAction([]));
   };
 
   const handleAmenityChange = (
@@ -135,6 +141,7 @@ const HotelSearch: React.FC = () => {
       // Ensure that selectedValue is an array of strings
       const selectedAmenitiesArray = selectedValue.map(String);
       setSelectedAmenities(selectedAmenitiesArray);
+      dispatch(setAmenitiesAction(selectedAmenitiesArray)); // Fix this line
     } else {
       // Handle the case where selectedValue is not an array
       console.error("Invalid value for selected amenities:", selectedValue);
@@ -143,65 +150,136 @@ const HotelSearch: React.FC = () => {
 
   const handleClearAmenities = () => {
     setSelectedAmenities([]);
+    dispatch(setAmenitiesAction([]));
   };
-
+  useEffect(() => {
+    console.log("Hotel List: ", hotelList);
+  }, [hotelList]);
+  // REDUX
   const destinationCityCode = useSelector(
     (state: RootState) => state.location.location.destinationCityCode
   );
-
-  // useEffect(() => {
-  //   if (
-  //     destinationCityCode &&
-  //     destinationCityCode != null &&
-  //     destinationCityCode != "NaN" &&
-  //     amenitiesOptions.length > 0 &&
-  //     ratings.length > 0
-  //   ) {
-  //     getHotelList();
-  //   }
-  // }, [destinationCityCode]);
-
+  const radiusAction = useSelector(
+    (state: RootState) => state.filters.filters.radius
+  );
+  const radiusUnitAction = useSelector(
+    (state: RootState) => state.filters.filters.radiusUnit
+  );
+  const amenitiesAction = useSelector(
+    (state: RootState) => state.filters.filters.Amenities
+  );
+  const ratingsAction = useSelector(
+    (state: RootState) => state.filters.filters.Ratings
+  );
   const getHotelList = async () => {
     try {
-      dispatch(setRadiusAction(radius));
-      dispatch(setRadiusUnitAction(radiusUnit));
-      dispatch(setAmenitiesAction(selectedAmenities));
-      dispatch(setRatingsAction(ratings));
       const storedToken = localStorage.getItem("token");
-      const response = await axios.get<HotelResponse>(
-        "http://localhost:8081/get-hotel-list",
-        {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-          params: {
-            cityCode: destinationCityCode,
-            radius: radius,
-            radiusUnit: radiusUnit,
-            amenities: selectedAmenities.join(","),
-            ratings: ratings.join(","),
-          },
-          withCredentials: true,
+      if (
+        radiusAction &&
+        radiusUnitAction &&
+        amenitiesAction &&
+        ratingsAction &&
+        destinationCityCode &&
+        radius !== radiusAction &&
+        selectedAmenities.length <= 0 &&
+        ratings.length <= 0
+      ) {
+        try {
+          const response = await axios.get<HotelResponse>(
+            "http://localhost:8081/get-hotel-list",
+            {
+              headers: {
+                Authorization: `Bearer ${storedToken}`,
+              },
+              params: {
+                cityCode: destinationCityCode,
+                radius: radiusAction,
+                radiusUnit: radiusUnitAction,
+                amenities: amenitiesAction.join(","),
+                ratings: ratingsAction.join(","),
+              },
+              withCredentials: true,
+            }
+          );
+          console.log("Response Data: ", response.data);
+          const hotels = response.data;
+          setHotelList(hotels);
+          console.log("Hotel List: ", hotelList);
+        } catch (error: any) {
+          console.log("Error Response Data: ", error.response?.data);
+          console.log("Error Status: ", error.response?.status);
+          console.log("Error Headers: ", error.response?.headers);
+          console.log("Error Request: ", error.request);
+          console.log("Error Message: ", error.message);
+          console.log("Error Config: ", error.config);
         }
-      );
+      } else {
+        try {
+          const response = await axios.get<HotelResponse>(
+            "http://localhost:8081/get-hotel-list",
+            {
+              headers: {
+                Authorization: `Bearer ${storedToken}`,
+              },
+              params: {
+                cityCode: destinationCityCode,
+                radius: radius,
+                radiusUnit: radiusUnit,
+                amenities: selectedAmenities.join(","),
+                ratings: ratings.join(","),
+              },
+              withCredentials: true,
+            }
+          );
 
-      console.log("Response Data: ", response.data);
-      const hotels = response.data;
-      setHotelList(hotels);
-      console.log("Hotel List: ", hotelList);
+          console.log("Response Data: ", response.data);
+          const hotels = response.data;
+          setHotelList(hotels);
+        } catch (error: any) {
+          console.log("Error Response Data: ", error.response?.data);
+          console.log("Error Status: ", error.response?.status);
+          console.log("Error Headers: ", error.response?.headers);
+          console.log("Error Request: ", error.request);
+          console.log("Error Message: ", error.message);
+          console.log("Error Config: ", error.config);
+        }
+      }
     } catch (error: any) {
-      console.log("Error Response Data: ", error.response?.data);
-      console.log("Error Status: ", error.response?.status);
-      console.log("Error Headers: ", error.response?.headers);
-      console.log("Error Request: ", error.request);
-      console.log("Error Message: ", error.message);
-      console.log("Error Config: ", error.config);
+      console.log("Error: ", error);
     }
   };
+
   const handleFormSubmit = (ev: any) => {
-    ev.preventDefault;
+    ev.preventDefault(); // Add parentheses to invoke the function
     getHotelList();
   };
+  const handleUseSavedFilters = (index: number) => {
+    const savedFilterSet = savedFilters[index];
+
+    // Dispatch actions to apply the saved filters
+    dispatch(setRadiusAction(savedFilterSet.radius));
+    dispatch(setRadiusUnitAction(savedFilterSet.radiusUnit));
+    dispatch(setAmenitiesAction(savedFilterSet.Amenities));
+    dispatch(setRatingsAction(savedFilterSet.Ratings));
+
+    // Optionally, you might want to fetch the hotel list with the applied filters
+    getHotelList();
+  };
+  const handleRemoveSavedFilters = (index: number) => {
+    // Remove the saved filters at the provided index
+    dispatch(removeSavedFilters(index));
+  };
+  const savedFilters = useSelector(
+    (state: RootState) => state.filters.savedFilters.filterSets
+  );
+  const handleSaveFilters = () => {
+    // Dispatch an action to save the current filters to localStorage
+    dispatch(saveFiltersToLocalStorage());
+  };
+  useEffect(() => {
+    // Load saved filters from localStorage when the component mounts
+    dispatch(loadFiltersFromLocalStorage());
+  }, [dispatch]);
   return (
     <div className={classes.formContainer}>
       <label className={classes.formLabel}>
@@ -209,7 +287,10 @@ const HotelSearch: React.FC = () => {
       </label>
       <select
         value={radiusUnit}
-        onChange={(e) => setRadiusUnit(e.target.value as "KM" | "MILE")}
+        onChange={(e) => {
+          setRadiusUnit(e.target.value as "KM" | "MILE");
+          dispatch(setRadiusUnitAction(e.target.value as "KM" | "MILE"));
+        }}
         className={classes.formSelect}
       >
         <option value="KM">KM</option>
@@ -220,9 +301,13 @@ const HotelSearch: React.FC = () => {
         type="number"
         value={radius}
         required
-        onChange={(e) => setRadius(Number(e.target.value))}
+        onChange={(e) => {
+          setRadius(Number(e.target.value));
+          dispatch(setRadiusAction(Number(e.target.value)));
+        }}
         className={classes.formInput}
       />
+
       <label className={classes.formLabel}>City Code:</label>
       <input
         type="text"
@@ -230,7 +315,6 @@ const HotelSearch: React.FC = () => {
         disabled
         className={classes.formTextInput}
       />
-
       <FormControl className={classes.formControl}>
         <InputLabel id="amenities-label">Select Amenities</InputLabel>
         <Select
@@ -304,14 +388,39 @@ const HotelSearch: React.FC = () => {
         <option value="BEDBANK">Bedbank</option>
         <option value="DIRECTCHAIN">Direct Chain</option>
       </select>
-
-      <button
-        onClick={handleFormSubmit}
-        type="submit"
-        className={classes.formButton}
-      >
-        FIND
-      </button>
+      <div>
+        <button
+          onClick={handleFormSubmit}
+          type="submit"
+          className={classes.formButton}
+        >
+          FIND
+        </button>
+        <Button className={classes.buttonTextStyle} onClick={handleSaveFilters}>
+          Save Filters
+        </Button>
+        {savedFilters.length > 0 && (
+          <div>
+            {savedFilters.map((filterSet, index) => (
+              <div key={index} className={classes.savedFiltersContainer}>
+                <p>Saved Filters {index + 1}</p>
+                <Button
+                  className={classes.buttonTextStyle}
+                  onClick={() => handleUseSavedFilters(index)}
+                >
+                  Use
+                </Button>
+                <Button
+                  className={classes.buttonTextStyle}
+                  onClick={() => handleRemoveSavedFilters(index)}
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

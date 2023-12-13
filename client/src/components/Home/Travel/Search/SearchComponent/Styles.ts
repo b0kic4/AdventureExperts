@@ -21,15 +21,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     alignContent: "center",
     background: "rgba(0, 0, 0, 0.30)",
+    padding: theme.spacing(2),
   },
   buttonContainer: {
     padding: "15px",
     display: "flex",
-    flexDirection: "column", // Adjusted flexDirection for better responsiveness
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
     top: "0",
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+    },
   },
   buttonContainerMobile: {
     padding: "15px",
@@ -52,8 +56,11 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "92%",
     height: "100%",
     overflow: "show", // Adjusted overflow for better responsiveness
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "100%", // Adjusted maxWidth for larger screens
+    },
     [theme.breakpoints.up("md")]: {
-      maxHeight: "90%", // Adjusted maxHeight for larger screens
+      maxWidth: "100%", // Adjusted maxWidth for even larger screens
     },
   },
   // BUTTONS

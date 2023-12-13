@@ -9,6 +9,10 @@ interface FiltersState {
     Adults: number;
     DepartureDate: Date | null;
   };
+  savedFilters: {
+    filterSets: FiltersState["filters"][];
+    selectedFilterSetIndex: number | null;
+  };
 }
 
 const initialState: FiltersState = {
@@ -19,6 +23,10 @@ const initialState: FiltersState = {
     radiusUnit: "KM",
     Adults: 1,
     DepartureDate: null,
+  },
+  savedFilters: {
+    filterSets: [],
+    selectedFilterSetIndex: null,
   },
 };
 
@@ -44,6 +52,54 @@ const filtersSlice = createSlice({
     setDepartureDate: (state, action: PayloadAction<Date | null>) => {
       state.filters.DepartureDate = action.payload;
     },
+    saveFiltersToLocalStorage: (state) => {
+      const filterSetsToSave = state.savedFilters.filterSets.map(
+        (filterSet) => ({
+          ...filterSet,
+          DepartureDate: filterSet.DepartureDate?.toISOString() || null,
+        })
+      );
+
+      localStorage.setItem("filterSets", JSON.stringify(filterSetsToSave));
+      localStorage.setItem(
+        "selectedFilterSetIndex",
+        state.savedFilters.selectedFilterSetIndex?.toString() || ""
+      );
+    },
+
+    loadFiltersFromLocalStorage: (state) => {
+      const storedFilterSets = localStorage.getItem("filterSets");
+      const storedSelectedFilterSetIndex = localStorage.getItem(
+        "selectedFilterSetIndex"
+      );
+
+      if (storedFilterSets) {
+        const parsedFilterSets = JSON.parse(
+          storedFilterSets
+        ) as FiltersState["savedFilters"]["filterSets"];
+        state.savedFilters.filterSets = parsedFilterSets.map((filterSet) => ({
+          ...filterSet,
+          DepartureDate: filterSet.DepartureDate
+            ? new Date(filterSet.DepartureDate)
+            : null,
+        }));
+      }
+
+      if (storedSelectedFilterSetIndex) {
+        state.savedFilters.selectedFilterSetIndex = parseInt(
+          storedSelectedFilterSetIndex,
+          10
+        );
+      }
+    },
+    removeSavedFilters: (state, action: PayloadAction<number>) => {
+      const indexToRemove = action.payload;
+      state.savedFilters.filterSets.splice(indexToRemove, 1);
+      localStorage.setItem(
+        "filterSets",
+        JSON.stringify(state.savedFilters.filterSets)
+      );
+    },
   },
 });
 
@@ -54,6 +110,9 @@ export const {
   setRadiusUnit,
   setAdults,
   setDepartureDate,
+  loadFiltersFromLocalStorage,
+  saveFiltersToLocalStorage,
+  removeSavedFilters,
 } = filtersSlice.actions;
 
 export default filtersSlice.reducer;
