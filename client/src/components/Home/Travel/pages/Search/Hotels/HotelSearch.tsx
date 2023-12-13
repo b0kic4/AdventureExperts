@@ -128,15 +128,17 @@ const HotelSearch: React.FC = () => {
     (state: RootState) => state.location.location.destinationCityCode
   );
 
-  useEffect(() => {
-    if (
-      destinationCityCode &&
-      destinationCityCode != null &&
-      destinationCityCode != "NaN"
-    ) {
-      getHotelList();
-    }
-  }, [destinationCityCode]);
+  // useEffect(() => {
+  //   if (
+  //     destinationCityCode &&
+  //     destinationCityCode != null &&
+  //     destinationCityCode != "NaN" &&
+  //     amenitiesOptions.length > 0 &&
+  //     ratings.length > 0
+  //   ) {
+  //     getHotelList();
+  //   }
+  // }, [destinationCityCode]);
 
   const getHotelList = async () => {
     try {
@@ -176,7 +178,7 @@ const HotelSearch: React.FC = () => {
   };
   const handleFormSubmit = (ev: any) => {
     ev.preventDefault;
-    return null;
+    getHotelList();
   };
   return (
     <div className={classes.formContainer}>

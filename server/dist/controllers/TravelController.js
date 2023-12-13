@@ -68,6 +68,7 @@ const getHotelList = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             amenites: amenites,
         });
         const parsedResponse = JSON.parse(response.body);
+        console.log("Hotels: ", parsedResponse);
         res.send(parsedResponse);
     }
     catch (err) {

@@ -57,6 +57,7 @@ const getHotelList = async (req: Request, res: Response) => {
     });
 
     const parsedResponse = JSON.parse(response.body);
+    console.log("Hotels: ", parsedResponse);
     res.send(parsedResponse);
   } catch (err: any) {
     console.log(err.message);

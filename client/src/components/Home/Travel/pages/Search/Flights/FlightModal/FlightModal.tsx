@@ -1,5 +1,13 @@
 import { faCartShopping, faClose } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  FlightTakeoff as FlightIcon,
+  Close as CloseIcon,
+  AccessTime as TimeIcon,
+  MonetizationOn as MoneyIcon,
+  Person as PersonIcon,
+} from "@material-ui/icons";
+
 import { animated, useSpring } from "react-spring";
 import "./style.css";
 
@@ -32,10 +40,10 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
           >
             <div className="header-container">
               <button id="shop">
-                <FontAwesomeIcon size={"2xl"} icon={faCartShopping} /> - Cart
+                <FlightIcon fontSize="large" />
               </button>{" "}
               <button id="exit" onClick={onClose}>
-                Close - <FontAwesomeIcon size={"2xl"} icon={faClose} />
+                <CloseIcon fontSize="large" />
               </button>
             </div>
             <div className="modal-header">
@@ -49,14 +57,18 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                   <p>Source: {flight.source}</p>
                   <p>Last Ticketing Date: {flight.lastTicketingDate}</p>
                   <p>
-                    Number of Bookable Seats: {flight.numberOfBookableSeats}
+                    Seats: {flight.numberOfBookableSeats}{" "}
+                    <PersonIcon fontSize="small" />
                   </p>
                 </div>
                 <div className="section">
                   <h3>Itineraries:</h3>
                   {flight.itineraries.map((itinerary: any, index) => (
                     <div key={index} className="section">
-                      <p>Duration: {itinerary.duration}</p>
+                      <p>
+                        <TimeIcon fontSize="large" /> Duration:{" "}
+                        {itinerary.duration}
+                      </p>
                       <h4>Segments:</h4>
                       {itinerary.segments.map(
                         (segment: any, segmentIndex: any) => (
@@ -96,7 +108,9 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                   ))}
                 </div>
                 <div className="section">
-                  <h3>Price:</h3>
+                  <p>
+                    Price <MoneyIcon fontSize="large" />
+                  </p>
                   <p>Currency: {flight.price.currency}</p>
                   <p>Total: {flight.price.total}</p>
                 </div>
