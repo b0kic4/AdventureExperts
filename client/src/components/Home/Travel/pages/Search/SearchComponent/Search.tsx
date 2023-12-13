@@ -4,7 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import useStyles from "./components/Styles";
+import useStyles from "./Styles";
 import { useDispatch } from "react-redux";
 import {
   setOriginCitySliceCode,
@@ -23,6 +23,7 @@ import FlightModal from "../Flights/FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";
 import HotelList from "../Hotels/HotelList";
+import { useMediaQuery, useTheme } from "@material-ui/core";
 // INTERFACES
 interface City {
   city: string;
@@ -253,9 +254,15 @@ const Search: React.FC = () => {
   // >
   //   Hotels
   // </Button>
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <div className={classes.mainContainer}>
-      <div className={classes.buttonContainer}>
+      <div
+        className={`${classes.buttonContainer} ${
+          isMobile ? classes.buttonContainerMobile : ""
+        }`}
+      >
         <Button
           variant={activeButton === "flights" ? "contained" : "outlined"}
           color="primary"

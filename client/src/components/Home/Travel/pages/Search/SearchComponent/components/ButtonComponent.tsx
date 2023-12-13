@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import useStyles from "./Styles";
+import useStyles from "../Styles";
 interface ButtonComponentProps {
   onClick: () => void;
 }

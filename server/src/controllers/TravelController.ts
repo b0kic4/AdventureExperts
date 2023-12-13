@@ -43,7 +43,7 @@ const getDestinationLocations = async (req: Request, res: Response) => {
 const getHotelList = async (req: Request, res: Response) => {
   try {
     console.log("Query: ", req.query);
-    const { cityCode } = req.query;
+    const { cityCode, radius, radiusUnit, amenites } = req.query;
 
     if (!cityCode) {
       return res.status(400).json({ error: "Missing cityCode parameter" });
@@ -51,11 +51,11 @@ const getHotelList = async (req: Request, res: Response) => {
 
     const response = await amadeus.referenceData.locations.hotels.byCity.get({
       cityCode: cityCode.toString(),
+      radius: radius,
+      radiusUnit: radiusUnit,
+      amenites: amenites,
     });
 
-    console.log(response.data);
-    const hotelList = response.data;
-    console.log("Hotel List: ", hotelList);
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (err: any) {
@@ -84,7 +84,7 @@ const getFlightOffers = async (req: Request, res: Response) => {
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (error: any) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

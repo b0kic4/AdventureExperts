@@ -2,24 +2,29 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
-    border: "1px solid orange",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignContent: "center",
     alignItems: "center",
-    maxWidth: "50%",
     width: "100%",
+    height: "50%",
     margin: "auto",
     padding: "20px",
     backgroundColor: "rgba(255, 255, 255, 0.85)",
-    borderRadius: "8px",
+    borderRadius: "35px",
     boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    overflow: "auto",
+    flexWrap: "wrap",
+    boxSizing: "border-box",
+    [theme.breakpoints.down("sm")]: {
+      width: "80%",
+      height: "60%",
+    },
   },
 
   formControl: {
     minWidth: 120,
-    width: "100%",
+    width: "70%",
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
@@ -39,19 +44,24 @@ const useStyles = makeStyles((theme) => ({
   },
   formInput: {
     marginBottom: "20px",
-    width: "100%",
+    width: "100%", // Updated for better responsiveness
     padding: "10px",
     boxSizing: "border-box",
     fontSize: "14px",
-    border: "1px solid #ccc",
     borderRadius: "4px",
     "&:focus": {
       outline: "none",
       borderColor: "#50C878",
     },
+    [theme.breakpoints.up("sm")]: {
+      width: "70%", // Adjusted width for larger screens
+    },
+  },
+  buttonTextStyle: {
+    fontWeight: "bold",
   },
   formSelect: {
-    width: "100%",
+    width: "100%", // Updated for better responsiveness
     marginBottom: "20px",
     padding: "10px",
     boxSizing: "border-box",
@@ -62,9 +72,12 @@ const useStyles = makeStyles((theme) => ({
       outline: "none",
       borderColor: "#50C878",
     },
+    [theme.breakpoints.up("sm")]: {
+      width: "70%", // Adjusted width for larger screens
+    },
   },
   formTextInput: {
-    width: "100%",
+    width: "100%", // Updated for better responsiveness
     marginBottom: "20px",
     padding: "10px",
     boxSizing: "border-box",
@@ -76,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
       outline: "none",
       borderColor: "#50C878",
     },
+    [theme.breakpoints.up("sm")]: {
+      width: "70%", // Adjusted width for larger screens
+    },
   },
 
   formCheckboxContainer: {
@@ -86,15 +102,6 @@ const useStyles = makeStyles((theme) => ({
   formCheckboxLabel: {
     fontSize: "14px",
     marginLeft: "10px",
-  },
-  clearButton: {
-    backgroundColor: "white",
-    borderRadius: "10px",
-    display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-    alignItems: "center",
-    width: "25%",
   },
   formButton: {
     backgroundColor: "#4CAF50",

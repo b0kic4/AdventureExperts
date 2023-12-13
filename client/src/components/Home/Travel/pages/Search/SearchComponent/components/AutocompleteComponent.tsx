@@ -1,7 +1,7 @@
 import React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import useStyles from "./Styles";
+import useStyles from "../Styles";
 interface AutocompleteComponentProps {
   options: any[]; // Change the type based on your data
   loading: boolean;

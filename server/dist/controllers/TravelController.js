@@ -57,16 +57,16 @@ exports.getDestinationLocations = getDestinationLocations;
 const getHotelList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Query: ", req.query);
-        const { cityCode } = req.query;
+        const { cityCode, radius, radiusUnit, amenites } = req.query;
         if (!cityCode) {
             return res.status(400).json({ error: "Missing cityCode parameter" });
         }
         const response = yield amadeusApi_1.default.referenceData.locations.hotels.byCity.get({
             cityCode: cityCode.toString(),
+            radius: radius,
+            radiusUnit: radiusUnit,
+            amenites: amenites,
         });
-        console.log(response.data);
-        const hotelList = response.data;
-        console.log("Hotel List: ", hotelList);
         const parsedResponse = JSON.parse(response.body);
         res.send(parsedResponse);
     }
@@ -90,7 +90,7 @@ const getFlightOffers = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.send(parsedResponse);
     }
     catch (error) {
-        console.error(error);
+        // console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });

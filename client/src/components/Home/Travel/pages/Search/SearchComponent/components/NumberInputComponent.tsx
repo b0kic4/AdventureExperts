@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import useStyles from "./Styles";
+import useStyles from "../Styles";
 interface NumberInputComponentProps {
   value: number;
   onChange: (value: number) => void;

@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   modalHeader: {
     display: "flex",
     justifyContent: "space-between",
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     display: "flex",
     flex: 1,
     width: "100%",
-    maxHeight: "100vh",
+    minHeight: "100%", // Adjusted height for better responsiveness
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -23,12 +23,25 @@ const useStyles = makeStyles({
     background: "rgba(0, 0, 0, 0.30)",
   },
   buttonContainer: {
+    padding: "15px",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column", // Adjusted flexDirection for better responsiveness
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
     top: "0",
+  },
+  buttonContainerMobile: {
+    padding: "15px",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    top: "0",
+    [theme.breakpoints.up("md")]: {
+      display: "none", // Hide on larger screens
+    },
   },
   container: {
     display: "flex",
@@ -36,8 +49,12 @@ const useStyles = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    width: "100%",
-    overflow: "none",
+    maxWidth: "92%",
+    height: "100%",
+    overflow: "show", // Adjusted overflow for better responsiveness
+    [theme.breakpoints.up("md")]: {
+      maxHeight: "90%", // Adjusted maxHeight for larger screens
+    },
   },
   // BUTTONS
   flightButton: {
@@ -82,7 +99,6 @@ const useStyles = makeStyles({
     boxSizing: "border-box",
     cursor: "pointer",
     padding: "10px",
-    border: "1px solid #ccc",
     borderRadius: "8px",
     transition: "background-color 0.3s ease",
     "&:hover": {
@@ -181,6 +197,6 @@ const useStyles = makeStyles({
       borderColor: "#50C878 !important",
     },
   },
-});
+}));
 
 export default useStyles;

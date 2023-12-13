@@ -2,7 +2,7 @@
 
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import useStyles from "./Styles";
+import useStyles from "../Styles";
 import { format } from "date-fns"; // Import the format function from date-fns
 
 interface DateInputComponentProps {

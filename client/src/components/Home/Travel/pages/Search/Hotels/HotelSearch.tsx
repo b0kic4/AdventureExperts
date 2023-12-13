@@ -94,24 +94,24 @@ const HotelSearch: React.FC = () => {
   const [radius, setRadius] = useState<number>(5);
   const [radiusUnit, setRadiusUnit] = useState<"KM" | "MILE">("KM");
   //Array of hotel chain codes. Each code is a string consisted of 2 capital alphabetic characters.
-  const [chainCodes, setChainCodes] = useState<string[]>([]);
 
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
   const [ratings, setRatings] = useState<string[]>([]);
   const [hotelSource, setHotelSource] = useState<string[]>([]);
 
-  const handleRatingChange = (selectedRating: string) => {
-    if (!ratings.includes(selectedRating) && ratings.length < 4) {
-      setRatings((prevRatings) => [...prevRatings, selectedRating]);
-    } else {
+  const handleRatingChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const selectedRatings = event.target.value as string[];
+
+    if (selectedRatings.length > 4) {
       toast.error("Select up to four ratings");
+    } else {
+      setRatings(selectedRatings);
     }
   };
-  const handleRemoveRating = (removedRating: string) => {
-    setRatings((prevRatings) =>
-      prevRatings.filter((rating) => rating !== removedRating)
-    );
+
+  const handleClearRatings = () => {
+    setRatings([]);
   };
 
   const handleAmenityChange = (
@@ -149,6 +149,9 @@ const HotelSearch: React.FC = () => {
           },
           params: {
             cityCode: destinationCityCode,
+            radius: radius,
+            radiusUnit: radiusUnit,
+            amenites: selectedAmenities,
           },
           withCredentials: true,
         }
@@ -177,7 +180,9 @@ const HotelSearch: React.FC = () => {
   };
   return (
     <div className={classes.formContainer}>
-      <label className={classes.formLabel}>Radius Unit:</label>
+      <label className={classes.formLabel}>
+        Radius Unit: - Default Unit of 5
+      </label>
       <select
         value={radiusUnit}
         onChange={(e) => setRadiusUnit(e.target.value as "KM" | "MILE")}
@@ -194,11 +199,11 @@ const HotelSearch: React.FC = () => {
         onChange={(e) => setRadius(Number(e.target.value))}
         className={classes.formInput}
       />
-      <label className={classes.formLabel}>Chain Codes - Optional:</label>
+      <label className={classes.formLabel}>City Code:</label>
       <input
         type="text"
-        value={chainCodes.join(",")}
-        onChange={(e) => setChainCodes(e.target.value.split(","))}
+        value={destinationCityCode ?? ""}
+        disabled
         className={classes.formTextInput}
       />
 
@@ -225,25 +230,27 @@ const HotelSearch: React.FC = () => {
             </MenuItem>
           ))}
         </Select>
-        <Button onClick={handleClearAmenities} className={classes.clearButton}>
+        <Button
+          className={classes.buttonTextStyle}
+          onClick={handleClearAmenities}
+        >
           Clear Filters
         </Button>
       </FormControl>
       <FormControl className={classes.formControl}>
-        <InputLabel id="ratings-label">Select Ratings - Optional:</InputLabel>
+        <InputLabel id="ratings-label">Hotel Stars - Optional:</InputLabel>
         <Select
           labelId="ratings-label"
           id="ratings"
           multiple
           value={ratings}
-          onChange={(e) => handleRatingChange(e.target.value as string)}
-          renderValue={(selected) => (
+          onChange={handleRatingChange}
+          renderValue={() => (
             <div className={classes.chips}>
-              {(selected as string[]).map((value) => (
+              {ratings.map((value) => (
                 <Chip
                   key={value}
-                  label={`Rating ${value}`}
-                  onDelete={() => handleRemoveRating(value)}
+                  label={`Stars ${value}`}
                   className={classes.chip}
                 />
               ))}
@@ -252,13 +259,17 @@ const HotelSearch: React.FC = () => {
         >
           {[1, 2, 3, 4, 5].map((rating) => (
             <MenuItem key={rating} value={String(rating)}>
-              {`Rating ${rating}`}
+              {`Stars ${rating}`}
             </MenuItem>
           ))}
         </Select>
-        <Button onClick={() => setRatings([])}>Clear Ratings</Button>
+        <Button
+          className={classes.buttonTextStyle}
+          onClick={handleClearRatings}
+        >
+          Clear Ratings
+        </Button>
       </FormControl>
-
       <label className={classes.formLabel}>Hotel Source:</label>
       <select
         value={hotelSource.join(",")}
@@ -275,7 +286,7 @@ const HotelSearch: React.FC = () => {
         type="submit"
         className={classes.formButton}
       >
-        Search
+        FIND
       </button>
     </div>
   );
