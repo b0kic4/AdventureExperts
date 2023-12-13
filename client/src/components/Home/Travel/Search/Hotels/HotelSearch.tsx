@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useStyles from "./Styles";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../../../app/rootReducer";
+import { RootState } from "../../../../../app/rootReducer";
 import {
   Button,
   Chip,
@@ -89,7 +89,7 @@ const amenitiesOptions = [
 
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
-  const [hotelList, setHotelList] = useState<Hotel[]>([]);
+  const [hotelList, setHotelList] = useState<HotelResponse | null>(null);
 
   const [radius, setRadius] = useState<number>(5);
   const [radiusUnit, setRadiusUnit] = useState<"KM" | "MILE">("KM");
@@ -106,7 +106,12 @@ const HotelSearch: React.FC = () => {
     if (selectedRatings.length > 4) {
       toast.error("Select up to four ratings");
     } else {
-      setRatings(selectedRatings);
+      if (Array.isArray(selectedRatings)) {
+        const selectedRatingsArray = selectedRatings.map(String);
+        setRatings(selectedRatingsArray);
+      } else {
+        toast.error("Invalid ratings");
+      }
     }
   };
 
@@ -117,7 +122,16 @@ const HotelSearch: React.FC = () => {
   const handleAmenityChange = (
     event: React.ChangeEvent<{ value: unknown }>
   ) => {
-    setSelectedAmenities(event.target.value as string[]);
+    const selectedValue = event.target.value;
+
+    if (Array.isArray(selectedValue)) {
+      // Ensure that selectedValue is an array of strings
+      const selectedAmenitiesArray = selectedValue.map(String);
+      setSelectedAmenities(selectedAmenitiesArray);
+    } else {
+      // Handle the case where selectedValue is not an array
+      console.error("Invalid value for selected amenities:", selectedValue);
+    }
   };
 
   const handleClearAmenities = () => {
@@ -153,27 +167,24 @@ const HotelSearch: React.FC = () => {
             cityCode: destinationCityCode,
             radius: radius,
             radiusUnit: radiusUnit,
-            amenites: selectedAmenities,
+            amenities: selectedAmenities.join(","),
+            ratings: ratings.join(","),
           },
           withCredentials: true,
         }
       );
-      console.log(response.data);
-      const hotels = response.data.data;
+
+      console.log("Response Data: ", response.data);
+      const hotels = response.data;
       setHotelList(hotels);
       console.log("Hotel List: ", hotelList);
     } catch (error: any) {
-      if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
-      } else if (error.request) {
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        console.log("Error", error.message);
-      }
-      console.log(error.config);
+      console.log("Error Response Data: ", error.response?.data);
+      console.log("Error Status: ", error.response?.status);
+      console.log("Error Headers: ", error.response?.headers);
+      console.log("Error Request: ", error.request);
+      console.log("Error Message: ", error.message);
+      console.log("Error Config: ", error.config);
     }
   };
   const handleFormSubmit = (ev: any) => {

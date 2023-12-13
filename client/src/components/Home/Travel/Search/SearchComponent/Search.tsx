@@ -9,16 +9,16 @@ import { useDispatch } from "react-redux";
 import {
   setOriginCitySliceCode,
   setDestinationSliceCode,
-} from "../../../../../../app/locationSlice";
+} from "../../../../../app/locationSlice";
 import { useSelector } from "react-redux/es/hooks/useSelector";
-import { RootState } from "../../../../../../app/rootReducer";
+import { RootState } from "../../../../../app/rootReducer";
 import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
 import DateInputComponent from "./components/DateInputComponent";
 import ButtonComponent from "./components/ButtonComponent";
 import AutocompleteComponent from "./components/AutocompleteComponent";
 import NumberInputComponent from "./components/NumberInputComponent";
-import Loader from "../../../../../assets/Loader";
+import Loader from "../../../../assets/Loader";
 import FlightModal from "../Flights/FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";

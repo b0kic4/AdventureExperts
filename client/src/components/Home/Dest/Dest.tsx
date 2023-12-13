@@ -7,7 +7,7 @@ import winterVideo from "./assets/pexels-sinan-serin-8951664 (720p).mp4";
 import exoticVideo from "./assets/production_id 5058332 (2160p).mp4";
 import "./style.css";
 
-const Dest = () => {
+const Dest: React.FC = () => {
   return (
     <div className="container">
       <div className="dest-items">

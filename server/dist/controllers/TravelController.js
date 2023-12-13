@@ -57,22 +57,26 @@ exports.getDestinationLocations = getDestinationLocations;
 const getHotelList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log("Query: ", req.query);
-        const { cityCode, radius, radiusUnit, amenites } = req.query;
+        const { cityCode, radius, radiusUnit, amenities, ratings } = req.query;
         if (!cityCode) {
             return res.status(400).json({ error: "Missing cityCode parameter" });
         }
+        console.log("RADIUS TYPE: ", typeof radius);
+        const numericRadius = Number(radius);
+        console.log("NUMERIC RADIUS TYPE: ", typeof numericRadius);
         const response = yield amadeusApi_1.default.referenceData.locations.hotels.byCity.get({
             cityCode: cityCode.toString(),
-            radius: radius,
-            radiusUnit: radiusUnit,
-            amenites: amenites,
+            radius: numericRadius,
+            radiusUnit: radiusUnit === null || radiusUnit === void 0 ? void 0 : radiusUnit.toString(),
+            amenities: amenities,
+            ratings: ratings,
         });
         const parsedResponse = JSON.parse(response.body);
         console.log("Hotels: ", parsedResponse);
         res.send(parsedResponse);
     }
     catch (err) {
-        console.log(err.message);
+        console.log("Error Message: ", err.message);
         console.error("Error fetching hotel list:", err);
         res.status(500).json({ error: "Internal Server Error" });
     }
