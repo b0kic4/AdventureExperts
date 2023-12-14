@@ -1,0 +1,67 @@
+/* Add these styles to your CSS file */
+
+.nav-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  color: #fff; /* White text color */
+  z-index: 2; /* Ensure the navbar is on top of the video */
+}
+
+/* Logo Container */
+.logo-container h1 {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  color: black;
+  font-size: 28px; /* Increased font size */
+  margin: 0; /* Removed margin */
+  gap: 10px; /* Adjusted gap */
+}
+
+.logo-container button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff; /* White text color */
+  font-size: 20px; /* Increased font size */
+  margin-left: 60%;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links span {
+  color: #fff; /* White text color */
+  font-size: 18px; /* Font size for the username */
+  margin-left: 20px; /* Adjusted margin for spacing */
+}
+
+/* Adjustments for Mobile Responsiveness */
+@media only screen and (max-width: 768px) {
+  .nav-container {
+    flex-direction: row;
+    height: auto;
+  }
+
+  .logo-container h1 {
+    margin-bottom: 10px; /* Added margin at the bottom for spacing */
+  }
+
+  .nav-links {
+    justify-content: center;
+    margin-top: 10px; /* Added margin at the top for spacing */
+  }
+
+  .logo-container button,
+  .nav-links span {
+    margin: 0; /* Reset margin for buttons and username on smaller screens */
+  }
+}

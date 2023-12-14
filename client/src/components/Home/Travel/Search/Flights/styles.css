@@ -1,0 +1,70 @@
+/* FLIGHT LIST CSS */
+
+.scrollContainer {
+  color: #333;
+  max-height: 70vh;
+  width: 100%;
+  overflow-y: auto;
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.flightOfferCard {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flightOfferCard:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.flightOfferDetails {
+  margin-top: 15px;
+}
+
+.flightOfferDetails p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  gap: 8px;
+  text-align: center;
+}
+
+.clearButton {
+  background-color: #e74c3c;
+  margin-top: 20px;
+  color: white;
+  font-weight: bold;
+
+  font-size: 18px;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.clearButton:hover {
+  background-color: #c0392b;
+}
+
+/* Adjustments for smaller screens */
+@media only screen and (max-width: 600px) {
+  .flightOfferCard {
+    padding: 15px;
+  }
+
+  .clearButton {
+    width: 100%;
+  }
+}
