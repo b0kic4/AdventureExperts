@@ -253,6 +253,12 @@ const HotelSearch: React.FC = () => {
     ev.preventDefault(); // Add parentheses to invoke the function
     getHotelList();
   };
+
+  const handleSaveFilters = () => {
+    // Dispatch an action to save the current filters to localStorage
+    dispatch(saveFiltersToLocalStorage());
+  };
+
   const handleUseSavedFilters = (index: number) => {
     const savedFilterSet = savedFilters[index];
 
@@ -265,17 +271,19 @@ const HotelSearch: React.FC = () => {
     // Optionally, you might want to fetch the hotel list with the applied filters
     getHotelList();
   };
+
   const handleRemoveSavedFilters = (index: number) => {
     // Remove the saved filters at the provided index
     dispatch(removeSavedFilters(index));
   };
+
   const savedFilters = useSelector(
     (state: RootState) => state.filters.savedFilters.filterSets
   );
-  const handleSaveFilters = () => {
-    // Dispatch an action to save the current filters to localStorage
-    dispatch(saveFiltersToLocalStorage());
-  };
+  useEffect(() => {
+    console.log("Saved Filters: ", savedFilters);
+  }, [savedFilters]);
+
   useEffect(() => {
     // Load saved filters from localStorage when the component mounts
     dispatch(loadFiltersFromLocalStorage());
@@ -401,7 +409,7 @@ const HotelSearch: React.FC = () => {
         </Button>
         {savedFilters.length > 0 && (
           <div>
-            {savedFilters.map((filterSet, index) => (
+            {savedFilters.map((index: any) => (
               <div key={index} className={classes.savedFiltersContainer}>
                 <p>Saved Filters {index + 1}</p>
                 <Button

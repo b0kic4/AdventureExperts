@@ -97,6 +97,13 @@ const Search: React.FC = () => {
           },
         }
       );
+      if (destinationLocationCode !== null && originLocationCode !== null) {
+        localStorage.setItem("originLocationCode", originLocationCode);
+        localStorage.setItem(
+          "destinationLocationCode",
+          destinationLocationCode
+        );
+      }
       const offers = response.data.data;
       setFlightOffers(offers);
       const responseData = response.data;
@@ -238,22 +245,22 @@ const Search: React.FC = () => {
   const handleCloseFlightDetails = () => {
     setSelectedFlight(null);
   };
-  //   <Button
-  //   className={`${classes.flightButton} ${
-  //     activeButton === "flights" ? "" : classes.inactiveButton
-  //   }`}
-  //   onClick={() => handleButtonClick("flights")}
-  // >
-  //   Flight Offers
-  // </Button>
-  // <Button
-  //   className={`${classes.hotelButton} ${
-  //     activeButton === "hotels" ? "" : classes.inactiveButton
-  //   }`}
-  //   onClick={() => handleButtonClick("hotels")}
-  // >
-  //   Hotels
-  // </Button>
+  useEffect(() => {
+    // Retrieve values from local storage
+    const savedOriginLocationCode = localStorage.getItem("originLocationCode");
+    const savedDestinationLocationCode = localStorage.getItem(
+      "destinationLocationCode"
+    );
+
+    // Set the retrieved values as default values for Autocomplete inputs
+    setOriginLocationCode(savedOriginLocationCode || null);
+    setDestinationLocationCode(savedDestinationLocationCode || null);
+
+    // Set default values for Autocomplete inputs
+    setOriginInputValue(savedOriginLocationCode || "");
+    setDestinationInputValue(savedDestinationLocationCode || "");
+  }, []);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -312,7 +319,7 @@ const Search: React.FC = () => {
                       </Grid>
                     </Grid>
                   )}
-                  label="From (City)"
+                  label={"From (City)"}
                 />
               </Grid>
 

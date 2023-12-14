@@ -32,6 +32,7 @@
     "@types/react-leaflet": "^3.0.0",
     "@types/react-redux": "^7.1.33",
     "axios": "^1.6.2",
+    "create-vite": "^5.1.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "jsonwebtoken": "^9.0.2",

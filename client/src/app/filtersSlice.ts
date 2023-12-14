@@ -53,20 +53,15 @@ const filtersSlice = createSlice({
       state.filters.DepartureDate = action.payload;
     },
     saveFiltersToLocalStorage: (state) => {
-      const filterSetsToSave = state.savedFilters.filterSets.map(
-        (filterSet) => ({
-          ...filterSet,
-          DepartureDate: filterSet.DepartureDate?.toISOString() || null,
-        })
+      localStorage.setItem(
+        "filterSets",
+        JSON.stringify(state.savedFilters.filterSets)
       );
-
-      localStorage.setItem("filterSets", JSON.stringify(filterSetsToSave));
       localStorage.setItem(
         "selectedFilterSetIndex",
         state.savedFilters.selectedFilterSetIndex?.toString() || ""
       );
     },
-
     loadFiltersFromLocalStorage: (state) => {
       const storedFilterSets = localStorage.getItem("filterSets");
       const storedSelectedFilterSetIndex = localStorage.getItem(
@@ -74,15 +69,7 @@ const filtersSlice = createSlice({
       );
 
       if (storedFilterSets) {
-        const parsedFilterSets = JSON.parse(
-          storedFilterSets
-        ) as FiltersState["savedFilters"]["filterSets"];
-        state.savedFilters.filterSets = parsedFilterSets.map((filterSet) => ({
-          ...filterSet,
-          DepartureDate: filterSet.DepartureDate
-            ? new Date(filterSet.DepartureDate)
-            : null,
-        }));
+        state.savedFilters.filterSets = JSON.parse(storedFilterSets);
       }
 
       if (storedSelectedFilterSetIndex) {
