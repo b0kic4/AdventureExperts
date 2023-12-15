@@ -35,32 +35,40 @@ interface City {
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
+  // Location Codes
   const [originLocationCode, setOriginLocationCode] = useState<string | null>(
     null
   );
-  const [dictionaries, setDictionaries] = useState<[]>([]);
-  const [adults, setAdults] = useState<number>(1);
   const [destinationLocationCode, setDestinationLocationCode] = useState<
     string | null
   >(null);
-  const classes = useStyles();
-
-  // const thisCityCode = useSelector((state: RootState) => state.location);
-
+  // Params
+  const [dictionaries, setDictionaries] = useState<[]>([]);
+  const [adults, setAdults] = useState<number>(1);
   const [departureDate, setDepartureDate] = useState<Date | null>(null);
   const [options, setOptions] = useState<City[]>([
     { city: "", country: "", code: "", state: "" },
   ]);
-  const [originInputValue, setOriginInputValue] = useState("");
-  const [destinationInputValue, setDestinationInputValue] = useState("");
+
+  // Styles
+  const classes = useStyles();
+
+  // Input values
+  const [originInputValue, setOriginInputValue] = useState<string>(String);
+  const [destinationInputValue, setDestinationInputValue] =
+    useState<string>(String);
+  const [savedOriginInputValue, setSavedOriginInputValue] =
+    useState<City | null>(null);
+  const [savedDestInputValue, setSavedDestInputValue] = useState<City | null>(
+    null
+  );
+
   const [loading, setLoading] = useState(false);
+  // Setting location codes to redux slice
   useEffect(() => {
     dispatch(setOriginCitySliceCode(originLocationCode));
     dispatch(setDestinationSliceCode(destinationLocationCode));
   }, [originLocationCode, destinationLocationCode]);
-  // useEffect(() => {
-  //   console.log("city code slicers after changes:", thisCityCode);
-  // }, [thisCityCode]);
 
   // Making call to find flights offers
   const [flightOffers, setFlightOffers] = useState<FlightOffer[]>([]);
@@ -97,13 +105,6 @@ const Search: React.FC = () => {
           },
         }
       );
-      if (destinationLocationCode !== null && originLocationCode !== null) {
-        localStorage.setItem("originLocationCode", originLocationCode);
-        localStorage.setItem(
-          "destinationLocationCode",
-          destinationLocationCode
-        );
-      }
       const offers = response.data.data;
       setFlightOffers(offers);
       const responseData = response.data;
@@ -135,7 +136,7 @@ const Search: React.FC = () => {
             },
           }
         );
-        // console.log("Origin Location Value: ", originInputValue);
+
         const locations = response.data.data;
         const cities = locations.map((location: any) => ({
           city: location.address.cityName,
@@ -143,14 +144,14 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
+        // console.log("Cities in origin: ", cities);
+        // console.log("Locations in origin: ", locations);
 
-        setOptions((_prevOptions) => cities);
-        // console.log("Origin Options: ", cities);
+        setOptions(cities);
 
         setOriginLocationCode((prevCityCode) =>
           originInputValue.trim() !== "" ? prevCityCode : null
         );
-        // console.log("Origin City code: ", originLocationCode);
       } catch (error: any) {
         console.error(error);
       }
@@ -186,9 +187,11 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
+        console.log("Cities in destination: ", cities);
+        console.log("Locations in destination: ", locations);
 
         // Use the callback form to ensure you get the updated state
-        setOptions((_prevOptions) => cities);
+        setOptions(cities);
         // console.log("Destination city code: ", destinationLocationCode);
         // Use the callback form to ensure you get the updated state
         setDestinationLocationCode((prevCityCode) =>
@@ -208,22 +211,66 @@ const Search: React.FC = () => {
     value: NonNullable<string | City>
   ): void => {
     if (value) {
+      console.log("Value: ", value);
+
+      // Update state
+      setSavedOriginInputValue(value as City); // Ensure value is treated as City
+
+      // Update local storage
+      localStorage.setItem("originInputValue", JSON.stringify(value));
+
       const newCityCode = typeof value === "string" ? value : value.code || "";
-      setOriginLocationCode(newCityCode);
-      // console.log("New city code: ", newCityCode);
-      // console.log("Origin Location Code: ", originLocationCode);
+      console.log("New City Code: " + newCityCode);
+
+      if (originLocationCode !== null) {
+        localStorage.setItem("originLocationCode", newCityCode);
+        setOriginLocationCode(newCityCode);
+      }
     }
   };
+
   const handleDestinationLocationCodeAutocompleteChange = (
     value: NonNullable<string | City>
   ): void => {
     if (value) {
+      console.log("Value: ", value);
+
+      // Update state
+      setSavedDestInputValue(value as City); // Ensure value is treated as City
+
+      // Update local storage
+      localStorage.setItem("destinationInputValue", JSON.stringify(value));
+
       const newCityCode = typeof value === "string" ? value : value.code || "";
-      setDestinationLocationCode(newCityCode);
-      // console.log("New city code: ", newCityCode);
-      // console.log("Destination Location Code: ", destinationLocationCode);
+      console.log("New city code: ", newCityCode);
+
+      if (destinationLocationCode !== null) {
+        localStorage.setItem("destinationLocationCode", newCityCode);
+        setDestinationLocationCode(newCityCode);
+      }
     }
   };
+
+  useEffect(() => {
+    // Retrieve values from local storage and set as default values
+    const savedOriginInputValueString =
+      localStorage.getItem("originInputValue");
+    const savedDestInputValueString = localStorage.getItem(
+      "destinationInputValue"
+    );
+
+    if (savedOriginInputValueString) {
+      const savedOriginInputValueParsed = JSON.parse(
+        savedOriginInputValueString
+      );
+      setSavedOriginInputValue(savedOriginInputValueParsed);
+    }
+
+    if (savedDestInputValueString) {
+      const savedDestInputValueParsed = JSON.parse(savedDestInputValueString);
+      setSavedDestInputValue(savedDestInputValueParsed);
+    }
+  }, []);
 
   const handleDateChange = (date: Date | null): void => {
     setDepartureDate(date);
@@ -247,19 +294,42 @@ const Search: React.FC = () => {
   };
   useEffect(() => {
     // Retrieve values from local storage
+
     const savedOriginLocationCode = localStorage.getItem("originLocationCode");
     const savedDestinationLocationCode = localStorage.getItem(
       "destinationLocationCode"
     );
 
     // Set the retrieved values as default values for Autocomplete inputs
-    setOriginLocationCode(savedOriginLocationCode || null);
-    setDestinationLocationCode(savedDestinationLocationCode || null);
-
-    // Set default values for Autocomplete inputs
-    setOriginInputValue(savedOriginLocationCode || "");
-    setDestinationInputValue(savedDestinationLocationCode || "");
+    setOriginLocationCode(savedOriginLocationCode);
+    setDestinationLocationCode(savedDestinationLocationCode);
   }, []);
+
+  useEffect(() => {
+    // Retrieve values from local storage and set as default values
+    const savedOriginInputValue = localStorage.getItem("originInputValue");
+    const savedDestinationInputValue = localStorage.getItem(
+      "destinationInputValue"
+    );
+
+    if (savedOriginInputValue !== null) {
+      setOriginInputValue(savedOriginInputValue);
+    }
+
+    if (savedDestinationInputValue !== null) {
+      setDestinationInputValue(savedDestinationInputValue);
+    }
+  }, [setOriginInputValue, setDestinationInputValue]);
+
+  // useEffect(() => {
+  //   // Log the updated values after the state has been set
+  //   console.log("Input value origin: ", originInputValue);
+  // }, [originInputValue]);
+
+  // useEffect(() => {
+  //   // Log the updated values after the state has been set
+  //   console.log("Input value dest: ", destinationInputValue);
+  // }, [destinationInputValue]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -319,6 +389,7 @@ const Search: React.FC = () => {
                       </Grid>
                     </Grid>
                   )}
+                  savedInputValue={savedOriginInputValue}
                   label={"From (City)"}
                 />
               </Grid>
@@ -352,6 +423,7 @@ const Search: React.FC = () => {
                     </Grid>
                   )}
                   label="To (City)"
+                  savedInputValue={savedDestInputValue}
                 />
               </Grid>
 
