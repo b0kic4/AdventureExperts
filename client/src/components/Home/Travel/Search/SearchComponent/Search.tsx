@@ -187,13 +187,9 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
-        console.log("Cities in destination: ", cities);
-        console.log("Locations in destination: ", locations);
-
-        // Use the callback form to ensure you get the updated state
+        // console.log("Cities in destination: ", cities);
+        // console.log("Locations in destination: ", locations);
         setOptions(cities);
-        // console.log("Destination city code: ", destinationLocationCode);
-        // Use the callback form to ensure you get the updated state
         setDestinationLocationCode((prevCityCode) =>
           destinationInputValue.trim() !== "" ? prevCityCode : null
         );
@@ -214,7 +210,7 @@ const Search: React.FC = () => {
       console.log("Value: ", value);
 
       // Update state
-      setSavedOriginInputValue(value as City); // Ensure value is treated as City
+      setSavedOriginInputValue(value as City);
 
       // Update local storage
       localStorage.setItem("originInputValue", JSON.stringify(value));
@@ -252,7 +248,6 @@ const Search: React.FC = () => {
   };
 
   useEffect(() => {
-    // Retrieve values from local storage and set as default values
     const savedOriginInputValueString =
       localStorage.getItem("originInputValue");
     const savedDestInputValueString = localStorage.getItem(
@@ -320,16 +315,6 @@ const Search: React.FC = () => {
       setDestinationInputValue(savedDestinationInputValue);
     }
   }, [setOriginInputValue, setDestinationInputValue]);
-
-  // useEffect(() => {
-  //   // Log the updated values after the state has been set
-  //   console.log("Input value origin: ", originInputValue);
-  // }, [originInputValue]);
-
-  // useEffect(() => {
-  //   // Log the updated values after the state has been set
-  //   console.log("Input value dest: ", destinationInputValue);
-  // }, [destinationInputValue]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     width: "100%",
     minHeight: "100%", // Adjusted height for better responsiveness
+    height: "100vh",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
@@ -133,9 +134,10 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
   },
   numberInput: {
-    width: "50%",
+    width: "60%",
     height: "50%",
     margin: "10px 0",
+    textAlign: "center",
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
       backgroundColor: "rgb(0, 0, 0, 0.5)",
@@ -156,7 +158,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textInput: {
-    width: "70%",
+    width: "100%",
     height: "50%",
 
     "& .MuiAutocomplete-inputRoot": {
@@ -179,10 +181,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   datePickerContainer: {
-    margin: "20px 0",
+    margin: "10px 0",
   },
   datePicker: {
-    width: "50%",
+    width: "45%",
     height: "50%",
     "& .MuiAutocomplete-inputRoot": {
       color: "white",

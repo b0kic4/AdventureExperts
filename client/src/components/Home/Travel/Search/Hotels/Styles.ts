@@ -1,3 +1,4 @@
+import { height } from "@fortawesome/free-solid-svg-icons/faGlobe";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -6,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    alignContent: "center",
     width: "100%", // Set width to 100%
     maxWidth: "80%",
     height: "50%",
@@ -19,10 +21,11 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: "border-box",
     [theme.breakpoints.down("sm")]: {
       width: "80%",
-      height: "60%",
+      maxHeight: "30%",
     },
     [theme.breakpoints.up("lg")]: {
-      maxWidth: "50%", // Adjusted maxWidth for larger screens (you can change this value)
+      maxWidth: "50%",
+      maxHeight: "30%",
     },
   },
   savedFiltersContainer: {
