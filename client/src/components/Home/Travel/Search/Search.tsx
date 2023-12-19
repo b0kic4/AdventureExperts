@@ -11,14 +11,13 @@ import {
   setDestinationSliceCode,
 } from "../../../../app/locationSlice";
 
-import { RootState } from "../../../../app/rootReducer";
 import { format } from "date-fns";
 import Button from "@material-ui/core/Button";
 import DateInputComponent from "./components/DateInputComponent";
 import ButtonComponent from "./components/ButtonComponent";
 import AutocompleteComponent from "./components/AutocompleteComponent";
 import NumberInputComponent from "./components/NumberInputComponent";
-import Loader from "../../../assets/Loader";
+import Loader from "../../Loader/Loader";
 import FlightModal from "../Flights/FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";
