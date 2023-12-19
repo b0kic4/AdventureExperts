@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import useStyles from "./Styles";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../../../app/rootReducer";
+import { RootState } from "../../../../app/rootReducer";
 import {
   setRadius as setRadiusAction,
   setRadiusUnit as setRadiusUnitAction,
   setAmenities as setAmenitiesAction,
   setRatings as setRatingsAction,
-} from "../../../../../app/filtersSlice";
+} from "../../../../app/filtersSlice";
 
 import {
   Button,

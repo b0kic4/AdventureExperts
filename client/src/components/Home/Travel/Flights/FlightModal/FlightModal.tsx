@@ -9,7 +9,7 @@ import {
 import { animated, useSpring } from "react-spring";
 import "./style.css";
 
-import FlightOffer from "../../SearchComponent/components/interfaces/FlightTypes";
+import FlightOffer from "../../Search/components/interfaces/FlightTypes";
 interface FlightDetailsProps {
   flight: FlightOffer;
   dictionaries: any;

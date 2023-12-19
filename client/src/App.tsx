@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home/Home";
 import Travel from "./components/Home/Travel/Travel";
-import Search from "./components/Home/Travel/Search/SearchComponent/Search";
+import Search from "./components/Home/Travel/Search/Search";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
