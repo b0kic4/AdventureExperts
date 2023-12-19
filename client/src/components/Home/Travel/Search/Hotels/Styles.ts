@@ -1,33 +1,50 @@
-import { height } from "@fortawesome/free-solid-svg-icons/faGlobe";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  scrollContainer: {
+    color: "#333",
+    maxHeight: "80vh",
+    width: "100%",
+    overflowY: "scroll",
+  },
   formContainer: {
+    border: "1px solid orange",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
     width: "100%", // Set width to 100%
-    maxWidth: "80%",
+    maxWidth: "85%",
     height: "50%",
     margin: "auto",
     padding: "20px",
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    borderRadius: "35px",
-    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-    overflow: "auto",
+    backgroundColor: "#F4F4F4",
+    borderRadius: "20px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    color: "#333",
+    transition: "background-color 0.3s ease",
+
+    scrollbarWidth: "thin", // for Firefox
+    scrollbarColor: "auto", // for Firefox
+    "&::-webkit-scrollbar": {
+      width: "12px", // for Chrome/Safari/Edge
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#888", // color of the thumb
+    },
     flexWrap: "wrap",
     boxSizing: "border-box",
     [theme.breakpoints.down("sm")]: {
-      width: "80%",
-      maxHeight: "30%",
+      width: "85%",
+      maxHeight: "70%", // Increase max height for smaller screens
     },
     [theme.breakpoints.up("lg")]: {
-      maxWidth: "50%",
-      maxHeight: "30%",
+      maxWidth: "55%",
+      maxHeight: "70%", // Increase max height for larger screens
     },
   },
+
   savedFiltersContainer: {
     marginBottom: theme.spacing(2),
     padding: theme.spacing(2),
@@ -55,16 +72,18 @@ const useStyles = makeStyles((theme) => ({
   formLabel: {
     color: "black",
     marginBottom: "10px",
-    fontSize: "16px",
+    fontSize: "18px",
     fontWeight: "bold",
   },
   formInput: {
-    marginBottom: "20px",
-    width: "100%", // Updated for better responsiveness
+    border: "1px solid #ccc",
+    borderRadius: "4px",
     padding: "10px",
     boxSizing: "border-box",
     fontSize: "14px",
-    borderRadius: "4px",
+    transition: "border-color 0.3s ease",
+    width: "100%",
+    marginBottom: "20px",
     "&:focus": {
       outline: "none",
       borderColor: "#50C878",
@@ -77,13 +96,14 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
   },
   formSelect: {
-    width: "100%", // Updated for better responsiveness
-    marginBottom: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
     padding: "10px",
     boxSizing: "border-box",
     fontSize: "14px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
+    transition: "border-color 0.3s ease",
+    width: "100%",
+    marginBottom: "20px",
     "&:focus": {
       outline: "none",
       borderColor: "#50C878",

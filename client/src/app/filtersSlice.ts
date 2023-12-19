@@ -52,41 +52,6 @@ const filtersSlice = createSlice({
     setDepartureDate: (state, action: PayloadAction<Date | null>) => {
       state.filters.DepartureDate = action.payload;
     },
-    saveFiltersToLocalStorage: (state) => {
-      localStorage.setItem(
-        "filterSets",
-        JSON.stringify(state.savedFilters.filterSets)
-      );
-      localStorage.setItem(
-        "selectedFilterSetIndex",
-        state.savedFilters.selectedFilterSetIndex?.toString() || ""
-      );
-    },
-    loadFiltersFromLocalStorage: (state) => {
-      const storedFilterSets = localStorage.getItem("filterSets");
-      const storedSelectedFilterSetIndex = localStorage.getItem(
-        "selectedFilterSetIndex"
-      );
-
-      if (storedFilterSets) {
-        state.savedFilters.filterSets = JSON.parse(storedFilterSets);
-      }
-
-      if (storedSelectedFilterSetIndex) {
-        state.savedFilters.selectedFilterSetIndex = parseInt(
-          storedSelectedFilterSetIndex,
-          10
-        );
-      }
-    },
-    removeSavedFilters: (state, action: PayloadAction<number>) => {
-      const indexToRemove = action.payload;
-      state.savedFilters.filterSets.splice(indexToRemove, 1);
-      localStorage.setItem(
-        "filterSets",
-        JSON.stringify(state.savedFilters.filterSets)
-      );
-    },
   },
 });
 
@@ -97,9 +62,6 @@ export const {
   setRadiusUnit,
   setAdults,
   setDepartureDate,
-  loadFiltersFromLocalStorage,
-  saveFiltersToLocalStorage,
-  removeSavedFilters,
 } = filtersSlice.actions;
 
 export default filtersSlice.reducer;

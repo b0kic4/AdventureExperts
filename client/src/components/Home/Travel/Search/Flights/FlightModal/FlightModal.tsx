@@ -1,5 +1,3 @@
-import { faCartShopping, faClose } from "@fortawesome/free-solid-svg-icons";
-
 import {
   FlightTakeoff as FlightIcon,
   Close as CloseIcon,
@@ -28,11 +26,15 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
     from: { opacity: 0 },
     config: { duration: 500 },
   });
-
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
   return (
     <>
       {flight && (
-        <div className="overlay">
+        <div className="overlay" onClick={handleOverlayClick}>
           <animated.div
             className="flight-modal"
             onClick={(e) => e.stopPropagation()}
@@ -70,6 +72,7 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                         {itinerary.duration}
                       </p>
                       <h4>Segments:</h4>
+                      // ...
                       {itinerary.segments.map(
                         (segment: any, segmentIndex: any) => (
                           <div key={segmentIndex} className="section">
@@ -83,7 +86,9 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                               {segment.arrival.terminal} Time:{" "}
                               {segment.arrival.at}
                             </p>
-                            <p>Carrier Code: {segment.carrierCode || "N/A"}</p>
+                            <p>
+                              Carrier Code: {segment.carrierCode || "N/A" || ""}
+                            </p>
                             <p>Number: {segment.number || "N/A"}</p>
                             <p>
                               <p>Aircraft Information:</p>
@@ -97,7 +102,7 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
 
                             <p>
                               Operating Carrier Code:{" "}
-                              {segment.operating.carrierCode || "N/A"}
+                              {segment.operating?.carrierCode || "N/A"}
                             </p>
 
                             <p>Duration Time: {segment.duration || "N/A"}</p>
