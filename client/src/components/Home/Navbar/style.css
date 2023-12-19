@@ -1,0 +1,97 @@
+/* Add these styles to your CSS file */
+
+/* Common styles for both desktop and mobile */
+.nav-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  color: #fff; /* White text color */
+  z-index: 2; /* Ensure the navbar is on top of the video */
+}
+
+/* Logo Container */
+.logo-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  color: black;
+  font-size: 28px; /* Increased font size */
+  margin: 0; /* Removed margin */
+  gap: 10px; /* Adjusted gap */
+}
+
+.logo-container h1 {
+  margin: 0; /* Removed margin */
+}
+
+.logo-container button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff; /* White text color */
+  font-size: 20px; /* Increased font size */
+  margin-left: 10px; /* Adjusted margin */
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links span {
+  color: #fff; /* White text color */
+  font-size: 18px; /* Font size for the username */
+  margin-left: 20px; /* Adjusted margin for spacing */
+}
+
+/* Adjustments for Mobile Responsiveness */
+@media only screen and (max-width: 851px) {
+  .nav-container {
+    flex-direction: row;
+    height: auto;
+  }
+
+  .logo-container h1 {
+    margin-bottom: 10px; /* Added margin at the bottom for spacing */
+    font-size: 18px; /* Decreased font size for mobile */
+  }
+
+  .nav-links {
+    justify-content: center;
+    margin-top: 10px; /* Added margin at the top for spacing */
+  }
+
+  .logo-container button,
+  .nav-links span {
+    margin: 0; /* Reset margin for buttons and username on smaller screens */
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .logo-container h1 {
+    font-size: 30px;
+  }
+}
+@media only screen and (max-width: 1300px) {
+  .logo-container h1 {
+    font-size: 28px;
+  }
+}
+@media only screen and (max-width: 1220px) {
+  .logo-container h1 {
+    font-size: 26px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .logo-container h1 {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,319 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: "Arial", sans-serif;
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+label {
+  font-weight: bold;
+}
+input {
+  font-weight: bold;
+}
+video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+}
+
+/* Login and register section */
+.login-register-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+  z-index: 1; /* Ensure the login-register-container is above the video */
+}
+
+.login-register-container h1 {
+  font-size: 36px;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.login-register-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  background-color: rgba(51, 51, 51, 0.8); /* Dark gray with 80% opacity */
+  padding: 15px; /* Increased padding for better readability on mobile */
+  display: inline-block;
+  border-radius: 7px;
+}
+/* IF USER IS LOGGED IN CONTAINER */
+.logged-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logged-container p {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.logout-button {
+  color: whitesmoke;
+  font-weight: bold;
+  padding: 8px 16px; /* Adjust padding as needed */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #a1071e; /* Darker shade of red on hover */
+}
+
+/* REGISTRAION FORM AND LOGIN FORM */
+.login-form,
+.registration-form {
+  position: absolute;
+  top: 50%; /* Adjust the top position as needed */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%; /* Adjust the width as needed */
+  max-width: 400px; /* Set a maximum width if necessary */
+  background-color: #fff; /* Background color for the form */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s ease;
+}
+.login-form.active,
+.registration-form.active {
+  visibility: visible;
+  background-color: whitesmoke;
+  opacity: 1;
+}
+.close-button {
+  position: absolute;
+  top: 1%;
+  left: 85%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: black;
+}
+
+.registration-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.registration-form label {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.registration-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+  overflow: none;
+  height: 100px;
+}
+.close-button {
+  position: absolute;
+  top: 1%;
+  right: 1%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 32px;
+  color: black;
+  transition: color 0.3s ease;
+}
+
+.submit-button {
+  background-color: #5500fe;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+.submit-button:hover {
+  background: #333;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Adjusted margin for better spacing */
+}
+
+.login-button {
+  background: white;
+  font-weight: bold;
+}
+.login-button:hover {
+  background-color: green;
+  color: white;
+  transition: background-color 0.3s ease;
+  transition: color 0.3s ease;
+}
+.register-button {
+  background: white;
+  font-weight: bold;
+}
+.register-button:hover {
+  background-color: blue;
+  color: white;
+  transition: background-color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+.buttons-container button {
+  color: #333;
+  padding: 15px 30px;
+  margin: 0 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 7px;
+}
+
+.traveling {
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-traveling {
+  background-color: #ff8c00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px; /* Adjusted margin for space between buttons */
+  transition: background-color 0.3s ease;
+}
+
+.button-destinations {
+  background-color: #5500fe;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.button-traveling:hover {
+  background: #6f3f05;
+}
+
+.button-destinations:hover {
+  background: #270768;
+}
+
+/* Travel component */
+.travel {
+  padding: 20px; /* Adjusted padding for better spacing */
+}
+/* 
+.Parallax-bg img {
+  opacity: 0.5; /* Adjust the opacity as needed */
+/* } */
+
+.get-started-container {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: none;
+  background: rgba(0, 0, 0, 0.78);
+}
+.container-renderLayer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: none;
+  background: rgba(0, 0, 0, 0.78);
+}
+.get-started-container h1 {
+  color: whitesmoke;
+}
+
+.get-started-container img {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.parallax-content {
+  height: 100vh;
+  overflow: none; /* or overflow: visible; */
+}
+/* DESTINAITONS CONTAINER */
+.destinations-container {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+.destinations-container img {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  border-radius: 7px;
+}
+/* Mobile responsiveness */
+@media only screen and (max-width: 768px) {
+  .login-register-container {
+    width: 90%; /* Adjusted width for better readability on smaller screens */
+  }
+
+  .buttons-container {
+    flex-direction: column; /* Stack buttons vertically on smaller screens */
+    align-items: center; /* Center-align buttons on smaller screens */
+    margin-top: 10px; /* Adjusted margin for better spacing */
+  }
+
+  .buttons-container button {
+    margin: 10px 0; /* Adjusted margin for better spacing */
+  }
+
+  .traveling button {
+    margin-top: 10px; /* Adjusted margin for better spacing */
+  }
+}
