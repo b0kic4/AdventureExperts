@@ -7,6 +7,11 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     overflowY: "scroll",
   },
+  errorMessage: {
+    color: theme.palette.error.main,
+    marginTop: theme.spacing(1),
+    fontSize: "0.875rem",
+  },
   formContainer: {
     border: "1px solid orange",
     display: "flex",

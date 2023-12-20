@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     width: "70%",
   },
   numberInput: {
-    width: "60%",
+    width: "45%",
     height: "50%",
     margin: "10px 0",
     textAlign: "center",
@@ -160,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
   textInput: {
     width: "100%",
     height: "50%",
-
+    textAlign: "center",
     "& .MuiAutocomplete-inputRoot": {
       color: "white",
       backgroundColor: "rgb(0, 0, 0, 0.5)",
@@ -184,6 +184,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "10px 0",
   },
   datePicker: {
+    textAlign: "center",
     width: "45%",
     height: "50%",
     "& .MuiAutocomplete-inputRoot": {

@@ -22,6 +22,20 @@ const FlightList: React.FC<FlightListProps> = ({
 }) => {
   return (
     <>
+      <Grid container spacing={2}>
+        <Grid item xs>
+          {flightOffers.length > 0 && (
+            <Button
+              className="clearButton"
+              variant="contained"
+              color="secondary"
+              onClick={() => handleClearFilter()}
+            >
+              Clear Filters
+            </Button>
+          )}
+        </Grid>
+      </Grid>
       <Grid item xs={12}>
         <Grid container spacing={2} className="scrollContainer">
           {flightOffers.map((offer: any) => (
@@ -57,20 +71,6 @@ const FlightList: React.FC<FlightListProps> = ({
               </div>
             </Grid>
           ))}
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          {flightOffers.length > 0 && (
-            <Button
-              className="clearButton"
-              variant="contained"
-              color="secondary"
-              onClick={() => handleClearFilter()}
-            >
-              Clear Filters
-            </Button>
-          )}
         </Grid>
       </Grid>
     </>

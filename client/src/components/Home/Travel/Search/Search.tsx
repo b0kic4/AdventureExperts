@@ -21,8 +21,12 @@ import Loader from "../../Loader/Loader";
 import FlightModal from "../Flights/FlightModal/FlightModal";
 import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";
-import HotelList from "../Hotels/HotelList";
+import Hotels from "../Hotels/Hotels";
 import { useMediaQuery, useTheme } from "@material-ui/core";
+import {
+  setIsHotelListActive,
+  setIsHotelSearchActive,
+} from "../../../../app/helpers";
 // INTERFACES
 interface City {
   city: string;
@@ -43,8 +47,27 @@ const Search: React.FC = () => {
   >(null);
   // Params
   const [dictionaries, setDictionaries] = useState<[]>([]);
-  const [adults, setAdults] = useState<number>(1);
+
+  const [adults, setAdults] = useState<number>(() => {
+    const savedAdults = localStorage.getItem("adults");
+    return savedAdults ? parseInt(savedAdults, 10) : 1;
+  });
+  useEffect(() => {
+    const savedAdults = localStorage.getItem("adults");
+    if (savedAdults) {
+      setAdults(parseInt(savedAdults, 10));
+    }
+  }, []);
+
   const [departureDate, setDepartureDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const savedDepartureDate = localStorage.getItem("departureDate");
+    if (savedDepartureDate) {
+      setDepartureDate(new Date(savedDepartureDate));
+    }
+  }, []);
+
   const [options, setOptions] = useState<City[]>([
     { city: "", country: "", code: "", state: "" },
   ]);
@@ -206,8 +229,6 @@ const Search: React.FC = () => {
     value: NonNullable<string | City>
   ): void => {
     if (value) {
-      console.log("Value: ", value);
-
       // Update state
       setSavedOriginInputValue(value as City);
 
@@ -215,7 +236,6 @@ const Search: React.FC = () => {
       localStorage.setItem("originInputValue", JSON.stringify(value));
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
-      console.log("New City Code: " + newCityCode);
 
       if (originLocationCode !== null) {
         localStorage.setItem("originLocationCode", newCityCode);
@@ -228,8 +248,6 @@ const Search: React.FC = () => {
     value: NonNullable<string | City>
   ): void => {
     if (value) {
-      console.log("Value: ", value);
-
       // Update state
       setSavedDestInputValue(value as City); // Ensure value is treated as City
 
@@ -237,8 +255,6 @@ const Search: React.FC = () => {
       localStorage.setItem("destinationInputValue", JSON.stringify(value));
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
-      console.log("New city code: ", newCityCode);
-
       if (destinationLocationCode !== null) {
         localStorage.setItem("destinationLocationCode", newCityCode);
         setDestinationLocationCode(newCityCode);
@@ -315,6 +331,31 @@ const Search: React.FC = () => {
     }
   }, [setOriginInputValue, setDestinationInputValue]);
 
+  // Drop down menu for Hotels
+
+  const [hotelDropdownAnchor, setHotelDropdownAnchor] =
+    useState<HTMLElement | null>(null);
+
+  const handleHotelButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setHotelDropdownAnchor(event.currentTarget);
+  };
+
+  const handleCloseHotelDropdown = () => {
+    setHotelDropdownAnchor(null);
+  };
+
+  const handleHotelOptionClick = (option: string) => {
+    if (option === "filters") {
+      // Handle Filters option click
+      dispatch(setIsHotelListActive(false));
+      dispatch(setIsHotelSearchActive(true));
+    } else if (option === "list") {
+      // Handle List option click
+      dispatch(setIsHotelListActive(true));
+      dispatch(setIsHotelSearchActive(false));
+    }
+    handleCloseHotelDropdown();
+  };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -452,7 +493,7 @@ const Search: React.FC = () => {
                   handleClearFilter={handleClearFilter}
                 />
               ) : activeButton === "hotels" ? (
-                <HotelList />
+                <Hotels />
               ) : (
                 <FlightList
                   flightOffers={flightOffers}

@@ -15,18 +15,22 @@ const NumberInputComponent: React.FC<NumberInputComponentProps> = ({
   max,
 }) => {
   const classes = useStyles();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    if (/^\d*$/.test(input)) {
+      onChange(Number(input));
+      localStorage.setItem("adults", input);
+    }
+  };
+
   return (
     <TextField
       type="text"
       label={label}
       variant="outlined"
       value={value}
-      onChange={(e) => {
-        const input = e.target.value;
-        if (/^\d*$/.test(input)) {
-          onChange(Number(input));
-        }
-      }}
+      onChange={handleInputChange}
       inputProps={{ min: 1, max }}
       className={`${classes.numberInput} ${classes.adultsInput}`}
     />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useStyles from "./Styles";
+import useStyles from "./hotelSearchStyles";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/rootReducer";
@@ -19,84 +19,19 @@ import {
   Select,
 } from "@material-ui/core";
 import { toast } from "react-toastify";
-
-interface GeoCode {
-  latitude: number;
-  longitude: number;
-}
-
-interface Address {
-  countryCode: string;
-}
-
-interface Distance {
-  value: number;
-  unit: string;
-}
-
-interface Hotel {
-  chainCode: string;
-  iataCode: string;
-  dupeId: number;
-  name: string;
-  hotelId: string;
-  geoCode: GeoCode;
-  address: Address;
-  distance: Distance;
-}
-
-interface Meta {
-  count: number;
-  links: {
-    self: string;
-  };
-}
-
-interface HotelResponse {
-  data: Hotel[];
-  meta: Meta;
-}
-
-const amenitiesOptions = [
-  "SWIMMING_POOL",
-  "SPA",
-  "FITNESS_CENTER",
-  "AIR_CONDITIONING",
-  "RESTAURANT",
-  "PARKING",
-  "PETS_ALLOWED",
-  "AIRPORT_SHUTTLE",
-  "BUSINESS_CENTER",
-  "DISABLED_FACILITIES",
-  "WIFI",
-  "MEETING_ROOMS",
-  "NO_KID_ALLOWED",
-  "TENNIS",
-  "GOLF",
-  "KITCHEN",
-  "ANIMAL_WATCHING",
-  "BABY-SITTING",
-  "BEACH",
-  "CASINO",
-  "JACUZZI",
-  "SAUNA",
-  "SOLARIUM",
-  "MASSAGE",
-  "VALET_PARKING",
-  "BAR or LOUNGE",
-  "KIDS_WELCOME",
-  "NO_PORN_FILMS",
-  "MINIBAR",
-  "TELEVISION",
-  "WI-FI_IN_ROOM",
-  "ROOM_SERVICE",
-  "GUARDED_PARKG",
-  "SERV_SPEC_MENU",
-];
+import HotelResponse, { Meta } from "./assets/interfaces/Hotel";
+import { amenitiesOptions } from "./assets/options/Options";
+import { setFoundHotelsCount } from "../../../../app/locationSlice";
+import {
+  setIsHotelListActive,
+  setIsHotelSearchActive,
+} from "../../../../app/helpers";
 
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
   const [hotelList, setHotelList] = useState<HotelResponse | null>(null);
+  const [foundHotels, setFoundHotels] = useState<number | Meta | null>(null);
+
   const dispatch = useDispatch();
 
   const [radius, setRadius] = useState<number>(5);
@@ -158,18 +93,10 @@ const HotelSearch: React.FC = () => {
   const destinationCityCode = useSelector(
     (state: RootState) => state.location.location.destinationCityCode
   );
-  // const radiusAction = useSelector(
-  //   (state: RootState) => state.filters.filters.radius
-  // );
-  // const radiusUnitAction = useSelector(
-  //   (state: RootState) => state.filters.filters.radiusUnit
-  // );
-  // const amenitiesAction = useSelector(
-  //   (state: RootState) => state.filters.filters.Amenities
-  // );
-  // const ratingsAction = useSelector(
-  //   (state: RootState) => state.filters.filters.Ratings
-  // );
+
+  // useEffect(() => {
+  //   console.log("Found Hotels Count: ", foundHotelsCount);
+  // }, [foundHotelsCount, hotelList]);
   const getHotelList = async () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -192,33 +119,40 @@ const HotelSearch: React.FC = () => {
           }
         );
 
-        console.log("Response Data: ", response.data);
+        const hotelCount = response.data.meta.count;
         const hotels = response.data;
         setHotelList(hotels);
+        setFoundHotels(hotelCount);
+        dispatch(setFoundHotelsCount(foundHotels));
       } catch (error: any) {
-        console.log("Error Response Data: ", error.response?.data);
-        console.log("Error Status: ", error.response?.status);
-        console.log("Error Headers: ", error.response?.headers);
-        console.log("Error Request: ", error.request);
+        // console.log("Error Response Data: ", error.response?.data);
+        // console.log("Error Status: ", error.response?.status);
+        // console.log("Error Headers: ", error.response?.headers);
+        // console.log("Error Request: ", error.request);
         console.log("Error Message: ", error.message);
-        console.log("Error Config: ", error.config);
+        // console.log("Error Config: ", error.config);
       }
     } catch (error: any) {
       console.log("Error: ", error);
     }
   };
+  // useEffect(() => {
+  //   console.log("Found hotels", foundHotels);
+  // }, [foundHotels]);
 
   const handleFormSubmit = (ev: any) => {
-    ev.preventDefault(); // Add parentheses to invoke the function
-    getHotelList();
+    ev.preventDefault();
+    if (selectedAmenities.length > 0 && ratings.length > 0) {
+      getHotelList();
+      dispatch(setIsHotelListActive(true));
+      dispatch(setIsHotelSearchActive(false));
+    } else if (selectedAmenities.length <= 0 && ratings.length <= 0)
+      toast.error("Select Ratings and Amenities");
+    else if (selectedAmenities.length > 0 && ratings.length <= 0)
+      toast.error("Select Ratings");
+    else if (selectedAmenities.length <= 0 && ratings.length > 0)
+      toast.error("Select Amenities");
   };
-
-  const savedFilters = useSelector(
-    (state: RootState) => state.filters.savedFilters.filterSets
-  );
-  useEffect(() => {
-    console.log("Saved Filters: ", savedFilters);
-  }, [savedFilters]);
 
   useEffect(() => {
     const savedAmenities = localStorage.getItem("selectedAmenities");
@@ -227,6 +161,21 @@ const HotelSearch: React.FC = () => {
     setSelectedAmenities(savedAmenities ? JSON.parse(savedAmenities) : []);
     setRatings(savedRatings ? JSON.parse(savedRatings) : []);
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (selectedAmenities.length > 0 && ratings) {
+          await getHotelList();
+        } else if (!selectedAmenities && !ratings) {
+          return null;
+        }
+      } catch (error) {
+        toast.error("Error fetching hotels");
+      }
+    };
+
+    fetchData();
+  }, [selectedAmenities, ratings]);
 
   return (
     <div className={classes.scrollContainer}>
@@ -295,10 +244,11 @@ const HotelSearch: React.FC = () => {
           </Button>
         </FormControl>
         <FormControl className={classes.formControl}>
-          <InputLabel id="ratings-label">Hotel Stars - Optional:</InputLabel>
+          <InputLabel id="ratings-label">Hotel Stars - Required:</InputLabel>
           <Select
             labelId="ratings-label"
             id="ratings"
+            required
             multiple
             value={ratings}
             onChange={handleRatingChange}
@@ -343,7 +293,9 @@ const HotelSearch: React.FC = () => {
             type="submit"
             className={classes.formButton}
           >
-            FIND
+            {typeof foundHotels === "number"
+              ? `FOUND ${foundHotels} Hotels`
+              : foundHotels && <p>{foundHotels.count}</p>}
           </button>
         </div>
       </div>

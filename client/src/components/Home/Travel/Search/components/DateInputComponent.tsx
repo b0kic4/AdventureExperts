@@ -17,6 +17,7 @@ const DateInputComponent: React.FC<DateInputComponentProps> = ({
   label,
 }) => {
   const classes = useStyles();
+
   return (
     <TextField
       type="date"
@@ -27,6 +28,7 @@ const DateInputComponent: React.FC<DateInputComponentProps> = ({
         const inputValue = e.target.value;
         const parsedDate = new Date(inputValue);
         onChange(parsedDate);
+        localStorage.setItem("departureDate", inputValue); // Save to localStorage
       }}
       inputProps={{ min: 1 }}
       InputLabelProps={{
