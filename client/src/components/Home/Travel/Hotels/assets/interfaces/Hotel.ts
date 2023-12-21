@@ -13,6 +13,8 @@ export interface Distance {
 }
 
 export interface Hotel {
+  amenities: any;
+  rating: any;
   chainCode: string;
   iataCode: string;
   dupeId: number;

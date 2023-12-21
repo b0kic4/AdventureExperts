@@ -64,6 +64,21 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: "100%", // Adjusted maxWidth for even larger screens
     },
   },
+  flightListActiveContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    alignContent: "center",
+    maxWidth: "92%",
+    height: "100%",
+    overflow: "show", // Adjusted overflow for better responsiveness
+    [theme.breakpoints.up("sm")]: {
+      maxWidth: "100%", // Adjusted maxWidth for larger screens
+    },
+    [theme.breakpoints.up("md")]: {
+      maxWidth: "100%", // Adjusted maxWidth for even larger screens
+    },
+  },
   // BUTTONS
   flightButton: {
     textAlign: "center",

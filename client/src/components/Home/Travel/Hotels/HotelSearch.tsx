@@ -25,7 +25,8 @@ import { setFoundHotelsCount } from "../../../../app/locationSlice";
 import {
   setIsHotelListActive,
   setIsHotelSearchActive,
-} from "../../../../app/helpers";
+} from "../../../../app/Helpers";
+import { setHotelListSlice } from "../../../../app/hotelListSlice";
 
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
@@ -124,6 +125,7 @@ const HotelSearch: React.FC = () => {
         setHotelList(hotels);
         setFoundHotels(hotelCount);
         dispatch(setFoundHotelsCount(foundHotels));
+        dispatch(setHotelListSlice(hotels));
       } catch (error: any) {
         // console.log("Error Response Data: ", error.response?.data);
         // console.log("Error Status: ", error.response?.status);

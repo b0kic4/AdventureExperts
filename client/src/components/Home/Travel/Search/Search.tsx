@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./Styles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setOriginCitySliceCode,
   setDestinationSliceCode,
@@ -23,10 +23,11 @@ import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";
 import Hotels from "../Hotels/Hotels";
 import { useMediaQuery, useTheme } from "@material-ui/core";
-import {
-  setIsHotelListActive,
-  setIsHotelSearchActive,
-} from "../../../../app/helpers";
+import { RootState } from "../../../../app/rootReducer";
+// import {
+//   setIsHotelListActive,
+//   setIsHotelSearchActive,
+// } from "../../../../app/helpers";
 // INTERFACES
 interface City {
   city: string;
@@ -101,10 +102,13 @@ const Search: React.FC = () => {
   const [activeButton, setActiveButton] = useState<"flights" | "hotels">(
     "flights"
   );
+
   const handleButtonClick = (buttonType: "flights" | "hotels") => {
     setActiveButton(buttonType);
   };
-  const fetchFlightsOffers = async () => {
+
+  const fetchFlightsOffers = async (ev: any) => {
+    ev.preventDefault;
     try {
       const storedToken = localStorage.getItem("token");
       setLoading(true);
@@ -236,7 +240,7 @@ const Search: React.FC = () => {
       localStorage.setItem("originInputValue", JSON.stringify(value));
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
-
+      console.log("Origin New City Code: " + newCityCode);
       if (originLocationCode !== null) {
         localStorage.setItem("originLocationCode", newCityCode);
         setOriginLocationCode(newCityCode);
@@ -255,6 +259,7 @@ const Search: React.FC = () => {
       localStorage.setItem("destinationInputValue", JSON.stringify(value));
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
+      console.log("Destination New City Code: ", newCityCode);
       if (destinationLocationCode !== null) {
         localStorage.setItem("destinationLocationCode", newCityCode);
         setDestinationLocationCode(newCityCode);
@@ -282,15 +287,30 @@ const Search: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    console.log("Origin Location Code: " + originLocationCode);
+    console.log("Destination location code: ", destinationLocationCode);
+  }, [originLocationCode, destinationLocationCode]);
+
   const handleDateChange = (date: Date | null): void => {
     setDepartureDate(date);
   };
+  // useEffect(() => {
+  //   dispatch(setOriginCitySliceCode(null));
+  //   dispatch(setDestinationSliceCode(null));
+  //   localStorage.removeItem("originLocationCode");
+  //   localStorage.removeItem("destinationLocationCode");
+  // }, []);
   const handleClearFilter = () => {
     setOriginLocationCode(null);
     setDestinationLocationCode(null);
     setDepartureDate(null);
     setAdults(1);
     setFlightOffers([]);
+    dispatch(setOriginCitySliceCode(null));
+    dispatch(setDestinationSliceCode(null));
+    localStorage.removeItem("originLocationCode");
+    localStorage.removeItem("destinationLocationCode");
   };
   const [selectedFlight, setSelectedFlight] = useState<FlightOffer | null>(
     null
@@ -333,29 +353,46 @@ const Search: React.FC = () => {
 
   // Drop down menu for Hotels
 
-  const [hotelDropdownAnchor, setHotelDropdownAnchor] =
-    useState<HTMLElement | null>(null);
+  // const [hotelDropdownAnchor, setHotelDropdownAnchor] =
+  //   useState<HTMLElement | null>(null);
 
-  const handleHotelButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    setHotelDropdownAnchor(event.currentTarget);
-  };
+  // const handleHotelButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+  //   setHotelDropdownAnchor(event.currentTarget);
+  // };
 
-  const handleCloseHotelDropdown = () => {
-    setHotelDropdownAnchor(null);
-  };
+  // const handleCloseHotelDropdown = () => {
+  //   setHotelDropdownAnchor(null);
+  // };
 
-  const handleHotelOptionClick = (option: string) => {
-    if (option === "filters") {
-      // Handle Filters option click
-      dispatch(setIsHotelListActive(false));
-      dispatch(setIsHotelSearchActive(true));
-    } else if (option === "list") {
-      // Handle List option click
-      dispatch(setIsHotelListActive(true));
-      dispatch(setIsHotelSearchActive(false));
-    }
-    handleCloseHotelDropdown();
-  };
+  // const handleHotelOptionClick = (option: string) => {
+  //   if (option === "filters") {
+  //     // Handle Filters option click
+  //     dispatch(setIsHotelListActive(false));
+  //     dispatch(setIsHotelSearchActive(true));
+  //   } else if (option === "list") {
+  //     // Handle List option click
+  //     dispatch(setIsHotelListActive(true));
+  //     dispatch(setIsHotelSearchActive(false));
+  //   }
+  //   handleCloseHotelDropdown();
+  // };
+
+  useEffect(() => {
+    return () => {
+      dispatch(setOriginCitySliceCode(null));
+      dispatch(setDestinationSliceCode(null));
+      setOriginLocationCode(null);
+      setDestinationLocationCode(null);
+      setDepartureDate(null);
+      localStorage.removeItem("originLocationCode");
+      localStorage.removeItem("destinationLocationCode");
+      localStorage.removeItem("departureDate");
+    };
+  }, [dispatch, setDestinationLocationCode, setDepartureDate]);
+
+  const isFlightListActive = useSelector(
+    (state: RootState) => state.navigationHelper.isFlightListActive
+  );
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -380,7 +417,11 @@ const Search: React.FC = () => {
           Hotels
         </Button>
       </div>
-      <div className={classes.container}>
+      <div
+        className={`${classes.container} ${
+          isFlightListActive ? classes.flightListActiveContainer : ""
+        }`}
+      >
         <Grid container spacing={2}>
           {loading ? (
             <Loader />

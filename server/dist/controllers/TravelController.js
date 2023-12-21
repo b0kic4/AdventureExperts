@@ -30,6 +30,7 @@ const getOriginLocations = (req, res) => __awaiter(void 0, void 0, void 0, funct
         });
         const parsedResponse = JSON.parse(response.body);
         res.send(parsedResponse);
+        console.log(parsedResponse);
     }
     catch (error) {
         console.error("Error parsing or sending response:", error);
@@ -46,6 +47,7 @@ const getDestinationLocations = (req, res) => __awaiter(void 0, void 0, void 0, 
         });
         const parsedResponse = JSON.parse(response.body);
         res.send(parsedResponse);
+        console.log(parsedResponse);
     }
     catch (error) {
         console.error("Error parsing or sending response:", error);

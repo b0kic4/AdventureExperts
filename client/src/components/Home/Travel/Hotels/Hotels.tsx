@@ -18,7 +18,7 @@ const Hotels: React.FC = () => {
     <div className="hotel-container">
       <div>
         {activeHotelSearch && <HotelSearch />}{" "}
-        {activeHotelList && foundHotelsCount && <HotelList />}
+        {activeHotelList && foundHotelsCount && <HotelList hotelList={null} />}
       </div>
     </div>
   );

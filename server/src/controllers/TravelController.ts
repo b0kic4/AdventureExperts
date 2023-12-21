@@ -19,6 +19,7 @@ const getOriginLocations = async (req: Request, res: Response) => {
 
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
+    console.log(parsedResponse);
   } catch (error: any) {
     console.error("Error parsing or sending response:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -34,6 +35,7 @@ const getDestinationLocations = async (req: Request, res: Response) => {
 
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
+    console.log(parsedResponse);
   } catch (error: any) {
     console.error("Error parsing or sending response:", error);
     res.status(500).json({ error: "Internal Server Error" });

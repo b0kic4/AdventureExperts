@@ -8,6 +8,9 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime"; // Import clock icon
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"; // Import money icon
 import PersonIcon from "@material-ui/icons/Person"; // Import person icon
 import "./styles.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsFlightListActive } from "../../../../app/Helpers";
+import { RootState } from "../../../../app/rootReducer";
 
 interface FlightListProps {
   flightOffers: any[];
@@ -20,6 +23,12 @@ const FlightList: React.FC<FlightListProps> = ({
   handleFlightClick,
   handleClearFilter,
 }) => {
+  const isFlightListActive = useSelector(
+    (state: RootState) => state.navigationHelper.isFlightListActive
+  );
+  const dispatch = useDispatch();
+  dispatch(setIsFlightListActive(true));
+  console.log("Flight List is active: ", isFlightListActive);
   return (
     <>
       <Grid container spacing={2}>
