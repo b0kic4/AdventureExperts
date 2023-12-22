@@ -5,6 +5,7 @@
   max-height: 75vh;
   width: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   border: 1px solid orange;
 }
 
@@ -13,6 +14,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 
 .hotelOfferCard {
@@ -24,6 +26,7 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
 }
 
 .hotelOfferCard:hover {
@@ -33,15 +36,21 @@
 
 .hotelOfferDetails {
   margin-top: 15px;
+  text-align: center;
 }
 
 .hotelOfferDetails p {
   display: flex;
   align-items: center;
   justify-content: center;
+  align-content: center;
   margin: 8px 0;
   gap: 8px;
   text-align: center;
+}
+
+.hotelOfferDetails p > svg {
+  vertical-align: middle;
 }
 
 .clearButton {

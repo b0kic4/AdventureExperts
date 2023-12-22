@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -8,9 +8,6 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime"; // Import clock icon
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"; // Import money icon
 import PersonIcon from "@material-ui/icons/Person"; // Import person icon
 import "./styles.css";
-import { useDispatch, useSelector } from "react-redux";
-
-import { RootState } from "../../../../app/rootReducer";
 
 interface FlightListProps {
   flightOffers: any[];

@@ -27,18 +27,23 @@ import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import CasinoIcon from "@mui/icons-material/Casino";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import RoomServiceIcon from "@mui/icons-material/RoomService";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 import HotTubIcon from "@mui/icons-material/HotTub";
 import LocalBarIcon from "@mui/icons-material/LocalBar";
-
 import NoDrinksIcon from "@mui/icons-material/NoDrinks";
-
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import StarRateIcon from "@mui/icons-material/StarRate";
 
 import "./css/hotelListStyles.css";
 import HotelResponse, { Hotel } from "./assets/interfaces/Hotel";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../app/rootReducer";
+import { setHotelListSlice } from "../../../../app/hotelListSlice";
+import HotelSearch from "./HotelSearch";
+import { toast } from "react-toastify";
+import {
+  setIsHotelListActive,
+  setIsHotelSearchActive,
+} from "../../../../app/helpers";
 
 interface HotelListProps {
   hotelList: HotelResponse | null;
@@ -82,13 +87,16 @@ const amenityIcons: { [key: string]: React.ReactElement } = {
 };
 
 const HotelList: React.FC<HotelListProps> = () => {
+  const dispatch = useDispatch();
   const hotelList = useSelector(
     (state: RootState) => state.hotelList.hotelList
   );
 
   if (!hotelList || hotelList.data.length === 0) {
     function handleClearFilter(): void {
-      throw new Error("Function not implemented.");
+      dispatch(setHotelListSlice(null));
+      dispatch(setIsHotelListActive(false));
+      dispatch(setIsHotelSearchActive(true));
     }
 
     return (
@@ -100,7 +108,7 @@ const HotelList: React.FC<HotelListProps> = () => {
             color="secondary"
             onClick={() => handleClearFilter()}
           >
-            Clear Filters
+            Clear Results
           </Button>
         </Grid>
       </Grid>
@@ -108,63 +116,73 @@ const HotelList: React.FC<HotelListProps> = () => {
   }
 
   function handleClearFilter(): void {
-    throw new Error("Function not implemented.");
+    dispatch(setHotelListSlice(null));
+    dispatch(setIsHotelListActive(false));
+    dispatch(setIsHotelSearchActive(true));
+    toast.success("Results Cleared");
   }
 
   function handleHotelClick(hotel: Hotel): void {
     throw new Error("Function not implemented.");
   }
-
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          {hotelList.data.length > 0 && (
-            <Button
-              className="clearButton"
-              variant="contained"
-              color="secondary"
-              onClick={() => handleClearFilter()}
-            >
-              Clear Filters
-            </Button>
-          )}
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={2} className="scrollContainer">
-        {hotelList.data.map((hotel) => (
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            key={hotel.hotelId}
-            className="hotelOfferCard"
-            onClick={() => handleHotelClick(hotel)}
-          >
-            <div className="infoContainer">
-              <Typography variant="h6">
-                <HotelIcon /> {hotel.name}
-              </Typography>
-              <div className="hotelOfferDetails">
-                <Typography variant="body1">
-                  {hotel.amenities.map((amenity: any) => (
-                    <React.Fragment key={amenity}>
-                      {amenityIcons[amenity]} {amenity}
-                    </React.Fragment>
-                  ))}
-                </Typography>
-                <Typography variant="body1">
-                  Rating: {hotel.rating} stars
-                </Typography>
-              </div>
-            </div>
+      {hotelList ? (
+        <>
+          <Grid container spacing={2} className="scrollContainer">
+            {hotelList.data.map((hotel) => (
+              <Grid
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                key={hotel.hotelId}
+                className="hotelOfferCard"
+                onClick={() => handleHotelClick(hotel)}
+              >
+                <div className="infoContainer">
+                  <Typography variant="h6">
+                    <HotelIcon /> {hotel.name}
+                  </Typography>
+                  <div className="hotelOfferDetails">
+                    <Typography variant="body1">
+                      {hotel.amenities.map((amenity: any) => (
+                        <React.Fragment key={amenity}>
+                          {amenityIcons[amenity]} {amenity}
+                        </React.Fragment>
+                      ))}
+                    </Typography>
+                    <Typography variant="body1">
+                      <p>
+                        {" "}
+                        <StarRateIcon />
+                        {hotel.rating}
+                      </p>
+                    </Typography>
+                  </div>
+                </div>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs>
+              {hotelList.data.length > 0 && (
+                <Button
+                  className="clearButton"
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleClearFilter}
+                >
+                  Clear Results
+                </Button>
+              )}
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <HotelSearch />
+      )}
     </>
   );
 };
-
 export default HotelList;

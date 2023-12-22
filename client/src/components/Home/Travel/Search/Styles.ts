@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    maxWidth: "92%",
+    maxWidth: "100%",
     height: "100%",
     overflow: "show", // Adjusted overflow for better responsiveness
     [theme.breakpoints.up("sm")]: {

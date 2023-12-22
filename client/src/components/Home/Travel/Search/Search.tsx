@@ -382,7 +382,7 @@ const Search: React.FC = () => {
         </Button>
         <Button
           variant={activeButton === "hotels" ? "contained" : "outlined"}
-          color="inherit"
+          color="primary"
           onClick={() => handleButtonClick("hotels")}
         >
           Hotels
