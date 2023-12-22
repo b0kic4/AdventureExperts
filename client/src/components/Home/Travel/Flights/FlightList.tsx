@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -9,7 +9,7 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"; // Import mo
 import PersonIcon from "@material-ui/icons/Person"; // Import person icon
 import "./styles.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsFlightListActive } from "../../../../app/Helpers";
+
 import { RootState } from "../../../../app/rootReducer";
 
 interface FlightListProps {
@@ -23,28 +23,9 @@ const FlightList: React.FC<FlightListProps> = ({
   handleFlightClick,
   handleClearFilter,
 }) => {
-  const isFlightListActive = useSelector(
-    (state: RootState) => state.navigationHelper.isFlightListActive
-  );
-  const dispatch = useDispatch();
-  dispatch(setIsFlightListActive(true));
-  console.log("Flight List is active: ", isFlightListActive);
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs>
-          {flightOffers.length > 0 && (
-            <Button
-              className="clearButton"
-              variant="contained"
-              color="secondary"
-              onClick={() => handleClearFilter()}
-            >
-              Clear Filters
-            </Button>
-          )}
-        </Grid>
-      </Grid>
+      <Grid container spacing={2}></Grid>
       <Grid item xs={12}>
         <Grid container spacing={2} className="scrollContainer">
           {flightOffers.map((offer: any) => (
@@ -81,6 +62,18 @@ const FlightList: React.FC<FlightListProps> = ({
             </Grid>
           ))}
         </Grid>
+      </Grid>
+      <Grid item xs>
+        {flightOffers.length > 0 && (
+          <Button
+            className="clearButton"
+            variant="contained"
+            color="secondary"
+            onClick={() => handleClearFilter()}
+          >
+            Clear Results
+          </Button>
+        )}
       </Grid>
     </>
   );

@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
   flightListActiveContainer: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "flex-start",
     alignItems: "center",
     alignContent: "center",
     maxWidth: "92%",

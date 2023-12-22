@@ -5,13 +5,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface NavigationState {
   isHotelSearchActive: boolean;
   isHotelListActive: boolean;
-  isFlightListActive: boolean;
 }
 
 const initialState: NavigationState = {
   isHotelListActive: false,
   isHotelSearchActive: true,
-  isFlightListActive: false,
 };
 
 const navigationSlice = createSlice({
@@ -24,16 +22,10 @@ const navigationSlice = createSlice({
     setIsHotelSearchActive: (state, action: PayloadAction<boolean>) => {
       state.isHotelSearchActive = action.payload;
     },
-    setIsFlightListActive: (state, action: PayloadAction<boolean>) => {
-      state.isFlightListActive = action.payload;
-    },
   },
 });
 
-export const {
-  setIsHotelListActive,
-  setIsHotelSearchActive,
-  setIsFlightListActive,
-} = navigationSlice.actions;
+export const { setIsHotelListActive, setIsHotelSearchActive } =
+  navigationSlice.actions;
 
 export default navigationSlice.reducer;

@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import useStyles from "./Styles";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setOriginCitySliceCode,
   setDestinationSliceCode,
@@ -23,11 +23,7 @@ import FlightOffer from "./components/interfaces/FlightTypes";
 import FlightList from "../Flights/FlightList";
 import Hotels from "../Hotels/Hotels";
 import { useMediaQuery, useTheme } from "@material-ui/core";
-import { RootState } from "../../../../app/rootReducer";
-// import {
-//   setIsHotelListActive,
-//   setIsHotelSearchActive,
-// } from "../../../../app/helpers";
+
 // INTERFACES
 interface City {
   city: string;
@@ -115,7 +111,6 @@ const Search: React.FC = () => {
       const formattedDate = departureDate
         ? format(departureDate, "yyyy-MM-dd")
         : null;
-
       const response = await axios.get(
         "http://localhost:8081/get-flight-offers",
         {
@@ -170,22 +165,19 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
-        // console.log("Cities in origin: ", cities);
-        // console.log("Locations in origin: ", locations);
 
         setOptions(cities);
 
-        setOriginLocationCode((prevCityCode) =>
-          originInputValue.trim() !== "" ? prevCityCode : null
-        );
+        // Only update if the input value is not empty
+        if (originInputValue.trim() !== "") {
+          setOriginLocationCode(cities.length > 0 ? cities[0].code : null);
+        }
       } catch (error: any) {
         console.error(error);
       }
     };
 
-    if (originInputValue.trim() !== "") {
-      fetchOriginLocationData();
-    }
+    fetchOriginLocationData();
   }, [originInputValue]);
 
   useEffect(() => {
@@ -213,20 +205,19 @@ const Search: React.FC = () => {
           code: location.iataCode,
           state: location.address.stateCode,
         }));
-        // console.log("Cities in destination: ", cities);
-        // console.log("Locations in destination: ", locations);
+
         setOptions(cities);
-        setDestinationLocationCode((prevCityCode) =>
-          destinationInputValue.trim() !== "" ? prevCityCode : null
-        );
+
+        // Only update if the input value is not empty
+        if (destinationInputValue.trim() !== "") {
+          setDestinationLocationCode(cities.length > 0 ? cities[0].code : null);
+        }
       } catch (error: any) {
         console.error(error);
       }
     };
 
-    if (destinationInputValue.trim() !== "") {
-      fetchDestinationLocationData();
-    }
+    fetchDestinationLocationData();
   }, [destinationInputValue]);
 
   const handleOriginLocationCodeAutocompleteChange = (
@@ -241,7 +232,7 @@ const Search: React.FC = () => {
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
       console.log("Origin New City Code: " + newCityCode);
-      if (originLocationCode !== null) {
+      if (originLocationCode !== null || "") {
         localStorage.setItem("originLocationCode", newCityCode);
         setOriginLocationCode(newCityCode);
       }
@@ -260,7 +251,7 @@ const Search: React.FC = () => {
 
       const newCityCode = typeof value === "string" ? value : value.code || "";
       console.log("Destination New City Code: ", newCityCode);
-      if (destinationLocationCode !== null) {
+      if (destinationLocationCode !== null || "") {
         localStorage.setItem("destinationLocationCode", newCityCode);
         setDestinationLocationCode(newCityCode);
       }
@@ -307,10 +298,6 @@ const Search: React.FC = () => {
     setDepartureDate(null);
     setAdults(1);
     setFlightOffers([]);
-    dispatch(setOriginCitySliceCode(null));
-    dispatch(setDestinationSliceCode(null));
-    localStorage.removeItem("originLocationCode");
-    localStorage.removeItem("destinationLocationCode");
   };
   const [selectedFlight, setSelectedFlight] = useState<FlightOffer | null>(
     null
@@ -377,22 +364,6 @@ const Search: React.FC = () => {
   //   handleCloseHotelDropdown();
   // };
 
-  useEffect(() => {
-    return () => {
-      dispatch(setOriginCitySliceCode(null));
-      dispatch(setDestinationSliceCode(null));
-      setOriginLocationCode(null);
-      setDestinationLocationCode(null);
-      setDepartureDate(null);
-      localStorage.removeItem("originLocationCode");
-      localStorage.removeItem("destinationLocationCode");
-      localStorage.removeItem("departureDate");
-    };
-  }, [dispatch, setDestinationLocationCode, setDepartureDate]);
-
-  const isFlightListActive = useSelector(
-    (state: RootState) => state.navigationHelper.isFlightListActive
-  );
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
@@ -419,7 +390,7 @@ const Search: React.FC = () => {
       </div>
       <div
         className={`${classes.container} ${
-          isFlightListActive ? classes.flightListActiveContainer : ""
+          flightOffers.length > 0 ? classes.flightListActiveContainer : ""
         }`}
       >
         <Grid container spacing={2}>
