@@ -34,6 +34,7 @@ const bodyParser = __importStar(require("body-parser"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const AuthRoutes_1 = require("./routes/AuthRoutes");
 const TravelingRoutes_1 = require("./routes/TravelingRoutes");
+const HotelRoutes_1 = require("./routes/HotelRoutes");
 const PORT = process.env.PORT || 3000;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
@@ -51,6 +52,7 @@ app.use(express_1.default.json());
 // routes
 app.use(AuthRoutes_1.authRouter);
 app.use(TravelingRoutes_1.travelingRouter);
+app.use(HotelRoutes_1.hotelRouter);
 app.get("/", (req, res) => {
     res.status(200).send("Hello World!");
 });

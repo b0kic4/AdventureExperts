@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface GeoCode {
   latitude: number;
   longitude: number;
@@ -13,6 +15,7 @@ export interface Distance {
 }
 
 export interface Hotel {
+  lastUpdate: ReactNode;
   amenities: any;
   rating: any;
   chainCode: string;

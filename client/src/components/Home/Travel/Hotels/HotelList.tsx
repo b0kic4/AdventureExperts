@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -44,12 +44,13 @@ import {
   setIsHotelListActive,
   setIsHotelSearchActive,
 } from "../../../../app/helpers";
+import HotelModal from "./HotelModal/HotelModal";
 
 interface HotelListProps {
   hotelList: HotelResponse | null;
 }
 
-const amenityIcons: { [key: string]: React.ReactElement } = {
+export const amenityIcons: { [key: string]: React.ReactElement } = {
   SWIMMING_POOL: <PoolIcon />,
   SPA: <SpaIcon />,
   FITNESS_CENTER: <FitnessCenterIcon />,
@@ -91,6 +92,8 @@ const HotelList: React.FC<HotelListProps> = () => {
   const hotelList = useSelector(
     (state: RootState) => state.hotelList.hotelList
   );
+  const [hotel, setHotel] = useState<Hotel | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!hotelList || hotelList.data.length === 0) {
     function handleClearFilter(): void {
@@ -123,13 +126,23 @@ const HotelList: React.FC<HotelListProps> = () => {
   }
 
   function handleHotelClick(hotel: Hotel): void {
-    throw new Error("Function not implemented.");
+    setHotel(hotel);
+    setIsModalOpen(true);
   }
+
+  const onClose = () => {
+    setHotel(null);
+    setIsModalOpen(false);
+  };
   return (
     <>
-      {hotelList ? (
+      {hotelList && hotel === null ? (
         <>
-          <Grid container spacing={2} className="scrollContainer">
+          <Grid
+            container
+            spacing={2}
+            className={`scrollContainer ${isModalOpen ? "blurred" : ""}`}
+          >
             {hotelList.data.map((hotel) => (
               <Grid
                 item
@@ -179,9 +192,11 @@ const HotelList: React.FC<HotelListProps> = () => {
             </Grid>
           </Grid>
         </>
-      ) : (
+      ) : hotelList === null || (hotelList === null && hotel === null) ? (
         <HotelSearch />
-      )}
+      ) : hotelList && hotel ? (
+        <HotelModal hotel={hotel} onClose={onClose} />
+      ) : null}
     </>
   );
 };

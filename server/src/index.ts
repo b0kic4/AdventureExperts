@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 import { authRouter } from "./routes/AuthRoutes";
 import { travelingRouter } from "./routes/TravelingRoutes";
+import { hotelRouter } from "./routes/HotelRoutes";
 
 const PORT: number | string = process.env.PORT || 3000;
 const app = express();
@@ -29,6 +30,7 @@ app.use(express.json());
 // routes
 app.use(authRouter);
 app.use(travelingRouter);
+app.use(hotelRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello World!");

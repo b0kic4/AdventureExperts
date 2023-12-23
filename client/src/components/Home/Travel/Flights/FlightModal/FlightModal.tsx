@@ -72,7 +72,6 @@ const FlightModal: React.FC<FlightDetailsProps> = ({
                         {itinerary.duration}
                       </p>
                       <h4>Segments:</h4>
-                      // ...
                       {itinerary.segments.map(
                         (segment: any, segmentIndex: any) => (
                           <div key={segmentIndex} className="section">

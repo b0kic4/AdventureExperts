@@ -22,11 +22,13 @@ import { toast } from "react-toastify";
 import HotelResponse, { Meta } from "./assets/interfaces/Hotel";
 import { amenitiesOptions } from "./assets/options/Options";
 import { setFoundHotelsCount } from "../../../../app/locationSlice";
+import { setHotelListSlice } from "../../../../app/hotelListSlice";
 import {
   setIsHotelListActive,
   setIsHotelSearchActive,
-} from "../../../../app/Helpers";
-import { setHotelListSlice } from "../../../../app/hotelListSlice";
+  setIsLoading,
+} from "../../../../app/helpers";
+import Loader from "../../Loader/Loader";
 
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
@@ -95,13 +97,13 @@ const HotelSearch: React.FC = () => {
     (state: RootState) => state.location.location.destinationCityCode
   );
 
-  // useEffect(() => {
-  //   console.log("Found Hotels Count: ", foundHotelsCount);
-  // }, [foundHotelsCount, hotelList]);
+  const loading = useSelector(
+    (state: RootState) => state.navigationHelper.isLoading
+  );
   const getHotelList = async () => {
     try {
       const storedToken = localStorage.getItem("token");
-
+      dispatch(setIsLoading(true));
       try {
         const response = await axios.get<HotelResponse>(
           "http://localhost:8081/get-hotel-list",
@@ -136,15 +138,18 @@ const HotelSearch: React.FC = () => {
       }
     } catch (error: any) {
       console.log("Error: ", error);
+    } finally {
+      dispatch(setIsLoading(false));
     }
   };
-  // useEffect(() => {
-  //   console.log("Found hotels", foundHotels);
-  // }, [foundHotels]);
 
   const handleFormSubmit = (ev: any) => {
     ev.preventDefault();
-    if (selectedAmenities.length > 0 && ratings.length > 0) {
+    if (
+      selectedAmenities.length > 0 &&
+      ratings.length > 0 &&
+      foundHotels !== null
+    ) {
       getHotelList();
       dispatch(setIsHotelListActive(true));
       dispatch(setIsHotelSearchActive(false));
@@ -154,6 +159,12 @@ const HotelSearch: React.FC = () => {
       toast.error("Select Ratings");
     else if (selectedAmenities.length <= 0 && ratings.length > 0)
       toast.error("Select Amenities");
+    else if (
+      selectedAmenities.length > 0 &&
+      ratings.length > 0 &&
+      foundHotels === null
+    )
+      toast.error("No Hotels Found");
   };
 
   useEffect(() => {
@@ -295,9 +306,13 @@ const HotelSearch: React.FC = () => {
             type="submit"
             className={classes.formButton}
           >
-            {typeof foundHotels === "number"
-              ? `FOUND ${foundHotels} Hotels`
-              : foundHotels && <p>{foundHotels.count}</p>}
+            {typeof foundHotels === "number" ? (
+              `FOUND ${foundHotels} Hotels`
+            ) : foundHotels ? (
+              <p>{foundHotels.count}</p>
+            ) : foundHotels === null ? (
+              `0 FOUND`
+            ) : null}
           </button>
         </div>
       </div>

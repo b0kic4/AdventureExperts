@@ -1,0 +1,110 @@
+/* style.css */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hotel-modal {
+  box-sizing: border-box;
+  max-width: 600px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f8f8f8;
+  color: #333;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  margin: 50px auto;
+  z-index: 9999;
+  overflow-y: scroll;
+  font-family: sans-serif;
+}
+
+.modal-content p {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  color: #3498db;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button {
+  background-color: transparent;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: #333;
+}
+
+.close-button:hover {
+  background-color: #ecf0f1;
+}
+
+.modal-content {
+  text-align: left;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+
+.amenities ul {
+  list-style-position: inside;
+  list-style-type: disc; /* Set the type of the list item marker (disc, circle, or square) */
+}
+
+.amenities ul li {
+  display: flex;
+  align-items: center;
+}
+
+.amenities ul li p {
+  text-align: left; /* or 'center' based on your preference */
+  display: flex;
+  align-items: center;
+}
+
+.amenities ul li p svg {
+  margin-right: 10px; /* Adjust the margin as needed for spacing between icon and text */
+}
+
+/* Add this to your existing CSS or create a new one */
+.offer-button-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.offers-button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.offers-button:hover {
+  background-color: #2980b9;
+}
