@@ -38,13 +38,13 @@ import HotelResponse, { Hotel } from "./assets/interfaces/Hotel";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../../app/rootReducer";
 import { setHotelListSlice } from "../../../../app/hotelListSlice";
-import HotelSearch from "./HotelSearch";
 import { toast } from "react-toastify";
 import {
   setIsHotelListActive,
   setIsHotelSearchActive,
-} from "../../../../app/helpers";
+} from "../../../../app/Helpers";
 import HotelModal from "./HotelModal/HotelModal";
+import MainSearch from "./MainSearch";
 
 interface HotelListProps {
   hotelList: HotelResponse | null;
@@ -193,7 +193,7 @@ const HotelList: React.FC<HotelListProps> = () => {
           </Grid>
         </>
       ) : hotelList === null || (hotelList === null && hotel === null) ? (
-        <HotelSearch />
+        <MainSearch />
       ) : hotelList && hotel ? (
         <HotelModal hotel={hotel} onClose={onClose} />
       ) : null}

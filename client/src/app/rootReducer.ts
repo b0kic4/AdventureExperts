@@ -2,7 +2,8 @@ import { combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import destinationReducer from "./locationSlice";
 import filtersReducer from "./filtersSlice";
-import navigationReducer from "./helpers";
+import navigationReducer from "./Helpers";
+import offersSliceReducer from "./offersSlice";
 import hotelListReducer from "./hotelListSlice";
 const rootReducer = combineReducers({
   user: userReducer,
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
   filters: filtersReducer,
   navigationHelper: navigationReducer,
   hotelList: hotelListReducer,
+  offers: offersSliceReducer,
   // Add more reducers as needed
 });
 

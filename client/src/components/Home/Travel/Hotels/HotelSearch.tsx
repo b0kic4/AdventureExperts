@@ -27,8 +27,8 @@ import {
   setIsHotelListActive,
   setIsHotelSearchActive,
   setIsLoading,
-} from "../../../../app/helpers";
-import Loader from "../../Loader/Loader";
+} from "../../../../app/Helpers";
+import OffersSearch from "./OffersSearch";
 
 const HotelSearch: React.FC = () => {
   const classes = useStyles();
@@ -97,9 +97,6 @@ const HotelSearch: React.FC = () => {
     (state: RootState) => state.location.location.destinationCityCode
   );
 
-  const loading = useSelector(
-    (state: RootState) => state.navigationHelper.isLoading
-  );
   const getHotelList = async () => {
     try {
       const storedToken = localStorage.getItem("token");
@@ -193,127 +190,150 @@ const HotelSearch: React.FC = () => {
   return (
     <div className={classes.scrollContainer}>
       <div className={classes.formContainer}>
-        <label className={classes.formLabel}>
-          Radius Unit: - Default Unit of 5
-        </label>
-        <select
-          value={radiusUnit}
-          onChange={(e) => {
-            setRadiusUnit(e.target.value as "KM" | "MILE");
-            dispatch(setRadiusUnitAction(e.target.value as "KM" | "MILE"));
-          }}
-          className={classes.formSelect}
-        >
-          <option value="KM">KM</option>
-          <option value="MILE">MILE</option>
-        </select>
-        <label className={classes.formLabel}>Radius:</label>
-        <input
-          type="number"
-          value={radius}
-          required
-          onChange={(e) => {
-            setRadius(Number(e.target.value));
-            dispatch(setRadiusAction(Number(e.target.value)));
-          }}
-          className={classes.formInput}
-        />
+        <div className={classes.hotelSearchContainer}>
+          <h2>Hotel Search</h2>
+          <div className={classes.radiusSearch}>
+            <label className={classes.radiusInputLabel}>
+              Hotel Distance From Center of the City
+            </label>
+            <div className={classes.radiusInputContainer}>
+              <input
+                type="number"
+                value={radius}
+                required
+                onChange={(e) => {
+                  setRadius(Number(e.target.value));
+                  dispatch(setRadiusAction(Number(e.target.value)));
+                }}
+                className={classes.radiusInput}
+              />
+              <select
+                value={radiusUnit}
+                onChange={(e) => {
+                  setRadiusUnit(e.target.value as "KM" | "MILE");
+                  dispatch(
+                    setRadiusUnitAction(e.target.value as "KM" | "MILE")
+                  );
+                }}
+                className={classes.radiusUnitSelect}
+              >
+                <option value="KM">KM</option>
+                <option value="MILE">MILE</option>
+              </select>
+            </div>
+          </div>
+          <div className={classes.filtersContainer}>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="amenities-label">
+                Select Amenities - Required:
+              </InputLabel>
+              <Select
+                labelId="amenities-label"
+                id="amenities"
+                multiple
+                required
+                value={selectedAmenities}
+                onChange={handleAmenityChange}
+                renderValue={(selected) => (
+                  <div className={classes.chips}>
+                    {(selected as string[]).map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        className={classes.chip}
+                      />
+                    ))}
+                  </div>
+                )}
+              >
+                {amenitiesOptions.map((amenity) => (
+                  <MenuItem key={amenity} value={amenity}>
+                    {amenity}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                className={classes.buttonTextStyle}
+                onClick={handleClearAmenities}
+              >
+                Clear Filters
+              </Button>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel id="ratings-label">
+                Hotel Stars - Required:
+              </InputLabel>
+              <Select
+                labelId="ratings-label"
+                id="ratings"
+                required
+                multiple
+                value={ratings}
+                onChange={handleRatingChange}
+                renderValue={() => (
+                  <div className={classes.chips}>
+                    {ratings.map((value) => (
+                      <Chip
+                        key={value}
+                        label={`Stars ${value}`}
+                        className={classes.chip}
+                      />
+                    ))}
+                  </div>
+                )}
+              >
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <MenuItem key={rating} value={String(rating)}>
+                    {`Stars ${rating}`}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Button
+                className={classes.buttonTextStyle}
+                onClick={handleClearRatings}
+              >
+                Clear Ratings
+              </Button>
+            </FormControl>
+          </div>
+          <div className={classes.aditionalProperties}>
+            <label className={classes.formLabel}>City Code:</label>
+            <input
+              type="text"
+              value={destinationCityCode ?? ""}
+              disabled
+              className={`${classes.formTextInput} ${classes.smallWidthTextInput}`}
+            />
 
-        <label className={classes.formLabel}>City Code:</label>
-        <input
-          type="text"
-          value={destinationCityCode ?? ""}
-          disabled
-          className={classes.formTextInput}
-        />
-        <FormControl className={classes.formControl}>
-          <InputLabel id="amenities-label">Select Amenities</InputLabel>
-          <Select
-            labelId="amenities-label"
-            id="amenities"
-            multiple
-            required
-            value={selectedAmenities}
-            onChange={handleAmenityChange}
-            renderValue={(selected) => (
-              <div className={classes.chips}>
-                {(selected as string[]).map((value) => (
-                  <Chip key={value} label={value} className={classes.chip} />
-                ))}
-              </div>
-            )}
-          >
-            {amenitiesOptions.map((amenity) => (
-              <MenuItem key={amenity} value={amenity}>
-                {amenity}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button
-            className={classes.buttonTextStyle}
-            onClick={handleClearAmenities}
-          >
-            Clear Filters
-          </Button>
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <InputLabel id="ratings-label">Hotel Stars - Required:</InputLabel>
-          <Select
-            labelId="ratings-label"
-            id="ratings"
-            required
-            multiple
-            value={ratings}
-            onChange={handleRatingChange}
-            renderValue={() => (
-              <div className={classes.chips}>
-                {ratings.map((value) => (
-                  <Chip
-                    key={value}
-                    label={`Stars ${value}`}
-                    className={classes.chip}
-                  />
-                ))}
-              </div>
-            )}
-          >
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <MenuItem key={rating} value={String(rating)}>
-                {`Stars ${rating}`}
-              </MenuItem>
-            ))}
-          </Select>
-          <Button
-            className={classes.buttonTextStyle}
-            onClick={handleClearRatings}
-          >
-            Clear Ratings
-          </Button>
-        </FormControl>
-        <label className={classes.formLabel}>Hotel Source:</label>
-        <select
-          value={hotelSource.join(",")}
-          onChange={(e) => setHotelSource(e.target.value.split(","))}
-          className={classes.formSelect}
-        >
-          <option value="ALL">All</option>
-          <option value="BEDBANK">Bedbank</option>
-          <option value="DIRECTCHAIN">Direct Chain</option>
-        </select>
-        <div>
-          <button
-            onClick={handleFormSubmit}
-            type="submit"
-            className={classes.formButton}
-          >
-            {typeof foundHotels === "number" ? (
-              `FOUND ${foundHotels} Hotels`
-            ) : foundHotels ? (
-              <p>{foundHotels.count}</p>
-            ) : foundHotels === null ? (
-              `0 FOUND`
-            ) : null}
-          </button>
+            <label className={classes.formLabel}>Hotel Source:</label>
+            <select
+              value={hotelSource.join(",")}
+              onChange={(e) => setHotelSource(e.target.value.split(","))}
+              className={`${classes.formSelect} ${classes.smallWidthTextInput}`}
+            >
+              <option value="ALL">All</option>
+              <option value="BEDBANK">Bedbank</option>
+              <option value="DIRECTCHAIN">Direct Chain</option>
+            </select>
+            <div>
+              <button
+                onClick={handleFormSubmit}
+                type="submit"
+                className={classes.formButton}
+              >
+                {typeof foundHotels === "number" ? (
+                  `FOUND ${foundHotels} Hotels`
+                ) : foundHotels ? (
+                  <p>{foundHotels.count}</p>
+                ) : foundHotels === null ? (
+                  `0 FOUND`
+                ) : null}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className={classes.offersSearchContainer}>
+          <OffersSearch />
         </div>
       </div>
     </div>

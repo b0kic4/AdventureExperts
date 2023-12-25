@@ -6,6 +6,8 @@ import "./style.css";
 import { amenityIcons } from "../HotelList";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import axios from "axios";
+import { RootState } from "../../../../../app/rootReducer";
+import { useSelector } from "react-redux";
 
 interface HotelModalProps {
   hotel: Hotel;
@@ -24,32 +26,80 @@ const HotelModal: React.FC<HotelModalProps> = ({ hotel, onClose }) => {
   useEffect(() => {
     console.log("Hotel ID before setting:", hotelId);
     if (hotel && hotel.hotelId) {
-      const id = [hotel.hotelId];
+      const id = hotel.hotelId; // Assuming hotelId is a string
       console.log("Setting hotelId:", id);
-      setHotelId(id);
+      setHotelId([id]); // Set hotelId as an array
     }
   }, [hotel]);
+
+  // Redux states
+  const selectedPeople = useSelector(
+    (state: RootState) => state.offers.offers.people
+  );
+  const selectedCheckInDate = useSelector(
+    (state: RootState) => state.offers.offers.checkInDate
+  );
+  const selectedCheckOutDate = useSelector(
+    (state: RootState) => state.offers.offers.checkOutDate
+  );
+  const selectedRoomQuantity = useSelector(
+    (state: RootState) => state.offers.offers.roomQuantity
+  );
+  const selectedPriceRange = useSelector(
+    (state: RootState) => state.offers.offers.priceRange
+  );
+  const selectedCurrency = useSelector(
+    (state: RootState) => state.offers.offers.currency
+  );
+  const selectedPaymentPolicy = useSelector(
+    (state: RootState) => state.offers.offers.paymentPolicy
+  );
+  const selectedBoardType = useSelector(
+    (state: RootState) => state.offers.offers.boardType
+  );
+  const selectedIncludeClosed = useSelector(
+    (state: RootState) => state.offers.offers.includeClosed
+  );
+  const selectedBestRateOnly = useSelector(
+    (state: RootState) => state.offers.offers.bestRateOnly
+  );
+  const selectedLang = useSelector(
+    (state: RootState) => state.offers.offers.lang
+  );
 
   const getHotelOffers = async () => {
     const savedToken = localStorage.getItem("token");
 
     try {
-      console.log("Before API call - getHotelOffers:", hotelId);
+      // Ensure hotelId is an array of strings
+      const hotelIds = Array.isArray(hotelId) ? hotelId : [hotelId];
+      if (hotelIds.length > 0) {
+        const response = await axios.get("http://localhost:8081/hotel-offers", {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+          params: {
+            // Converting array to comma-separated string
+            hotelIds: hotelIds.join(),
+            adults: selectedPeople,
+            checkInDate: selectedCheckInDate,
+            checkOutDate: selectedCheckOutDate,
+            roomQuantity: selectedRoomQuantity,
+            priceRange: selectedPriceRange,
+            currency: selectedCurrency,
+            paymentPolicy: selectedPaymentPolicy,
+            boardType: selectedBoardType,
+            includeClosed: selectedIncludeClosed,
+            bestRateOnly: selectedBestRateOnly,
+            lang: selectedLang,
+          },
+        });
 
-      const response = await axios.get("http://localhost:8081/hotel-offers", {
-        headers: {
-          Authorization: `Bearer ${savedToken}`,
-        },
-        params: {
-          hotelIds: hotelId, // Use 'hotelIds' instead of 'hotelId'
-        },
-      });
-
-      console.log("After Api Call hotel id: ", hotelId);
-      console.log("After API call - getHotelOffers:", response.data);
-      console.log("API response data:", response.data);
+        console.log("Response data: ", response.data);
+      }
     } catch (error: any) {
       console.log("API error:", error);
+      console.log(error.response.data);
       console.log("Request config:", error.config);
       console.log("Request payload:", JSON.stringify(error.config.data));
     }
