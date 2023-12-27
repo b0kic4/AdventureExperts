@@ -34,9 +34,13 @@ const AutocompleteComponent: React.FC<AutocompleteComponentProps> = ({
 }) => {
   useEffect(() => {
     if (savedInputValue) {
-      onInputChange(savedInputValue.city);
+      // Check if the current input value is different from the saved value
+      if (value !== savedInputValue.city) {
+        // Update the input value only if it's different
+        onInputChange(savedInputValue.city);
+      }
     }
-  }, [savedInputValue, onInputChange]);
+  }, [savedInputValue, value, onInputChange]);
   const classes = useStyles();
   return (
     <Autocomplete

@@ -14,9 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getHotelList = exports.getFlightOffers = exports.getDestinationLocations = exports.getOriginLocations = void 0;
 const amadeusApi_1 = __importDefault(require("../api/amadeusApi"));
+console.log(amadeusApi_1.default.referenceData);
 const getOriginLocations = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { keyword } = req.query;
+        console.log("Keyword: ", keyword);
         const response = yield amadeusApi_1.default.referenceData.locations.get({
             keyword: keyword,
             subType: "CITY",
@@ -41,7 +43,7 @@ const getDestinationLocations = (req, res) => __awaiter(void 0, void 0, void 0, 
         res.send(parsedResponse);
     }
     catch (error) {
-        // console.error("Error parsing or sending response:", error);
+        console.error("Error parsing or sending response:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });

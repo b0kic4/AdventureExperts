@@ -1,14 +1,16 @@
 import { Request, Response } from "express";
 import amadeus from "../api/amadeusApi";
 
+console.log(amadeus.referenceData);
+
 const getOriginLocations = async (req: Request, res: Response) => {
   try {
     const { keyword } = req.query;
+    console.log("Keyword: ", keyword);
     const response = await amadeus.referenceData.locations.get({
       keyword: keyword,
       subType: "CITY",
     });
-
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (error: any) {
@@ -27,7 +29,7 @@ const getDestinationLocations = async (req: Request, res: Response) => {
     const parsedResponse = JSON.parse(response.body);
     res.send(parsedResponse);
   } catch (error: any) {
-    // console.error("Error parsing or sending response:", error);
+    console.error("Error parsing or sending response:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
